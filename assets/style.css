@@ -15,8 +15,8 @@ body {
   grid-template-rows: auto 1fr auto;
   grid-template-areas:
     "header header"
-    "main side"
-    "footer side";
+    "side main "
+    "side footer";
 }
 #header {
   grid-area: header;
