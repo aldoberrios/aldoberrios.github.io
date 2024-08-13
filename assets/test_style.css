@@ -12,3 +12,5 @@ h1,h2,h3,h4,h5,h6 {font-family: 'Roboto Condensed', sans-serif}
 }
 
 p {color: #222;}
+
+.w3-leftbar{border-left:6px solid #3f51b5!important}.w3-rightbar{border-right:6px solid #3f51b5!important}
