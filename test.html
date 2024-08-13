@@ -16,6 +16,29 @@
 </head>
 <body class="w3-light-grey">
 
+
+<!-- Mobile Only Menu -->
+<div class="w3-bar w3-indigo w3-hide-medium w3-hide-large">
+  <a href="test.html" class="w3-bar-item w3-button">Home</a>
+  <a href="test_research.html" class="w3-bar-item w3-button">Research</a>
+  <a href="test_spanish.html" class="w3-bar-item w3-button">Español</a>
+</div>
+
+
+<!--
+<div class="w3-bar w3-indigo w3-mobile">
+  <a href="test.html" class="w3-bar-item w3-button">Home</a>
+  <a href="test_research.html" class="w3-bar-item w3-button w3-hide-small">Research</a>
+  <a href="test_spanish.html" class="w3-bar-item w3-button w3-hide-small">Español</a>
+  <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="myFunction()">&#9776;</a>
+</div>
+
+<div id="demo" class="w3-bar-block w3-indigo w3-hide w3-hide-large w3-hide-medium">
+  <a href="test_research.html" class="w3-bar-item w3-button">Research</a>
+  <a href="test_spanish.html" class="w3-bar-item w3-button">Español</a>
+</div>
+-->
+
 <!-- Page Container -->
 <div class="w3-content w3-margin-top" style="max-width:1400px;">
 
@@ -112,6 +135,17 @@
 <footer class="w3-container w3-indigo w3-center w3-margin-top">
   <p class="w3-text-white">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 </footer>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("demo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
 
 </body>
 </html>
