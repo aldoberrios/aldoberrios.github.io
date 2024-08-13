@@ -24,7 +24,6 @@
   <a href="test_spanish.html" class="w3-bar-item w3-button">Español</a>
 </div>
 
-
 <!--
 <div class="w3-bar w3-indigo w3-mobile">
   <a href="test.html" class="w3-bar-item w3-button">Home</a>
@@ -54,8 +53,11 @@
           <div class="w3-display-bottomleft w3-container w3-text-black">
             <h2 style="font-family: 'Roboto Condensed', sans-serif;" class="w3-text-white">Aldo Berrios Castillo</h2>
           </div>
+          <div class="w3-display-bottomright w3-container w3-text-black">
+           <h2 style="font-family: 'Roboto Condensed', sans-serif;" class="w3-text-white"> <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="myFunction()">&#9776;</a></h2>
+          </div>
         </div>
-        <div class="w3-container w3-hide-small">
+        <div id="demo2" class="w3-container  w3-hide w3-hide-large w3-hide-medium">
           <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-indigo"></i>PhD Research Student</p>
           <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-indigo"></i>University of Edinburgh</p>
           <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-indigo"></i>aldo.berrios [at] gmail [dot] com</p>
@@ -136,16 +138,7 @@
   <p class="w3-text-white">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 </footer>
 
-<script>
-function myFunction() {
-  var x = document.getElementById("demo");
-  if (x.className.indexOf("w3-show") == -1) {
-    x.className += " w3-show";
-  } else { 
-    x.className = x.className.replace(" w3-show", "");
-  }
-}
-</script>
+<script type="text/javascript" src="assets/hidesection.js"></script>
 
 </body>
 </html>
