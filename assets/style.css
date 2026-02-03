@@ -1,5 +1,9 @@
 html,body {}
-h1,h2,h3,h4,h5,h6 {font-family: 'Roboto Condensed', sans-serif; color: #3f51b5 !important}
+h1,h2,h3,h4,h5,h6 {
+    font-family: 'Roboto Condensed', sans-serif; 
+    color: #3f51b5;
+}
+
 .w3-margin-right-32 {margin-right:3em;}
 #link-section a {color: #3f51b5 !important}
 
@@ -17,3 +21,22 @@ p {color: #222;}
 
 .botoncito {background-color: #ccc;font-size: 16px;padding: 14px 40px;border-radius: 35px;}
 .botoncito:hover {background-color: #fff; color: #000;}
+
+
+.nav-font { font-family: 'Barlow Condensed', sans-serif; }
+
+
+/* This allows the hidden mobile sidebar to show up when toggled */
+.w3-show {
+    display: block !important;
+}
+
+/* This forces all icons in the sidebar to be indigo */
+.w3-third i.fa {
+    color: #3f51b5 !important;
+}
+
+/* This fixes the name header color specificity issue */
+.w3-display-container h2.w3-text-white {
+    color: white !important;
+}
