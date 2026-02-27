@@ -47,20 +47,21 @@
 
 <!-- Right Column -->
 <div class="w3-twothird">
-<div class="w3-bar w3-indigo w3-hide-small">
-<a href="index.html"          class="w3-bar-item w3-button w3-blue">Home</a>
-<a href="publications.html"   class="w3-bar-item w3-button">Publications</a>
-<a href="presentations.html"  class="w3-bar-item w3-button">Presentations</a>
-<a href="revitalisation.html" class="w3-bar-item w3-button">Language Revitalisation</a>
-<a href="spanish.html"        class="w3-bar-item w3-button">Español</a>
-<a href="CV/CV_ABerrios.pdf"  class="w3-bar-item w3-button w3-right">CV</a>
-</div>
 
-<div id="link-section">
+  <div class="w3-bar w3-indigo w3-hide-small">
+    <a href="index.html"          class="w3-bar-item w3-button w3-blue">Home</a>
+    <a href="publications.html"   class="w3-bar-item w3-button">Publications</a>
+    <a href="presentations.html"  class="w3-bar-item w3-button">Presentations</a>
+    <a href="revitalisation.html" class="w3-bar-item w3-button">Language Revitalisation</a>
+    <a href="spanish.html"        class="w3-bar-item w3-button">Español</a>
+    <a href="CV/CV_ABerrios.pdf"  class="w3-bar-item w3-button w3-right">CV</a>
+  </div>
 
-<div class="w3-panel w3-leftbar w3-pale-blue w3-serif">
-<p><strong>Aldo Berríos Castillo pingey tañi üy. Chillkatuken Mapudungun.</strong><br>(/ˌal.d̪o.be.ˈri.os kas.ˈt̪i.ʝo pi.ˈŋej ta.ɲi.ˈəj || tʃiʎ.ˈka.tu.ken ma.ˌpu.θu.ˈŋun/)<br><em>“My name is Aldo Berríos Castillo. I study Mapudungun.”</em></p>
-</div>
+  <div id="link-section">
+
+  <div class="w3-panel w3-leftbar w3-pale-blue w3-serif">
+  <p><strong>Aldo Berríos Castillo pingey tañi üy. Chillkatuken Mapudungun.</strong><br>(/ˌal.d̪o.be.ˈri.os kas.ˈt̪i.ʝo pi.ˈŋej ta.ɲi.ˈəj || tʃiʎ.ˈka.tu.ken ma.ˌpu.θu.ˈŋun/)<br><em>“My name is Aldo Berríos Castillo. I study Mapudungun.”</em></p>
+  </div>
 
 <!--
 <div class="w3-panel w3-leftbar w3-blue w3-serif">
@@ -173,11 +174,17 @@
 <script type="text/javascript" src="assets/hidesection.js"></script>
 
 <script>
-  fetch('assets/leftcol.html')
+function loadHTML(id, file) {
+  fetch(file)
     .then(response => response.text())
     .then(data => {
-      document.getElementById('leftcol').innerHTML = data;
+      document.getElementById(id).innerHTML = data;
     });
+}
+
+loadHTML("leftcol",  "assets/leftcol.html");
+// loadHTML("menu", "assets/menu.html");
+
 </script>
 
 </body>
