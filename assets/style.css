@@ -40,3 +40,57 @@ p {color: #222;}
 .w3-display-container h2.w3-text-white {
     color: white !important;
 }
+
+/* Add this to style.css */
+.w3-card, .w3-card-4 {
+    border-radius: 12px;
+    overflow: hidden; /* This ensures the background color doesn't "leak" out of the corners */
+}
+
+/* Targets ONLY the first card in the right column */
+.w3-twothird .w3-card:first-of-type {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+
+/* Styling the list containers in the right column */
+#link-section ul {
+    list-style-type: none; /* Removes the default bullet points */
+    padding-left: 0;
+}
+
+/* Styling each individual publication/presentation entry */
+#link-section li {
+    margin-bottom: 1em;
+    margin-left: 0.5em;
+    padding: 5px 15px;
+    border-left: 3px solid transparent; /* Hidden border for alignment */
+    transition: all 0.3s ease;
+    border-left: 2px solid #ccc; /* Indigo accent appears on hover */
+}
+
+/* Highlight entry on hover */
+#link-section li:hover {
+    background-color: #f9f9fb; /* Very subtle grey/blue tint */
+    border-left: 3px solid #3f51b5; /* Indigo accent appears on hover */
+    transform: translateX(5px); /* Gentle slide effect */
+}
+
+/* Make links inside the list items bold and indigo */
+#link-section li a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#link-section li a:hover {
+    text-decoration: underline;
+}
+
+/* Optional: Subtle grey color for the parenthetical dates/citations */
+#link-section li p {
+    margin: 0;
+    line-height: 1.5;
+}
