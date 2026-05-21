@@ -27,22 +27,26 @@ FILE_MAPPING = {
 #    'spanish-test.html': 'leftcol-spa.html'
 }
 
+
+START_ANCHOR = "<!-- start leftcol -->"
+END_ANCHOR = "<!-- end leftcol -->"
+
 def update_left_column():
-    # Cache component contents to avoid reading the same file multiple times
     component_cache = {}
 
-    # Regular expression to target only <div id="leftcol">...</div>
-    pattern = re.compile(r'(<div\s+id=["\']leftcol["\'][^>]*>)(.*?)(</div>)', re.DOTALL)
+    # Escapes the tags to handle the spaces and characters safely in Regex
+    pattern = re.compile(
+        rf'({re.escape(START_ANCHOR)}).*?({re.escape(END_ANCHOR)})', 
+        re.DOTALL
+    )
 
     for filename, component_name in FILE_MAPPING.items():
         file_path = os.path.join(PROJECT_ROOT, filename)
         component_path = os.path.join(PROJECT_ROOT, 'assets', component_name)
         
-        # Skip if the target HTML file doesn't exist
         if not os.path.exists(file_path):
             continue
             
-        # Read the component file if we haven't loaded it yet
         if component_name not in component_cache:
             if not os.path.exists(component_path):
                 print(f"Error: Component file not found at {component_path}")
@@ -51,21 +55,21 @@ def update_left_column():
                 component_cache[component_name] = f.read().strip()
                 
         component_content = component_cache[component_name]
-        print(f"Processing: {filename} using {component_name}...")
+        print(f"Processing: {filename}...")
         
         with open(file_path, 'r', encoding='utf-8') as f:
-            original_content = f.read()
+            content = f.read()
             
-        if pattern.search(original_content):
-            # Surgical swap: \1 is opening tag, \3 is closing tag. No formatting changes.
-            replacement = f"\\1\n{component_content}\n\\3"
-            updated_content = pattern.sub(replacement, original_content)
+        if pattern.search(content):
+            # \1 keeps your start comment, \2 keeps your end comment
+            replacement = f"\\1\n{component_content}\n\\2"
+            updated_content = pattern.sub(replacement, content)
             
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(updated_content)
-            print(f"Successfully moved {component_name} into {filename}")
+            print(f"  -> Successfully synchronized {filename}")
         else:
-            print(f"Warning: No <div id='leftcol'> container found in {filename}")
+            print(f"  -> Error: Could not find your anchors in {filename}")
 
 if __name__ == '__main__':
     update_left_column()
