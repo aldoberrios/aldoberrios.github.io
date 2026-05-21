@@ -10,4 +10,12 @@ CV/CV_ABerrios.tex
 # Ignore these folders
 Residues
 
+# Ignore Python virtual environments
+.venv/
+venv/
+env/
+ENV/
 
+# Ignore Python cache files
+__pycache__/
+*.pyc
