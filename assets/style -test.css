@@ -47,9 +47,8 @@ p {color: #222;}
     overflow: hidden; /* This ensures the background color doesn't "leak" out of the corners */
 }
 
-
 /* Targets ONLY the first card in the right column */
-.w3-threequarter .w3-card:first-of-type {
+.main-content .w3-card:first-of-type {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-left-radius: 12px;
@@ -95,18 +94,32 @@ p {color: #222;}
     line-height: 1.5;
 }
 
+/* ===== Modern Layout ===== */
 
-.more-talks {
-    margin-top: 1em;
+.layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
 }
 
-.more-talks summary {
-    cursor: pointer;
-    color: #3f51b5;
-    font-weight: bold;
-    margin-left: 1em;
+.sidebar {
+    width: 300px;
+    flex-shrink: 0;
 }
 
-.more-talks summary:hover {
-    text-decoration: underline;
+.main-content {
+    flex: 1;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .main-content {
+        width: 100%;
+        flex: none;
+    }
 }

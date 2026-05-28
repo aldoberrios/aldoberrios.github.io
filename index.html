@@ -19,13 +19,10 @@ It's not very organised
 
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="assets/style.css">
-
   <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
 
 </head>
@@ -34,11 +31,11 @@ It's not very organised
 
 <!-- Mobile Only Menu -->
 <div class="w3-bar w3-indigo w3-hide-medium w3-hide-large">
-<a class="w3-bar-item w3-button nav-font" href="#" class="w3-bar-item w3-button w3-blue">HOME</a>
-<a class="w3-bar-item w3-button nav-font" href="publications.html"   class="w3-bar-item w3-button">PUBLICATIONS</a>
-<a class="w3-bar-item w3-button nav-font" href="revitalisation.html"   class="w3-bar-item w3-button">REVITALISATION</a>
-<a class="w3-bar-item w3-button nav-font" href="spanish.html" class="w3-bar-item w3-button">ESPAÑOL</a>
-<a class="w3-bar-item w3-button nav-font" href="CV/CV_ABerrios.pdf"  class="w3-bar-item w3-button">CV</a>
+<a class="w3-bar-item w3-button nav-font w3-gray" href="#">Home</a>
+<a class="w3-bar-item w3-button nav-font" href="publications.html">Research</a>
+<a class="w3-bar-item w3-button nav-font" href="revitalisation.html">Mapudungun</a>
+<a class="w3-bar-item w3-button nav-font w3-right" href="spanish.html">ES</a>
+<a class="w3-bar-item w3-button nav-font w3-right" href="CV/CV_ABerrios.pdf">CV</a>
 </div>
 
 <!-- Page Container -->
@@ -49,12 +46,12 @@ It's not very organised
 
 <!-- start leftcol -->
 <!-- Left Column -->
-<div class="w3-third">
+<div class="w3-quarter w3-margin-bottom">
   <div class="w3-white w3-text-indigo w3-card-4">
     
     <!-- Top Indigo Banner for Name Only -->
     <div class="w3-container w3-indigo w3-center w3-padding-16">
-      <h2 class="nav-font w3-text-white" style="margin: 0; font-weight: 700; letter-spacing: 1px;">
+      <h2 class="nav-font w3-text-white" style="margin: 0; font-weight: 700; font-size: 1.75em ; letter-spacing: 1px;">
         ALDO BERRÍOS CASTILLO
       </h2>
     </div>
@@ -65,13 +62,13 @@ It's not very organised
       <div style="display: inline-block;">
         <img src="img/perfil.jpg" 
              class="w3-circle" 
-             style="width: 200px; height: 200px; object-fit: cover;" 
+             style="width: 170px; height: 170px; object-fit: cover;" 
              alt="Aldo Berríos Castillo">
       </div>
       
       <!-- Mobile Menu Burger Icon (Positioned cleanly below the picture for mobile users) -->
       <div class="w3-hide-large w3-hide-medium w3-margin-top">
-        <button onclick="myFunction()" class="w3-button w3-border w3-round w3-hover-indigo w3-text-black" aria-label="Menu">&#9776; Menu</button>
+        <button onclick="myFunction()" class="w3-button w3-border w3-round w3-hover-indigo w3-text-black" aria-label="Menu">Contact me</button>
       </div>
     </div>
     
@@ -110,13 +107,12 @@ It's not very organised
 
 
 <!-- Right Column -->
-<div class="w3-twothird">
+<div class="w3-threequarter">
 
 <!-- Top menu right column -->
 <div class="w3-bar w3-indigo w3-hide-small">
   <a href="#"          class="w3-bar-item w3-button w3-blue">Home</a>
-  <a href="publications.html"   class="w3-bar-item w3-button">Publications</a>
-  <a href="presentations.html"  class="w3-bar-item w3-button">Presentations</a>
+  <a href="publications.html"   class="w3-bar-item w3-button">Research</a>
   <a href="revitalisation.html" class="w3-bar-item w3-button">Language Revitalisation</a>
   <a href="spanish.html" class="w3-bar-item w3-button w3-right">ES</a>
   <span class="w3-bar-item w3-right w3-black">EN</span>
@@ -128,7 +124,8 @@ It's not very organised
 
 <div class="w3-container w3-card w3-white w3-margin-bottom">
 <h2 class="w3-text-indigo">About me</h2>
-<div class="w3-container">
+  <div class="w3-container w3-margin-right-32 w3-margin-bottom">
+
   <p>I’m a research student at the University of Edinburgh doing a PhD in linguistics, and a recipient of a Becas Chile scholarship granted by ANID (Chilean Government). I’m currently working on the field of Historical linguistics, under the supervision of
   <a href="https://www.ed.ac.uk/profile/benjamin-molineaux">Dr Benjamin Molineaux</a> and <a href="http://www.lel.ed.ac.uk/homes/patrick/">Dr Patrick Honeybone</a>.</p>
 
@@ -154,7 +151,6 @@ It's not very organised
   href="https://repositorio.udec.cl/server/api/core/bitstreams/026ab34a-5311-4f12-9757-cfec0ea2b0d4/content"
   class="w3-text-indigo">here</a> (in Spanish).</p>
 
-<div class="w3-content w3-padding-16"><!-- Buffer --></div>
 </div>
 </div>
 
@@ -164,29 +160,31 @@ It's not very organised
   </div>
 
 <div class="w3-container w3-card w3-white w3-margin-bottom">
-<h2 class="w3-text-indigo">Interests</h2>
-  <ul>
-  <li><p>Mapudungun morphology and phonology</p></li>
-  <li><p>Historical linguistics</p></li>
-  <li><p>Language revitalization of Mapudungun</p></li>
-  </ul>
-<div class="w3-content w3-padding-16"><!-- Buffer --></div>
+  <h2 class="w3-text-indigo">Interests</h2>
+  <div class="w3-container w3-margin-bottom">
+
+    <ul>
+    <li><p>Mapudungun morphology and phonology</p></li>
+    <li><p>Historical linguistics</p></li>
+    <li><p>Language revitalization of Mapudungun</p></li>
+    </ul>
+
+  </div>
 </div>
 
 <div class="w3-container w3-card w3-white w3-margin-bottom">
 <h2 class="w3-text-indigo">ETHL</h2>
-  <div class="w3-container">
+  <div class="w3-container w3-margin-bottom">
      <p>I am the co-organiser of <a href="https://ethl.uk">ETHL</a>, <strong>Edinburgh Theoretical Historical Linguistics</strong>, a venue for young researchers in Historical Linguistics to engage in theoretical discussion over issues at the intersection of theoretical and historical linguistics</p>
 
      <p>In <strong>April 2025</strong>, we organised the first <a href="https://ethl.uk/Ethl2025">ETHL Seminar 2025</a>, with four seminars that provided insights into various aspects of our field. We are currently organising an <a href="https://ethl.uk/Ethl2026">ETHL 2026 Summer School</a>, envisioned as an introduction “into the <em>what</em> and <em>why</em> of theoretical historical linguistics”.</p>
 
   </div>
-<div class="w3-content w3-padding-16"><!-- Buffer --></div>
 </div>
 
 <div class="w3-container w3-card w3-white w3-margin-bottom">
 <h2 class="w3-text-indigo">Other academic activities</h2>
-  <div class="w3-container">
+    <div class="w3-container w3-margin-bottom">
  
         <h3>Teaching</h3>
         <ul>
@@ -216,23 +214,21 @@ It's not very organised
               <!-- <li><a href=""></a></li>-->
             </ul>
   </div>
-<div class="w3-content w3-padding-16"><!-- Buffer --></div>
 </div>
 
 </div>
 
-<!-- End Right Column -->
-</div>
 
-<!-- End Grid -->
-</div>
+</div><!-- End Right -->
+</div><!-- End Grid  -->
+</div><!-- End Main  -->
 
-<!-- End Page Container -->
-</div>
-
+<!-- Begin footer-->
 <footer class="w3-container w3-indigo w3-center w3-margin-top">
 <p class="w3-text-white">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 </footer>
+<!-- End footer -->
+
 
 <script type="text/javascript" src="assets/hidesection.js"></script>
 
