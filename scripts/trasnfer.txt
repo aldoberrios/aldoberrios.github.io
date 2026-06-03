@@ -1,0 +1,50 @@
+sending incremental file list
+0 - PHONOLOGY/Optimality_Theory/2006_Tanner_Context insensitive vowel hiatus resolution in Ciyao\#012.pdf
+         32,768  15%    0.00kB/s    0:00:00          206,224 100%   55.14MB/s    0:00:00 (xfr#1, ir-chk=1032/3139)
+0 Polysynthesis/2016_Baker_Is Head Movement Still Needed for Noun Incorporation ? The Case of Mapudungun.pdf
+         32,768  12%    2.08MB/s    0:00:00          260,951 100%   13.10MB/s    0:00:00 (xfr#2, ir-chk=1007/3231)
+0_RESEARCH_METHODS/Additional_resources/
+0_RESEARCH_METHODS/Additional_resources/Acknowledging_knowledge.pdf
+         32,768  12%    1.56MB/s    0:00:00          267,064 100%   12.13MB/s    0:00:00 (xfr#3, ir-chk=1106/3440)
+0_RESEARCH_METHODS/Additional_resources/Engaging\#012your mind.pdf
+         32,768  12%    1.49MB/s    0:00:00          268,233 100%   11.12MB/s    0:00:00 (xfr#4, ir-chk=1105/3440)
+0_RESEARCH_METHODS/Additional_resources/Getting your\#012point across.pdf
+         32,768  14%    1.36MB/s    0:00:00          233,934 100%    9.30MB/s    0:00:00 (xfr#5, ir-chk=1104/3440)
+0_RESEARCH_METHODS/Additional_resources/Hammering\#012the prose..pdf
+         32,768  12%    1.30MB/s    0:00:00          256,914 100%    9.80MB/s    0:00:00 (xfr#6, ir-chk=1103/3440)
+0_RESEARCH_METHODS/Additional_resources/Navigating\#012the page.pdf
+         32,768  17%    1.25MB/s    0:00:00          186,886 100%    6.85MB/s    0:00:00 (xfr#7, ir-chk=1102/3440)
+0_RESEARCH_METHODS/Additional_resources/Picking your\#012profile.pdf
+         32,768  20%    1.20MB/s    0:00:00          159,390 100%    5.63MB/s    0:00:00 (xfr#8, ir-chk=1101/3440)
+0_RESEARCH_METHODS/Additional_resources/Posing the\#012question.pdf
+         32,768  14%    1.16MB/s    0:00:00          224,199 100%    7.64MB/s    0:00:00 (xfr#9, ir-chk=1100/3440)
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/Acknowledging__knowledge.pdf
+         32,768  12%    1.08MB/s    0:00:00          267,064 100%    8.78MB/s    0:00:00 (xfr#10, ir-chk=1062/3512)
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/Engaging\#012your mind.pdf
+         32,768  12%    1.08MB/s    0:00:00          268,233 100%    8.82MB/s    0:00:00 (xfr#11, ir-chk=1061/3512)
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/Getting your\#012point across.pdf
+         32,768  14%    1.08MB/s    0:00:00          233,934 100%    7.69MB/s    0:00:00 (xfr#12, ir-chk=1060/3512)
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/Hammering\#012the prose..pdf
+         32,768  12%    1.08MB/s    0:00:00          256,914 100%    8.45MB/s    0:00:00 (xfr#13, ir-chk=1059/3512)
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/Navigating\#012the page.pdf
+         32,768  17%    1.08MB/s    0:00:00          186,886 100%    6.15MB/s    0:00:00 (xfr#14, ir-chk=1058/3512)
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/Picking your\#012profile.pdf
+         32,768  20%    1.08MB/s    0:00:00          159,390 100%    5.24MB/s    0:00:00 (xfr#15, ir-chk=1057/3512)
+0_RESEARCH_METHODS/OLD_Studies/Developing_research_project/Additional_resources/Posing the\#012question.pdf
+         32,768  14%    1.08MB/s    0:00:00          224,199 100%    7.13MB/s    0:00:00 (xfr#16, ir-chk=1056/3512)
+Celto/Kaweska/Thumbs.db:encryptable
+              0 100%    0.00kB/s    0:00:00 (xfr#17, ir-chk=1006/9917)
+deleting Languages/Español/Koa/karsel
+Languages/Español/Koa/karsel.
+          1,326 100%    5.24kB/s    0:00:00            1,326 100%    5.24kB/s    0:00:00 (xfr#18, ir-chk=1087/10852)
+Languages/Español/Pronombres_Cliticos/
+Languages/Español/Pronombres_Cliticos/clíticos_uso.txt
+          1,166 100%    4.61kB/s    0:00:00            1,166 100%    4.61kB/s    0:00:00 (xfr#19, ir-chk=1014/10852)
+Languages/Guarani/2017 - Gynan - Morphological Glossing Conventions for the\#012Representation of Paraguayan Guaraní.pdf
+         32,768  15%  119.85kB/s    0:00:01          217,194 100%  788.49kB/s    0:00:00 (xfr#20, ir-chk=1164/11108)
+Molineaux/2017_Alcorn_etal_The emergence of Scots: Clues from Germanic a reflexes.pdf
+         32,768   1%   60.38kB/s    0:00:38        2,372,204 100%    4.19MB/s    0:00:00 (xfr#21, to-chk=630/26949)
+
+sent 4,433,913 bytes  received 2,614 bytes  2,957,684.67 bytes/sec
+total size is 47,603,971,323  speedup is 10,730.01
