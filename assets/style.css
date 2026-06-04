@@ -4,6 +4,8 @@ h1,h2,h3,h4,h5,h6 {
     color: #3f51b5;
 }
 
+
+
 .w3-margin-right-32 {margin-right:3em;}
 #link-section a {color: #3f51b5 !important}
 
@@ -72,9 +74,16 @@ p {color: #222;}
     border-left: 2px solid #ccc; /* Indigo accent appears on hover */
 }
 
+/* Targets buttons inside the top navigation and mobile menus on hover */
+.w3-bar .w3-button:hover {
+    background-color: #1a237e !important; /* A nice deep dark blue/indigo */
+    color: #ffffff !important;            /* Ensures text stays readable (white) */
+}
+
+
 /* Highlight entry on hover */
 #link-section li:hover {
-    background-color: #f9f9fb; /* Very subtle grey/blue tint */
+    background-color: #f9f9fb;  /* Very subtle grey/blue tint */
     border-left: 3px solid #3f51b5; /* Indigo accent appears on hover */
     transform: translateX(5px); /* Gentle slide effect */
 }
