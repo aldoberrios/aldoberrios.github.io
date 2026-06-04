@@ -110,3 +110,33 @@ p {color: #222;}
 .more-talks summary:hover {
     text-decoration: underline;
 }
+/* Keeps the mobile menu perfectly lined up with thin dividers ONLY on mobile screens */
+@media (max-width: 600px) {
+    .mobile-nav-bar {
+        display: flex !important;
+        align-items: stretch;
+        justify-content: space-between;
+    }
+
+    .mobile-nav-bar .w3-bar-item {
+        flex: 1;
+        text-align: center;
+        white-space: nowrap; /* Prevents words from breaking onto two lines */
+        padding-left: 8px !important;  /* Tighter padding to fit everything */
+        padding-right: 8px !important; 
+        border-color: rgba(255, 255, 255, 0.2) !important; /* Soft, semi-transparent white border */
+    }
+
+    /* Elegant style for the current/active page on mobile */
+    .mobile-nav-bar .active-nav {
+        background-color: #2c387e !important; /* A beautiful, deeper indigo shade */
+        font-weight: bold;
+        border-bottom: 3px solid #ffffff !important; /* Adds a crisp white bottom indicator line */
+    }
+
+    /* Keeps the ES button on the far right behaving nicely */
+    .mobile-nav-bar .w3-right {
+        margin-left: auto;
+        flex: none;
+    }
+}
