@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- 1. Homepage / Main Language Pairs -->
+  <url>
+    <loc>https://aldoberrios.cl/index.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/index.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/spanish.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/index.html"/>
+  </url>
+  <url>
+    <loc>https://aldoberrios.cl/spanish.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/index.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/spanish.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/index.html"/>
+  </url>
+
+  <!-- 2. Research / Investigacion -->
+  <url>
+    <loc>https://aldoberrios.cl/research.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/research.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/investigacion.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/research.html"/>
+  </url>
+  <url>
+    <loc>https://aldoberrios.cl/investigacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/research.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/investigacion.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/research.html"/>
+  </url>
+
+  <!-- 3. Revitalisation / Revitalizacion -->
+  <url>
+    <loc>https://aldoberrios.cl/revitalisation.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/revitalisation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/revitalizacion.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/revitalisation.html"/>
+  </url>
+  <url>
+    <loc>https://aldoberrios.cl/revitalizacion.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/revitalisation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/revitalizacion.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/revitalisation.html"/>
+  </url>
+
+  <!-- 4. Teaching / Ensenanza -->
+  <url>
+    <loc>https://aldoberrios.cl/teaching.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/teaching.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/ensenanza.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/teaching.html"/>
+  </url>
+  <url>
+    <loc>https://aldoberrios.cl/ensenanza.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://aldoberrios.cl/teaching.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://aldoberrios.cl/ensenanza.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/teaching.html"/>
+  </url>
+
+</urlset>
