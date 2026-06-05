@@ -1,14 +1,18 @@
 # Ignore these files
 test.js
+structure_website.txt
 
-# Ignore Latex files
+
+# Ignore Latex / Typst files
 CV/CV_ABerrios.aux
 CV/CV_ABerrios.log
 CV/CV_ABerrios.synctex.gz
 CV/CV_ABerrios.tex
+CV/cv.typ
 
 # Ignore these folders
 Residues
+scripts
 
 # Ignore Python virtual environments
 .venv/
