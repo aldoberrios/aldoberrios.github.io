@@ -6,7 +6,7 @@
   header: context {
     if counter(page).get().first() > 0 [
       #align(right)[
-        #text(size: 8pt, fill: rgb("#7f8c8d"))[Updated: #datetime.today().display("[year]-[month]")]
+        #text(size: 8pt, fill: rgb("#7f8c8d"))[Updated in #datetime.today().display("[month repr:long] [year]")]
       ]
     ]
   },
@@ -70,10 +70,10 @@
   institution: "University of Edinburgh",
   location: "Edinburgh, Scotland, UK",
   dates: dates-helper(start-date: "Sep 2023", end-date: "present day"),
-  degree: "PhD in Linguistics and English Language",
+  degree: "PhD in Linguistics",
 )
 - Recipient of the *Becas Chile* scholarship granted by ANID (Chilean Government).
-- Research focused on the historical trajectories of Mapudungun phonology and morphology utilising internal reconstruction techniques.
+- Research focused on the historical trajectories of Mapudungun phonology and morphology utilising internal reconstruction techniques and the written record available for this language isolate.
 - *Interests:* 
   Historical linguistics, 
   Mapudungun morphology & phonology, 
@@ -85,7 +85,7 @@
   institution: "Universidad de Concepción",
   location: "Concepción, Chile",
   dates: dates-helper(start-date: "Mar 2022", end-date: "Jan 2023"),
-  degree: "Master in Applied Linguistics",
+  degree: "Master's degree in Linguistics",
 )
 - *Thesis:* _Frecuencia fonemática del mapudungun._ A quantitative study exploring phoneme frequency from a corpus of ~2,900 mono-morphemic lexical units derived from Augusta's Dictionary (1916/2017) to study linguistic change.
 
@@ -94,7 +94,7 @@
 #edu(
   institution: "Pontificia Universidad Católica de Valparaíso",
   location: "Valparaíso, Chile",
-  dates: dates-helper(start-date: "Mar 1997", end-date: "Dec 2002"),
+  dates: dates-helper(start-date: "Mar 1997", end-date: "Nov 2002"),
   degree: "English-Spanish Translator",
 )
 
@@ -128,8 +128,8 @@
   company: "University of Edinburgh",
   dates: dates-helper(start-date: "Jan 2024", end-date: "present day"),
 )
-- *Course Lecturer* (2025): Taught a module in the course curriculum for _Historical Phonology_ tailored to Honours undergraduate and MSc postgraduate students.
-- *Academic Tutor* (2024 -- 2026): Led weekly instructional tutorial groups, evaluated coursework, and mentored students in core linguistic areas:
+- *Course Lecturer* (2025): Taught a module in the course _Historical Phonology_, for Honours undergraduate and MSc postgraduate students.
+- *Academic Tutor* (2024 -- 2026): Led weekly instructional tutorial groups, and mentored students in core linguistic areas:
   - _Linguistics and English Language 2D: Cross-linguistic Variation; Limits and Theories_ (2024, 2026)
   - _Linguistics and English Language 2A: Linguistic Theory and the Structure of English_ (2025)
 
@@ -141,8 +141,10 @@
   company: "Universidad de Concepción",
   dates: dates-helper(start-date: "Mar 2022", end-date: "Dec 2023"),
 )
-- Taught the core curriculum course _Cultura y Lengua Mapuche_ (Code 940408) within the School of Anthropology, Faculty of Social Sciences.
-- Taught _Introducción a la lengua y cultura Mapuche_ (Code 731575) within the Departamento de Castellano, Faculty of Humanities and Art.
+- Developed and taught the core curriculum course _Cultura y Lengua Mapuche_ \[Mapuche language and culture\] (Code 940408) within the School of Anthropology, Faculty of Social Sciences.
+- Developed and taught _Introducción a la lengua y cultura Mapuche_ \[Introduction to Mapuche language and culture\] (Code 731575) within the Departamento de Castellano, Faculty of Humanities and Art.
+
+
 
   #divider
 
@@ -152,8 +154,8 @@
   company: "Mapudungun Nemülkawe Project / Fiw-Fiw ñi Dungun",
   dates: dates-helper(start-date: "Sep 2024", end-date: "Oct 2024"),
 )
-- Designed and delivered lexicographic training workshops for language revitalization practitioners within the Fiw-Fiw ñi Dungun association.
-- Coordinated the development of data structures and linguistic criteria for the digital learner's dictionary (_Nemülkawe_).
+- Designed and delivered lexicographic training workshops for language revitalization practitioners for the Fiw-Fiw ñi Dungun association.
+- Coordinated and developed data structures and linguistic criteria for a digital learner's dictionary (_Nemülkawe_).
 - Project profile: #link("https://mapudungun.cl")[mapudungun.cl]
 
 //   #divider
@@ -185,7 +187,7 @@
 - Berríos, A. (2026). _Mapudungun: A Concise Language Profile_. Edinburgh Research Archive. #link("https://doi.org/10.7488/era/7088")[doi.org/10.7488/era/7088]
 - Berríos, A. (2023). _Esbozo Gramatical del Mapudungun_. Fiwfiw ñi Dungun.
 - Berríos, A., Urrea, P., Pichún, H., Gutiérrez, C., Llancapan, L., & Guíñez, M. (2023). _Mapudungun: Gramática básica ilustrada_. Fiwfiw ñi Dungun.
-- Berríos, A. (2022). _Nhemülkawe: Diccionario Mapuzugun – Castellano_ . Mapuzuguletuaiñ Konse Mew.
+- Berríos, A. (2022). _Nhemülkawe: Diccionario Mapuzugun – Castellano_. Mapuzuguletuaiñ Konse Mew.
 
 
 == Invited Guest Lectures
@@ -230,17 +232,17 @@
 
 
 == Leadership & Academic Service
-- *Co-Organizer*, _Edinburgh Theoretical Historical Linguistics (ETHL)_: Established a recurring young researcher venue intersectionalizing historical and theoretical frameworks. Spearheaded the *ETHL 2025 Seminar* and the *ETHL 2026 Summer School*.
-- *Co-Organizer*, _Willow Reading Group_ (Ex-NILA): Native Indigenous Languages of the Americas.
-- *Co-Organizer*, _Swalif_: Linguistics and English Language (LEL) Networking Talks.
+- *Co-Organiser*, _Edinburgh Theoretical Historical Linguistics (ETHL)_: Established a recurring young researcher venue intersectionalizing historical and theoretical frameworks. Spearheaded the *ETHL 2025 Seminar* and the *ETHL 2026 Summer School*.
+- *Co-Organiser*, _Willow Reading Group_ (Ex-NILA): Native Indigenous Languages of the Americas.
+- *Co-Organiser*, _Swalif_: Linguistics and English Language (LEL) Networking Talks.
 - *Committee Board Member*, _Linguistics and English Language Postgraduate Conference_ (30th & 31st Editions, 2024 -- 2025).
 - *Committee Board Member*, _Edinburgh Symposium on Historical Phonology (ESHP)_: Technical volunteer and program logistics for the Sixth (2023) and Seventh (2025) symposia.
 - *Organizing Assistant*, Ukrainian Week at the University of Edinburgh (April 2024).
 
 
 == Digital Activism & Community Impact
-- *Co-Founder & Linguist*, _Kimeltuwe_ (2015 -- Present): Co-founded the digital artivism and educational project _Kimeltuwe_ ("place of learning") to promote and teach Mapudungun. Managed community engagement for an audience of over 200,000 followers and co-authored pedagogical materials widely used in Chilean and Argentinian schools.
-- *Member*, _Fiw-Fiw ñi Dungun_ (2019 -- Present): Organise language immersion camps and language courses within the Biobío region. Developed educational materials, including grammar outlines and introductory textbooks for students.
+- *Co-Founder & language activist*, _Kimeltuwe_ (2015 -- Present): Co-founded the digital artivism and educational project _Kimeltuwe_ ("place of learning") to promote and teach Mapudungun. Managed community engagement for an audience of over 200,000 followers and co-authored pedagogical materials widely used in Chilean and Argentinian schools.
+- *Member*, _Fiw-Fiw ñi Dungun_ (2019 -- Present): Organised courses and language immersion camps within the Biobío region. Developed educational materials, including grammar outlines and introductory textbooks for students.
 
 == Selected Media & Interviews
 - Alvarado, G. (2022). Aldo Berríos (Fiestoforo): “Siempre he pensado que el mapuzugun es una lengua de futuro.” _Lenguas Radicales, 1(3)_.
@@ -248,7 +250,7 @@
 
 
 == Built Linguistic Web Tools
-- *Wirintukufe*: An open-access shiny web app engineered for precise orthographic conversion of Mapudungun text models.
+- *Wirintukufe*: An open-access Shiny web app engineered for precise orthographic conversion of Mapudungun text models.
 - *Phonemiser*: An interactive program mapping traditional inputs into systemic International Phonetic Alphabet (IPA) output matrices.
 - *Nemülkawe / Mapudungun Nemülkawe*: Contributed core dictionary database engineering and backend design for the digital student interface (available at #link("https://mapudungun.cl")[mapudungun.cl]).
 
