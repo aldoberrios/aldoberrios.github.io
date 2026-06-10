@@ -23,7 +23,7 @@
 #let location = "Edinburgh, Scotland, UK"
 #let email = "aldoberrios@gmail.com"
 #let github = "github.com/aldoberrios"
-#let linkedin = "linkedin.com/aldoberrios"
+#let linkedin = "linkedin.com/in/aldoberrios"
 #let personal-site = "aldoberrios.cl"
 #let phone = ""
 
@@ -134,6 +134,18 @@
   - _Linguistics and English Language 2A: Linguistic Theory and the Structure of English_ (2025)
 
   #divider
+
+#work(
+  title: "Lexicographic Trainer & Project Consultant",
+  location: "Concepción, Chile (Remote)",
+  company: "Mapudungun Nemülkawe Project / Fiw-Fiw ñi Dungun",
+  dates: dates-helper(start-date: "Sep 2024", end-date: "Oct 2024"),
+)
+- Designed and delivered lexicographic training workshops for language revitalization practitioners for the Fiw-Fiw ñi Dungun association.
+- Coordinated and developed data structures and linguistic criteria for a digital learner's dictionary (_Nemülkawe_).
+- Project profile: #link("https://mapudungun.cl")[mapudungun.cl]
+
+  #divider
   
 #work(
   title: "Lecturer in Mapuche Language and Culture",
@@ -145,18 +157,6 @@
 - Developed and taught _Introducción a la lengua y cultura Mapuche_ \[Introduction to Mapuche language and culture\] (Code 731575) within the Departamento de Castellano, Faculty of Humanities and Art.
 
 
-
-  #divider
-
-#work(
-  title: "Lexicographic Trainer & Project Consultant",
-  location: "Concepción, Chile (Remote)",
-  company: "Mapudungun Nemülkawe Project / Fiw-Fiw ñi Dungun",
-  dates: dates-helper(start-date: "Sep 2024", end-date: "Oct 2024"),
-)
-- Designed and delivered lexicographic training workshops for language revitalization practitioners for the Fiw-Fiw ñi Dungun association.
-- Coordinated and developed data structures and linguistic criteria for a digital learner's dictionary (_Nemülkawe_).
-- Project profile: #link("https://mapudungun.cl")[mapudungun.cl]
 
 //   #divider
 
@@ -182,7 +182,7 @@
 - Berríos, A., & Inostroza, M.-J. (2025). Experiencia de enseñanza de mapudungun en contexto universitario: Tañi chumken kiñe antü mew. In C. D. Vargas, C. S. Campos, & E. Q. Llancao (Eds.), _La enseñanza de lenguas y culturas originarias: Desafíos y oportunidades para la educación del siglo XXI_ (1st ed., pp. 175–190). Ediciones Universidad de Concepción.
 - Berríos, A., Namuncura, A., & Carilaf, V. (Forthcoming). Kimeltuwe witrañpüramtuael mapuzungun: un espacio de enseñanza para levantar el mapuzungun. In M. Malvestitti & A. Olate (Eds.), _La lengua mapuche en Gulumapu y Puelmapu: Avances e intersecciones en los estudios lingüísticos, la enseñanza y los activismos_. Editoriales UFRO y UNRN.
 
-=== Research Archives & Educational Profiles
+=== Other resources and educational materials
 - Berríos, A. (2026). _Phoneme Frequency in Mapudungun: a report_. Edinburgh Research Archive. #link("https://doi.org/10.7488/era/7112")[doi.org/10.7488/era/7112]
 - Berríos, A. (2026). _Mapudungun: A Concise Language Profile_. Edinburgh Research Archive. #link("https://doi.org/10.7488/era/7088")[doi.org/10.7488/era/7088]
 - Berríos, A. (2023). _Esbozo Gramatical del Mapudungun_. Fiwfiw ñi Dungun.
@@ -231,7 +231,7 @@
 - Berríos, A. (2023, November 2). _Phoneme Frequency in Mapudungun_. 78th Language Lunch, University of Edinburgh, UK.
 
 
-== Leadership & Academic Service
+== Academic Service and Community Building
 - *Co-Organiser*, _Edinburgh Theoretical Historical Linguistics (ETHL)_: Established a recurring young researcher venue intersectionalizing historical and theoretical frameworks. Spearheaded the *ETHL 2025 Seminar* and the *ETHL 2026 Summer School*.
 - *Co-Organiser*, _Willow Reading Group_ (Ex-NILA): Native Indigenous Languages of the Americas.
 - *Co-Organiser*, _Swalif_: Linguistics and English Language (LEL) Networking Talks.
@@ -250,9 +250,9 @@
 
 
 == Built Linguistic Web Tools
-- *Wirintukufe*: An open-access Shiny web app engineered for precise orthographic conversion of Mapudungun text models.
-- *Phonemiser*: An interactive program mapping traditional inputs into systemic International Phonetic Alphabet (IPA) output matrices.
-- *Nemülkawe / Mapudungun Nemülkawe*: Contributed core dictionary database engineering and backend design for the digital student interface (available at #link("https://mapudungun.cl")[mapudungun.cl]).
+- *Wirintukufe*: An open-access Shiny web app engineered for precise orthographic conversion of Mapudungun text models. #link("https://aldoberrios.shinyapps.io/Wirintukufe/")[aldoberrios.shinyapps.io/Wirintukufe/]
+- *Phonemiser*: An interactive program mapping traditional inputs into systemic International Phonetic Alphabet (IPA) output matrices. #link("https://aldoberrios.shinyapps.io/phonemizer/")[aldoberrios.shinyapps.io/phonemizer/]
+- *Mapudungun Nemülkawe*: Online Mapudungun dictionary. A grass-root innitiative to create a dictionary database for students, with examples and playable audio to model pronunciation (available at #link("https://mapudungun.cl")[mapudungun.cl]).
 
 == Professional Memberships
 - Sociedad Chilena de Lingüística (*Sochil*)

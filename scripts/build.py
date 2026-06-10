@@ -14,6 +14,7 @@ FILE_MAPPING = {
     'presentations.html': 'leftcol.html',
     'revitalisation.html': 'leftcol.html',
     'research.html': 'leftcol.html',
+    'teaching.html': 'leftcol.html',
     
     # Spanish pages -> leftcol-spa.html
     'spanish.html': 'leftcol-spa.html',
@@ -21,6 +22,7 @@ FILE_MAPPING = {
     'publicaciones.html': 'leftcol-spa.html',
     'presentaciones.html': 'leftcol-spa.html',
     'revitalizacion.html': 'leftcol-spa.html',
+    'ensenanza.html': 'leftcol-spa.html',
     
     # Test file (Change to 'leftcol-spa.html' if you want to test the Spanish version)
 #    'index-test.html': 'leftcol.html',
