@@ -1,0 +1,329 @@
+html,body {}
+h1,h2,h3,h4,h5,h6 {
+    font-family: 'Roboto Condensed', sans-serif; 
+    color: #fff;
+}
+
+.w3-margin-right-32 {margin-right:3em;}
+#link-section a {color: #3f51b5 !important}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+p {color: #222;}
+
+.w3-leftbar{border-left:6px solid #3f51b5!important}.w3-rightbar{border-right:6px solid #3f51b5!important}
+
+.botoncito {background-color: #ccc;font-size: 16px;padding: 14px 40px;border-radius: 35px;}
+.botoncito:hover {background-color: #fff; color: #000;}
+
+
+.nav-font { font-family: 'Barlow Condensed', sans-serif; }
+
+
+/* This allows the hidden mobile sidebar to show up when toggled */
+.w3-show {
+    display: block !important;
+}
+
+/* This forces all icons in the sidebar to be indigo */
+.w3-third i.fa {
+    color: #3f51b5 !important;
+}
+
+/* This fixes the name header color specificity issue */
+.w3-display-container h2.w3-text-white {
+    color: white !important;
+}
+
+/* Add this to style.css */
+.w3-card, .w3-card-4 {
+    border-radius: 12px;
+    overflow: hidden; /* This ensures the background color doesn't "leak" out of the corners */
+}
+
+
+/* Targets ONLY the first card in the right column */
+.w3-threequarter .w3-card:first-of-type {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Styling the list containers in the right column */
+#link-section ul {
+    list-style-type: none; /* Removes the default bullet points */
+    padding-left: 0;
+}
+
+/* Styling each individual publication/presentation entry */
+#link-section li {
+    margin-bottom: 1em;
+    margin-left: 0.5em;
+    padding: 5px 15px;
+    border-left: 3px solid transparent; /* Hidden border for alignment */
+    transition: all 0.3s ease;
+    border-left: 2px solid #ccc; /* Indigo accent appears on hover */
+}
+
+/* Targets buttons inside the top navigation and mobile menus on hover */
+.w3-bar .w3-button:hover {
+    background-color: #1a237e !important; /* A nice deep dark blue/indigo */
+    color: #ffffff !important;            /* Ensures text stays readable (white) */
+}
+
+
+/* Highlight entry on hover */
+#link-section li:hover {
+    background-color: #f9f9fb;  /* Very subtle grey/blue tint */
+    border-left: 3px solid #3f51b5; /* Indigo accent appears on hover */
+    transform: translateX(5px); /* Gentle slide effect */
+}
+
+/* Make links inside the list items bold and indigo */
+#link-section li a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#link-section li a:hover {
+    text-decoration: underline;
+}
+
+/* Optional: Subtle grey color for the parenthetical dates/citations */
+#link-section li p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+.more-talks {
+    margin-top: 1em;
+}
+
+.more-talks summary {
+    cursor: pointer;
+    color: #3f51b5;
+    font-weight: bold;
+    margin-left: 1em;
+}
+
+.more-talks summary:hover {
+    text-decoration: underline;
+}
+/* Keeps the mobile menu perfectly lined up with thin dividers ONLY on mobile screens */
+@media (max-width: 600px) {
+    .mobile-nav-bar {
+        display: flex !important;
+        align-items: stretch;
+        justify-content: space-between;
+    }
+
+    .mobile-nav-bar .w3-bar-item {
+        flex: 1;
+        text-align: center;
+        white-space: nowrap; /* Prevents words from breaking onto two lines */
+        padding-left: 8px !important;  /* Tighter padding to fit everything */
+        padding-right: 8px !important; 
+        border-color: rgba(255, 255, 255, 0.2) !important; /* Soft, semi-transparent white border */
+    }
+
+    /* Elegant style for the current/active page on mobile */
+    .mobile-nav-bar .active-nav {
+        background-color: #2c387e !important; /* A beautiful, deeper indigo shade */
+        font-weight: bold;
+        border-bottom: 3px solid #ffffff !important; /* Adds a crisp white bottom indicator line */
+    }
+
+    /* Keeps the ES button on the far right behaving nicely */
+    .mobile-nav-bar .w3-right {
+        margin-left: auto;
+        flex: none;
+    }
+}
+
+
+
+  /* Flexbox makes the items sit horizontally and spaces them out nicely */
+  .icon-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* This line centers the icons horizontally */
+    align-items: center;    /* This centers them vertically if needed */
+    gap: 10px; /* Adjust the spacing between icons here */
+    align-items: center;
+  }
+
+  /* Styling the icons to inherit your indigo color and add a hover effect */
+  .icon-bar a {
+    color: inherit; 
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Subtle fade effect when hovering over the icons */
+  .icon-bar a:hover {
+    opacity: 0.7;
+  }
+
+
+/* --- CRITICAL REDESIGN OVERRIDES: WHITE BACKGROUND & BIG BLUE NAVIGATION --- */
+
+/* Force global crisp white background */
+body.site-clean-bg {
+    background-color: #ffffff !important;
+}
+
+/* Remove card properties, borders, and shadowing */
+.w3-card, .w3-card-4, .w3-threequarter .w3-card:first-of-type {
+    border-radius: 0px !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+}
+
+/* Style the transparent navigation header */
+.custom-nav-bar {
+    background-color: transparent !important;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+
+/* Enlarge navigation text, make it your brand's blue tint, and style typography */
+.custom-nav-bar .w3-bar-item {
+    font-size: 22px; /* Large prominent size */
+    color: #3f51b5 !important; /* Elegant slate blue */
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: transparent !important;
+    transition: color 0.2s ease;
+}
+
+/* Active navigation tracking layout */
+.custom-nav-bar .active-nav-link {
+    color: #1a237e !important; /* Dark deep indigo focus color */
+    border-bottom: 2px solid #1a237e;
+}
+
+/* Inactive label/language markers styling */
+.custom-nav-bar .text-inactive {
+    color: #999999 !important;
+    font-weight: 400;
+}
+
+/* Elegant minimal divider beneath the clean menu */
+.nav-divider {
+    border: 0;
+    border-top: 1px solid #e0e0e0;
+    margin: 0 auto;
+    max-width: 1400px;
+}
+
+/* Subtle clean link transitions on hover instead of background blocks */
+.custom-nav-bar .w3-button:hover {
+    background-color: transparent !important;
+    color: #1a237e !important;
+    text-decoration: underline;
+}
+
+/* Profile Name Typography Adjustments */
+.profile-name {
+    color: #3f51b5 !important;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* Sidebar and Right Content adaptations for clean theme */
+.sidebar-info-text, .sidebar-info-text p, .sidebar-info-text i {
+    color: #444444 !important;
+}
+.section-subheading-blue {
+    color: #3f51b5 !important;
+}
+.content-title-blue {
+    color: #3f51b5 !important;
+    font-weight: 700;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 8px;
+    margin-top: 1.5em;
+}
+.content-sub-title {
+    color: #1a237e !important;
+    font-weight: 700;
+}
+
+/* Blockquote adaptation */
+.clean-quote-box {
+    background-color: #f4f6fa !important;
+    border-left: 4px solid #3f51b5 !important;
+}
+
+/* Footer layout correction */
+.clean-footer {
+    background-color: transparent !important;
+    border-top: 1px solid #eeeeee;
+    padding: 20px 0;
+    margin-top: 50px !important;
+}
+.clean-footer p, .clean-footer a {
+    color: #888888 !important;
+}
+/* --- HAMBURGER / SANDWICH MENU STYLES FOR MOBILE --- */
+@media (max-width: 600px) {
+    /* Hide the default desktop spacing and handle the mobile wrapper */
+    .custom-nav-bar {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+
+    .sandwich-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+    }
+
+    /* Small subtle branding text next to the sandwich icon */
+    .mobile-brand-title {
+        font-size: 20px;
+        color: #3f51b5;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    /* Elegant, borderless sandwich button */
+    .sandwich-btn {
+        font-size: 24px !important;
+        color: #3f51b5 !important;
+        background: transparent !important;
+        padding: 0 10px !important;
+    }
+
+    /* Dropdown drawer style when expanded */
+    .mobile-drawer-links {
+        background-color: #ffffff;
+        border-top: 1px solid #eeeeee;
+        padding: 10px 0;
+    }
+
+    .mobile-drawer-links .w3-bar-item {
+        font-size: 22px !important; /* Retains your preferred large size beautifully */
+        padding: 12px 20px !important;
+        text-align: left;
+        width: 100%;
+        display: block;
+    }
+
+    /* Remove the default desktop bottom accent line on mobile drawers */
+    .custom-nav-bar .mobile-drawer-links .active-nav-link {
+        border-bottom: none !important;
+        background-color: #f4f6fa !important; /* Gentle tint for active link item */
+    }
+}
