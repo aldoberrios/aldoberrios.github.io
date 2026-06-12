@@ -1,38 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+<!----------------------
+        /\_/\  
+       ( o.o ) 
+      Mari mari! 
+ Thanks for checking 
+ out my source code. 
+It's not very organised
+ but feel free to copy
+----------------------->
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aldo Berríos Castillo | Teaching</title>
   <meta name="description" content="Academic profile of Aldo Berríos Castillo, PhD student at the University of Edinburgh specialising in Mapudungun historical linguistics.">
 
-  <link rel="alternate" hreflang="en" href="https://aldoberrios.cl/teaching.html" />
-  <link rel="alternate" hreflang="es" href="https://aldoberrios.cl/ensenanza.html" />
-  <link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/teaching.html" />
+  <link rel="alternate" hreflang="en" href="https://aldoberrios.cl/index.html" />
+  <link rel="alternate" hreflang="es" href="https://aldoberrios.cl/spanish.html" />
+  <link rel="alternate" hreflang="x-default" href="https://aldoberrios.cl/index.html" />
 
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="assets/style.css">
   <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
 
 </head>
 
-<body class="w3-light-grey">
 
-<!-- Mobile Only Menu -->
-<div class="w3-bar w3-indigo w3-hide-medium w3-hide-large mobile-nav-bar">
-  <a class="w3-bar-item w3-button nav-font w3-border-bottom w3-border-white w3-border-right" href="index.html"><i class="fa fa-home w3-text-white"></i> Home</a>
-  <a class="w3-bar-item w3-button nav-font w3-border-right" href="research.html">Research</a>
-  <a class="w3-bar-item w3-button nav-font w3-border-right" href="revitalisation.html">Revitalisation</a>
-  <a class="w3-bar-item w3-button nav-font w3-border-right w3-blue" href="#">Teaching</a>
-  <a class="w3-bar-item w3-button nav-font w3-right" href="ensenanza.html">ES</a>
+<body class="site-clean-bg">
+
+<!-- NEW MINIMAL TOP NAVIGATION BAR (THREE-PART FLEX SPLIT) -->
+<div class="custom-nav-bar w3-content" style="max-width:1400px;">
+  
+  <!-- Desktop / Tablet Menu Configuration -->
+  <div class="desktop-flex-nav">
+    <!-- Part 1: Far Left Identity -->
+    <div class="nav-left-brand">
+      <a href="#" class="nav-font profile-name active-nav-link">ALDO BERRÍOS CASTILLO</a>
+    </div>
+    
+    <!-- Part 2: Middle Content Pathing Links -->
+    <div class="nav-center-links">
+      <a href="research.html" class="w3-bar-item w3-button nav-font">Research</a>
+      <a href="#" class="w3-bar-item w3-button nav-font active-nav">Teaching</a>
+      <a href="revitalisation.html" class="w3-bar-item w3-button nav-font">Language Revitalisation</a>
+    </div>
+    
+    <!-- Part 3: Far Right Utility Anchors -->
+    <div class="nav-right-utility">
+      <a href="ensenanza.html" class="w3-bar-item w3-button nav-font">ES</a>
+      <span class="w3-bar-item nav-font text-inactive">EN</span>
+      <a href="CV/CV_ABerrios.pdf" class="w3-bar-item w3-button nav-font">CV</a>
+    </div>
+  </div>
+
+  <!-- Mobile Only Sandwich Menu Configuration -->
+<div class="w3-hide-large mobile-sandwich-container">
+    <div class="sandwich-header">
+      <span class="nav-font mobile-brand-title">ALDO BERRÍOS CASTILLO</span>
+      <button onclick="toggleMobileMenu()" class="w3-button sandwich-btn" aria-label="Toggle Menu">&#9776;</button>
+    </div>
+    
+    <!-- Hidden Mobile Drawer -->
+    <div id="mobileMenuDrawer" class="w3-bar-block mobile-drawer-links w3-hide">
+      <a class="w3-bar-item w3-button nav-font" href="index.html">Home</a>
+      <a class="w3-bar-item w3-button nav-font active-nav-link" href="research.html">Research</a>
+      <a class="w3-bar-item w3-button nav-font" href="teaching.html">Teaching</a>
+      <a class="w3-bar-item w3-button nav-font" href="revitalisation.html">Language Revitalisation</a>
+      <hr style="margin: 5px 20px; border-color: #eee;">
+      <a class="w3-bar-item w3-button nav-font" href="ensenanza.html">ES (Español)</a>
+      <a class="w3-bar-item w3-button nav-font" href="CV/CV_ABerrios.pdf">CV (Curriculum)</a>
+    </div>
+  </div>
+
 </div>
+
+<hr class="nav-divider">
 
 <!-- Page Container -->
 <div class="w3-content w3-margin-top" style="max-width:1400px;">
@@ -40,88 +89,75 @@
 <!-- The Grid -->
 <div class="w3-row-padding">
 
-<!-- start leftcol -->
 <!-- Left Column -->
-<div class="w3-quarter w3-margin-bottom">
-  <div class="w3-white w3-text-indigo w3-card-4 ">
+<div class="w3-col l3 m12 s12">
+  <div class="minimal-profile-section">
     
-    <!-- Header -->
-    <div class="w3-container w3-indigo w3-center w3-padding-16">
-      <h3 class="nav-font w3-text-white" style="margin: 0; font-weight: 700; font-size: 1.5em ; letter-spacing: 1px;">
-        ALDO BERRÍOS CASTILLO
-      </h3>
-    </div>
-
-    <!-- Top Image -->
+    <!-- Portrait -->
     <div class="w3-container w3-center w3-padding-24">
       <div style="display: inline-block;">
         <img src="img/perfil.jpg" 
              class="w3-circle" 
-             style="width: 170px; height: 170px; object-fit: cover;" 
+             style="width: 200px; height: 200px; object-fit: cover;" 
              alt="Aldo Berríos Castillo">
       </div>
     </div>
+    
 
-    <!-- Icon bar -->
-    <div id="icons" class="w3-container w3-text-indigo icon-bar w3-hide-medium w3-hide-large">
-      <a href="mailto:aldo.berrios@gmail.com" title="Email: aldo.berrios[at]gmail[dot]com"><i class="fa fa-envelope fa-fw w3-large"></i>Email</a>
-      <!--<a href="https://github.com/aldoberrios" target="_blank" title="GitHub"><i class="fa fa-github fa-fw w3-large"></i>Github</a>-->
-      <a href="https://orcid.org/0000-0001-8303-1088" target="_blank" title="ORCID iD"><i class="fa fa-id-badge fa-fw w3-large"></i>Orcid</a>
+<!-- NEW COMPACT ICON ROW: Triggers only on Mobile and Tablets -->
+    <div class="w3-container w3-center w3-padding-16 w3-hide-large mobile-profile-icons">
+      <a href="mailto:aldo.berrios@gmail.com" title="Email: aldo.berrios[at]gmail[dot]com">
+        <i class="fa fa-envelope fa-fw w3-large"></i> Email
+      </a>
+      <a href="https://github.com/aldoberrios" target="_blank" title="GitHub">
+        <i class="fa fa-github fa-fw w3-large"></i> GitHub
+      </a>
+      <a href="https://orcid.org/0000-0001-8303-1088" target="_blank" title="ORCID iD">
+        <i class="fa fa-id-badge fa-fw w3-large"></i> Orcid
+      </a>
     </div>
 
-    <!-- links -->
-    <div class="w3-hide-small">
-      <div id="links" class="w3-container w3-hide-small w3-text-indigo w3-padding-large">
-        <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large"></i>PhD Research Student</p>
-        <p><i class="fa fa-home fa-fw w3-margin-right w3-large"></i>University of Edinburgh</p>
-        <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large"></i>aldo.berrios[at]gmail[dot]com</p>
-        <p><i class="fa fa-github fa-fw w3-margin-right w3-large"></i><a href="https://github.com/aldoberrios">github.com/aldoberrios</a></p>
-        <p><i class="fa fa-id-badge fa-fw w3-margin-right w3-large"></i><a href="https://orcid.org/0000-0001-8303-1088">ORCID iD</a></p>
-        <hr>
-        <p class="w3-large w3-text-indigo"><b>Tools</b></p>
-        <p><i class="fa fa-pencil-square fa-fw w3-margin-right w3-large"></i><a href="https://aldoberrios.shinyapps.io/Wirintukufe/">Wirintukufe</a></p>
-        <p><i class="fa fa-microphone fa-fw w3-margin-right w3-large"></i><a href="https://aldoberrios.shinyapps.io/Phonemizer/">Phonemiser</a></p>
-        <p><i class="fa fa-language fa-fw w3-margin-right w3-large"></i><a href="https://mapudungun.cl/">Nemülkawe</a></p>
-        <hr>
-        <p class="w3-large w3-text-indigo"><b>Memberships</b></p>
-        <p><i class="fa fa-address-book fa-fw w3-margin-right w3-large"></i><a href="https://www.lagb.org.uk/">LAGB</a></p>
-        <p><i class="fa fa-address-card fa-fw w3-margin-right w3-large"></i><a href="https://philsoc.org.uk/">Philsoc</a></p>
-        <p><i class="fa fa-id-badge fa-fw w3-margin-right w3-large"></i><a href="https://www.sochil.cl/">Sochil</a></p>
-        <p><i class="fa fa-university fa-fw w3-margin-right w3-large"></i><a href="https://www.ed.ac.uk/profile/aldo-berrios-castillo">Profile UoE</a></p>
-        <p><i class="fa fa-calendar-check-o fa-fw w3-margin-right w3-large"></i><a href="https://pgc.lel.ed.ac.uk/">LELPGC24</a></p>
-        <p><i class="fa fa-users fa-fw w3-margin-right w3-large"></i><a href="http://www.lel.ed.ac.uk/symposium-on-historical-phonology/">ESHP</a></p>
-        <p><i class="fa fa-book fa-fw w3-margin-right w3-large"></i><a href="https://blogs.ed.ac.uk/willow/">Willow (Ex-NILA)</a></p>
-        <p><i class="fa fa-calendar fa-fw w3-margin-right w3-large"></i><a href="https://ethl.uk/">ETHL</a></p>      
-        <br>
-      </div>
+    <!-- Info Links Section -->
+<div class="w3-container w3-padding-large sidebar-info-text w3-hide-small w3-hide-medium">
+      <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large"></i>PhD Research Student</p>
+      <p><i class="fa fa-home fa-fw w3-margin-right w3-large"></i>University of Edinburgh</p>
+      <p>aldo.berrios[at]gmail[dot]com</p>
+      <p><i class="fa fa-github fa-fw w3-margin-right w3-large"></i><a href="https://github.com/aldoberrios">github.com/aldoberrios</a></p>
+      <p><i class="fa fa-id-badge fa-fw w3-margin-right w3-large"></i><a href="https://orcid.org/0000-0001-8303-1088">ORCID iD</a></p>
+  <!--          
+      <hr>
+      <p class="w3-large section-subheading-blue"><b>Tools for Mapudungun</b></p>
+      <p><i class="fa fa-pencil-square fa-fw w3-margin-right w3-large"></i><a href="https://aldoberrios.shinyapps.io/Wirintukufe/">Wirintukufe</a></p>
+      <p><i class="fa fa-microphone fa-fw w3-margin-right w3-large"></i><a href="https://aldoberrios.shinyapps.io/Phonemizer/">Phonemiser</a></p>
+      <p><i class="fa fa-language fa-fw w3-margin-right w3-large"></i><a href="https://mapudungun.cl/">Nemülkawe</a>: online dictionary</p>
+      
+      <hr>
+      <p class="w3-large section-subheading-blue"><b>Membership</b></p>
+      <p><i class="fa fa-address-book fa-fw w3-margin-right w3-large"></i><a href="https://www.lagb.org.uk/">LAGB</a></p>
+      <p><i class="fa fa-address-card fa-fw w3-margin-right w3-large"></i><a href="https://philsoc.org.uk/">Philsoc</a></p>
+      <p><i class="fa fa-id-badge fa-fw w3-margin-right w3-large"></i><a href="https://www.sochil.cl/">Sochil</a></p>
+      
+      <hr>
+      <p class="w3-large section-subheading-blue"><b>Participation</b></p>
+      <p><i class="fa fa-university fa-fw w3-margin-right w3-large"></i><a href="https://www.ed.ac.uk/profile/aldo-berrios-castillo">Profile UoE</a></p>
+      <p><i class="fa fa-calendar-check-o fa-fw w3-margin-right w3-large"></i><a href="https://pgc.lel.ed.ac.uk/">LELPGC24</a></p>
+      <p><i class="fa fa-users fa-fw w3-margin-right w3-large"></i><a href="http://www.lel.ed.ac.uk/symposium-on-historical-phonology/">ESHP</a></p>
+      <br> -->
     </div>
-  <div class="w3-padding-large"></div>
   </div>
 </div>
-<!-- end leftcol -->
-
 
 
 <!-- Right Column -->
-<div class="w3-threequarter">
+<div class="w3-col l9 m12 s12 minimal-content-section">
 
-<!-- Top menu right column -->
-<div class="w3-bar w3-indigo w3-hide-small">
-  <a class="w3-bar-item w3-button" href="index.html">Home</a>
-  <a class="w3-bar-item w3-button" href="research.html">Research</a>
-  <a class="w3-bar-item w3-button" href="revitalisation.html">Revitalisation</a>
-  <a class="w3-bar-item w3-button w3-blue" href="#">Teaching</a>
-  <a class="w3-bar-item w3-button w3-right" href="ensenanza.html">ES</a>
-  <span class="w3-bar-item w3-right w3-blue">EN</span>
-  <a class="w3-bar-item w3-button w3-right" href="CV/CV_ABerrios.pdf"  >CV</a>
-</div>
+  <div id="link-section">
 
-<div id="link-section">
+<!-- Academic activities -->
+<div class="w3-container w3-margin-bottom">
+  <h2 class="content-title-blue">Academic activities</h2>
+  <div class="w3-container w3-padding-0">
 
-<div class="w3-container w3-card w3-white w3-margin-bottom">
-<h1 class="w3-text-indigo">Academic activities</h1>
-    <div class="w3-container w3-margin-bottom">
-    
     <p>I have extensive experience teaching Mapudungun at the university
     level, alongside a strong background in general and theoretical
     linguistics. My higher education teaching spans core subjects such as
@@ -138,108 +174,121 @@
   </div>
 </div>
 
-<div class="w3-container w3-card w3-white w3-margin-bottom">
-<h2 class="w3-text-indigo">Teaching</h2>
-  <div class="w3-container w3-margin-bottom">
+<!-- Teaching -->
+<div class="w3-container w3-margin-bottom">
+  <h2 class="content-title-blue">Teaching</h2>
+  <div class="w3-container w3-padding-0">
 
+    <ul>
+      <li>2026 – Tutor for Linguistics and English Language 2D: <em>Cross-linguistic Variation; Limits and Theories</em></li>
+      <li>2025 – Course lecturer for <em>Historical Phonology</em> (Honours & MSc)</li>
 
-        <ul>
-          <li>2026 – Tutor for Linguistics and English Language 2D: <em>Cross-linguistic Variation; Limits and Theories</em></li>
-          <li>2025 – Course lecturer for <em>Historical Phonology</em> (Honours & MSc)</li>
+      <li>2025 – Tutor for Linguistics and English Language 2A: <em>Linguistic Theory and the Structure of English</em></li>
+      <li>2024 – Tutor for Linguistics and English Language 2D: <em>Cross-linguistic Variation; Limits and Theories</em></li>
 
-          <li>2025 – Tutor for Linguistics and English Language 2A: <em>Linguistic Theory and the Structure of English</em></li>
-          <li>2024 – Tutor for Linguistics and English Language 2D: <em>Cross-linguistic Variation; Limits and Theories</em></li>
-
-        </ul>
-
-  </div>
-</div>
-
-<div class="w3-container w3-card w3-white w3-margin-bottom">
-<h2 class="w3-text-indigo">Guest lectures</h2>
-  <div class="w3-container w3-margin-bottom">
-
-
-        <ul>
-          <li><p> Berríos, A. (2026, March 25). Guest Lecturer for <em>Language
-          Endangerment and Revitalisation</em> (Honours & MSc), taught by Dr Amalia Skilton, to give
-          a lecture entitled “The role of people vs. documents in
-          revitalisation: How can revitalisation practitioners use language
-          documentation?”</p></li>
-
-        <li> <p> Berríos, A. (2023, November 27). <em>N’emülkawe: A learner’s
-        dictionary for Mapudungun</em>. Invited speaker at the lecture <em>Minority
-        Languages II</em>, taught by <a href="https://mariamazzoli.wordpress.com/">Dr
-        Maria Mazzoli</a>, University of Groningen (NL). <a
-        href="https://drive.google.com/file/d/1q3szmyhcWfA8-aR_l2rVGLU7z4lJ4xev/view?usp=drive_link">Slides
-        PDF</a> </p> </li>
-
-
-        <li><p> Berríos, A. (2023, November 6). Invited speaker at the lecture
-        <em>Structure of a Language : Mapudungun</em>, taught by <a href="https://benmolineaux.ppls.ed.ac.uk/">Dr Ben Molineaux</a>, University of
-        Edinburgh (UK). <a
-        href="https://drive.google.com/file/d/18PhZZ9Mr77lJLIItivlAXGVDnryy0BcR/view?usp=drive_link">Slides
-        PDF</a> </p> </li>
-
-        </ul>
+    </ul>
 
   </div>
 </div>
 
 
-<div class="w3-container w3-card w3-white w3-margin-bottom">
-  <h2 class="w3-text-indigo">Lexicographic training</h2>
-  <div class="w3-container w3-margin-bottom">
-      <div class="w3-container">
+<!-- Guest lectures -->
+<div class="w3-container w3-margin-bottom">
+  <h2 class="content-title-blue">Guest lectures</h2>
+  <div class="w3-container w3-padding-0">
 
-          <p> Within the project, <a href="https://mapudungun.cl/">Mapudungun
-          Nemülkawe</a>, an innitiative to create a dictionary for Mapudungun
-          students, I carried out a lexicographic training for members of the
-          association <a href="http://ffd.cl" title="Fiw Fiw ñi Dungun
-          website">Fiw Fiw ñi Dungun</a>, during September and October 2024.
-          </p>
-
-
-        <p>A copy of the presentations slides can be downloaded here: 
-        <a href="https://drive.google.com/file/d/1uCTw-ewzySCcMC1jp3Fo4enR2rF59pPg/view?usp=drive_link">Session 1</a> | 
-        <a href="https://drive.google.com/file/d/1DxFaFwIPHYkKu8ikLc_QqO_MFAE71XMM/view?usp=drive_link">Session 2</a> | 
-        <a href="https://drive.google.com/file/d/1XhmaU2UbTiJsRzUe6vrvWXKjPEKGxiKF/view?usp=drive_link">Session 3</a>
-
-        </p>
-      </div>
-  </div>
-</div>
-
-<div class="w3-container w3-card w3-white w3-margin-bottom">
-    <h2 class="w3-text-indigo">Teaching Mapudungun at the University level</h2>
-
-    <div class="w3-container w3-margin-bottom">
     <ul>
 
+    <li><p> Berríos, A. (2026, March 25). Guest Lecturer for <em>Language
+    Endangerment and Revitalisation</em> (Honours & MSc), taught by Dr Amalia
+    Skilton, to give a lecture entitled “The role of people vs. documents in
+    revitalisation: How can revitalisation practitioners use language
+    documentation?”</p></li>
+
+    <li> <p> Berríos, A. (2023, November 27). <em>N’emülkawe: A learner’s
+    dictionary for Mapudungun</em>. Invited speaker at the lecture
+    <em>Minority Languages II</em>, taught by <a
+    href="https://mariamazzoli.wordpress.com/">Dr Maria Mazzoli</a>,
+    University of Groningen (NL). <a
+    href="https://drive.google.com/file/d/1q3szmyhcWfA8-aR_l2rVGLU7z4lJ4xev/view?usp=drive_link">Slides
+    PDF</a> </p> </li>
+
+
+    <li><p> Berríos, A. (2023, November 6). Invited speaker at the lecture
+    <em>Structure of a Language : Mapudungun</em>, taught by <a
+    href="https://benmolineaux.ppls.ed.ac.uk/">Dr Ben Molineaux</a>,
+    University of Edinburgh (UK). <a
+    href="https://drive.google.com/file/d/18PhZZ9Mr77lJLIItivlAXGVDnryy0BcR/view?usp=drive_link">Slides
+    PDF</a> </p></li>
+
+    </ul>
+
+
+  </div>
+</div>
+
+<!-- Lexicographic training -->
+<div class="w3-container w3-margin-bottom">
+  <h2 class="content-title-blue">Lexicographic training</h2>
+  <div class="w3-container w3-padding-0">
+
+    <p> Within the project, <a href="https://mapudungun.cl/">Mapudungun
+    Nemülkawe</a>, an innitiative to create a dictionary for Mapudungun
+    students, I carried out a lexicographic training for members of the
+    association <a href="http://ffd.cl" title="Fiw Fiw ñi Dungun website">Fiw
+    Fiw ñi Dungun</a>, during September and October 2024. </p>
+
+
+    <p>A copy of the presentations slides can be downloaded here: 
+
+    <a href="https://drive.google.com/file/d/1uCTw-ewzySCcMC1jp3Fo4enR2rF59pPg/view?usp=drive_link">Session 1</a> | 
+    <a href="https://drive.google.com/file/d/1DxFaFwIPHYkKu8ikLc_QqO_MFAE71XMM/view?usp=drive_link">Session 2</a> | 
+    <a href="https://drive.google.com/file/d/1XhmaU2UbTiJsRzUe6vrvWXKjPEKGxiKF/view?usp=drive_link">Session 3</a>
+
+    </p>
+
+
+  </div>
+</div>
+
+<!-- Teaching Mapudungun at the University level -->
+<div class="w3-container w3-margin-bottom">
+  <h2 class="content-title-blue">Teaching Mapudungun at the University level</h2>
+  <div class="w3-container w3-padding-0">
+
+    <ul>
       <li>2022 & 2023 — <em>Cultura y Lengua Mapuche</em> (Mapuche Language
       and Culture) (Código 940408) at the Anthropology School, Universidad de
       Concepción</li> <li>2023 — <em>Introducción a la lengua y cultura
       mapuche</em> (Introduction to Mapuche language and culture)
       (Código 731575), at the Departamento de Castellano, Facultad de
       Humanidades y Arte, Universidad de Concepción.</li>
-
     </ul>
 
-    </div>
+  </div>
 </div>
 
-</div><!-- End Links -->
-</div><!-- End Right -->
-</div><!-- End Grid  -->
-</div><!-- End Main  -->
 
-<!-- Begin footer-->
-<footer class="w3-container w3-indigo w3-center w3-margin-top">
-<p class="w3-text-white">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</div><!-- End Link Section -->
+</div><!-- End Right Column -->
+</div><!-- End Grid -->
+</div><!-- End Page Container -->
+
+<!-- Footer -->
+<footer class="w3-container w3-center w3-margin-top clean-footer">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 </footer>
-<!-- End footer -->
+
+<script>
+function toggleMobileMenu() {
+  var x = document.getElementById("mobileMenuDrawer");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
 
 </body>
 </html>
-
-
