@@ -285,6 +285,23 @@ h1, h2, h3, h4, h5, h6 {
         border-bottom: none !important;
         background-color: #f4f6fa !important; 
     }
+
+    /* FIXED MOBILE CRAMPING */
+    .w3-col {
+        padding-left: 8px !important;  /* Reduces heavy default column padding */
+        padding-right: 8px !important;
+    }
+
+    #link-section .w3-container {
+        padding-left: 4px !important;  /* Maximizes reading area for text containers */
+        padding-right: 4px !important;
+    }
+
+    #link-section li {
+        margin-left: 0px !important;   /* Eliminates the left margin push */
+        padding: 8px 10px !important;  /* Tightens horizontal padding while keeping the left border legible */
+    }
+
 }
 
 
@@ -379,4 +396,35 @@ h1, h2, h3, h4, h5, h6 {
 .nav-left-brand a.profile-name,
 .nav-left-brand a.profile-name.active-nav-link {
     border-bottom: none !important;
+}
+
+
+/* ==========================================================================
+   4. MAIN CONTENT AREA (INLINE PUBLICATION BUTTONS)
+   ========================================================================== */
+.pub-btn {
+    font-size: 13px !important;       /* Scaled down to match body text size smoothly */
+    font-weight: bold !important;
+    padding: 2px 8px !important;      /* Tight horizontal/vertical padding for an inline layout */
+    border-radius: 3px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;  /* Using flex centers the tiny icon inside the button bounds */
+    align-items: center;
+    gap: 4px;                         /* Compact spacing between icon and text */
+    margin-left: 6px;                 /* Clean separation right after the period */
+    vertical-align: middle !important;/* Aligns the button smoothly along the text baseline */
+    transition: all 0.2s ease;
+}
+
+
+/* Inline PDF (Clean Outline Blue) */
+.pub-btn {
+    background-color: #f4f6fa !important;
+    color: #3f51b5 !important;
+    border: 1px solid #3f51b5 !important;
+}
+
+.pub-btn:hover {
+    background-color: #ccc !important;
+    color: #ffffff !important;
 }
