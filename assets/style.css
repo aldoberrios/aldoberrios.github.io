@@ -37,14 +37,32 @@ h1, h2, h3, h4, h5, h6 {
 .w3-rightbar { border-right: 6px solid #3f51b5 !important; }
 .w3-show { display: block !important; }
 
-
 /* ==========================================================================
    2. DESKTOP & GLOBAL HEADER NAVIGATION
    ========================================================================== */
-.custom-nav-bar {
-    background-color: transparent !important;
-    padding-top: 15px;
-    padding-bottom: 5px;
+   /* 1. Target ONLY the active links in the middle navigation or mobile menu */
+.custom-nav-bar .nav-center-links .active-nav-link,
+.custom-nav-bar .nav-center-links .active-nav,
+.custom-nav-bar .mobile-drawer-links .active-nav-link {
+    color: #1a237e !important;          /* Deeper blue to override default */
+    border-bottom: 3px solid #1a237e !important; /* Thick bottom indicator line */
+    padding-bottom: 4px;                /* Gives the underline breathing room */
+}
+
+/* 2. Target the name link specifically so it stays clean and plain */
+.custom-nav-bar .nav-left-brand .active-nav-link,
+.custom-nav-bar .nav-left-brand .active-nav {
+    color: #3f51b5 !important; 
+    border-bottom: none !important;     /* Explicitly prevents the underline here */
+}
+
+/* Styles the current/inactive language link to look grayed-out and un-clickable */
+.custom-nav-bar .text-inactive {
+    color: #b0b0b0 !important;      /* Soft, subtle gray */
+    font-weight: 400 !important;    /* Thinner font weight so it doesn't shout */
+    cursor: default !important;     /* Changes cursor to a regular pointer instead of a hand */
+    pointer-events: none;           /* Disables clicking actions completely */
+    border-bottom: none !important; /* Erases any underline styles cleanly */
 }
 
 .custom-nav-bar .w3-bar-item {
@@ -56,20 +74,13 @@ h1, h2, h3, h4, h5, h6 {
     transition: color 0.2s ease;
 }
 
-.custom-nav-bar .active-nav-link {
-    color: #3f51b5 !important; 
-    border-bottom: 2px solid #1a237e;
-}
-
-.custom-nav-bar .text-inactive {
-    color: #999999 !important;
-    font-weight: 400;
-}
-
+/* Applies the elegant bottom-border hover effect to ALL clickable menu links */
 .custom-nav-bar .w3-button:hover {
     background-color: transparent !important;
-    color: #1a237e !important;
-    text-decoration: underline;
+    text-decoration: none !important;             /* Kills the cluttered text underline universally */
+    color: #1a237e !important;                    /* Changes text to deep navy blue */
+    border-bottom: 2px solid #1a237e !important;  /* Sharp, consistent bottom line indicator */
+    padding-bottom: 4px;                          /* Creates uniform breathing room above the divider */
 }
 
 .nav-divider {
@@ -78,7 +89,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
     max-width: 1400px;
 }
-
 /* ==========================================================================
    3. SIDEBAR (LEFT COLUMN) LAYOUT
    ========================================================================== */
@@ -267,6 +277,14 @@ h1, h2, h3, h4, h5, h6 {
         cursor: pointer;
     }
 
+    /* FIX: Match the exact specificity of your global hover rule to successfully deactivate it */
+    .custom-nav-bar .sandwich-btn:hover {
+        background-color: transparent !important;
+        color: #1a237e !important;          /* Gently darkens the blue color on interaction instead */
+        border-bottom: none !important;     /* Erases the awkward underline completely */
+        text-decoration: none !important;   /* Keeps browser fallback lines hidden */
+    }
+
     .mobile-drawer-links {
         background-color: #ffffff;
         border-top: 1px solid #eeeeee;
@@ -398,6 +416,12 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: none !important;
 }
 
+/* Adds a clean, spaced-out text underline on hover */
+.nav-left-brand a.profile-name:hover {
+    text-decoration: underline !important;
+    text-underline-offset: 5px; /* Pushes the underline down away from the letters */
+    text-decoration-thickness: 2px; /* Keeps the line crisp and subtle */
+}
 
 /* ==========================================================================
    4. MAIN CONTENT AREA (INLINE PUBLICATION BUTTONS)
