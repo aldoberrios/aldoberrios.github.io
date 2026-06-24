@@ -193,11 +193,13 @@
 == Invited Guest Lectures
 - *University of Edinburgh* (Mar 2026): Invited by Dr. Amalia Skilton for the Honours/MSc module _Language Endangerment and Revitalisation_. Presentation: *"The role of people vs. documents in revitalisation: How can revitalisation practitioners use language documentation?"*
 - *University of Groningen, NL* (Nov 2023): Invited by Dr. Maria Mazzoli for the course _Minority Languages II_. Presentation: *"N’emülkawe: A learner’s dictionary for Mapudungun"*.
-- *University of Edinburgh* (Nov 2023): Invited by Dr. Ben Molineaux for the course _Structure of a Language: Mapudungun_.
+- *University of Edinburgh* (Nov 2023): Invited by Dr. Ben Molineaux for the course _Structure of a Language: Mapudungun_. Presentation: *Revitalisation of Mapudungun*
 
 
 == Talks & Presentations
 
+- Berríos, A. (2026, June 23). _Theoretical Historical Linguistics & Minoritised Languages_. Talk at the Edinburgh Theoretical Historical Linguistics Summer School 2026 (ETHL).
+- Berríos, A. (2026, June 18). _Kɨ-allomorphy in Mapudungun: Morphology between the lexicon and phonology_. Talk at the Phonomorphology at the Interface Workshop, during the 22nd International Morphology Meeting (18-19 June 2026). Budapest, Hungary. 
 - Berríos, A. (2026, June 3). _Decolonising Linguistics: Communities and Practice_. Panel Discussion with Dr. Christian Ilbury and Dr. Amalia Skilton, 31st Linguistics and English Language Postgraduate Conference, University of Edinburgh, UK.
 - Berríos, A. (2026, February 27). _Phonologically conditioned allomorphy in Mapudungun: A missed generalisation or a historical accident?_. Talk at the Phonetics and Phonology Research Group (P-workshop), University of Edinburgh, UK.
 - Molineaux, B., & Berríos, A. (2025, October 15). _A grapho-phonological history of the ‘sixth vowel’ in Mapudungun: Epenthesis, stress and rule inversion_. Angus McIntosh Centre for Historical Linguistics Catchup Sessions.
