@@ -9,11 +9,7 @@ test.js
 structure_website.txt
 
 # Ignore Latex / Typst files
-CV/CV_ABerrios.aux
-CV/CV_ABerrios.log
-CV/CV_ABerrios.synctex.gz
-CV/CV_ABerrios.tex
-CV/cv.typ
+CV/old/
 
 # Ignore Python virtual environments
 .venv/
