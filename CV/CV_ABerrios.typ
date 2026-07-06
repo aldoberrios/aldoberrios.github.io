@@ -179,7 +179,7 @@
 )
 
 #cv-entry(
-  "03.2022–12.2023",
+  "03.2022–08.2023",
   "Lecturer in Mapuche Language and Culture",
   "Universidad de Concepción (Concepción, Chile)",
   details: [
