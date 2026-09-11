@@ -255,6 +255,11 @@
   #it.term #it.description
 ]
 
+
+/ *Berríos, A.*, Honeybone, P. & Molineaux, B. (2026, Sept 09):_Phonotactic change: the emergence of a coda constraint in Mapudungun_. Talk at the _Special interest panel: What is/are phonotactics?_, Linguistics Association of Great Britain (LAGB) Annual Conference 2026.
+
+/ Molineaux, B., *Berríos, A.*, Engels, J. & Domínguez, V. (2026, Sept 08-10).:_Mapudungun: LAGB Language Tutorial_. Language tutorial at the LAGB Annual Conference 2026.
+
 / *Berríos, A.* (2026, June 23).: _Theoretical Historical Linguistics & Minoritised Languages_. Talk at the Edinburgh Theoretical Historical Linguistics Summer School 2026 (ETHL).
 
 / *Berríos, A.* (2026, June 18).: _Kɨ-allomorphy in Mapudungun: Morphology between the lexicon and phonology_. Talk at the Phonomorphology at the Interface Workshop, during the 22nd International Morphology Meeting (18-19 June 2026). Budapest, Hungary. 
@@ -317,6 +322,9 @@
 / *Berríos, A.* (2024, June 13).: _Today’s morphology is yesterday’s phonology_. PPLS Research Day 2024, University of Edinburgh.
 
 / *Berríos, A.* (2023, November 2).: _Phoneme Frequency in Mapudungun_. 78th Language Lunch, University of Edinburgh, UK.
+
+#pagebreak()
+
 #cv-section("Academic Service and Community Building")
 
 
@@ -383,14 +391,14 @@
 
 
 #cv-section("Selected Media & Interviews")
-- Alvarado, G. (2022). Aldo Berríos (Fiestoforo): “Siempre he pensado que el mapuzugun es una lengua de futuro.” _Lenguas Radicales, 1(3)_.
-- Carilaf, V., Berríos, A., & Becerra, R. (2017). Del compromiso político-cultural a la acción educativa en internet. In _Mapun Kimün. Relaciones mapunche entre persona, tiempo y espacio_. Editorial Ocholibros, pp. 271-292.
+- Alvarado, G. (2022). *Aldo Berríos* (Fiestoforo): “Siempre he pensado que el mapuzugun es una lengua de futuro.” _Lenguas Radicales, 1(3)_.
+- Carilaf, V., *Berríos, A.*, & Becerra, R. (2017). Del compromiso político-cultural a la acción educativa en internet. In _Mapun Kimün. Relaciones mapunche entre persona, tiempo y espacio_. Editorial Ocholibros, pp. 271-292.
 
 
-#cv-section("Built Linguistic Web Tools")
-- *Wirintukufe*: An open-access Shiny web app engineered for precise orthographic conversion of Mapudungun text models. #link("https://aldoberrios.shinyapps.io/Wirintukufe/")[aldoberrios.shinyapps.io/Wirintukufe/]
+// #cv-section("Built Linguistic Web Tools")
+// - *Wirintukufe*: An open-access Shiny web app engineered for precise orthographic conversion of Mapudungun text models. #link("https://aldoberrios.shinyapps.io/Wirintukufe/")[aldoberrios.shinyapps.io/Wirintukufe/]
 // - *Phonemiser*: An interactive program mapping traditional inputs into systemic International Phonetic Alphabet (IPA) output matrices. #link("https://aldoberrios.shinyapps.io/phonemizer/")[aldoberrios.shinyapps.io/phonemizer/]
-- *Mapudungun Nemülkawe*: Online Mapudungun dictionary. A grass-root innitiative to create a dictionary database for students, with examples and playable audio to model pronunciation (available at #link("https://mapudungun.cl")[mapudungun.cl]).
+// - *Mapudungun Nemülkawe*: Online Mapudungun dictionary. A grass-root innitiative to create a dictionary database for students, with examples and playable audio to model pronunciation (available at #link("https://mapudungun.cl")[mapudungun.cl]).
 
 #cv-section("Professional Memberships")
 - Sociedad Chilena de Lingüística (*Sochil*)
