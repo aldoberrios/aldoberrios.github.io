@@ -416,79 +416,53 @@
       }
     }
 
-    // Triangular cave attaches to column c=4:
-    // Nodes at c=4 are:
-    // (r=0): id 4
-    // (r=1): id 9
-    // (r=2): id 14 (Apex connection on baseline)
-    // (r=3): id 19
-    // (r=4): id 24
+    // Triangular cave attached to square at row 2, col 4:
+    // Matches the exact diagram:
+    // Row 0: . . . . .               .       (col 7)
+    // Row 1: . . . . .           .   .       (col 6, col 7)
+    // Row 2: . . . . .   .   .   .           (col 5, col 6, col 7)
+    // Row 3: . . . . .           .   .       (col 6, col 7)
+    // Row 4: . . . . .               .       (col 7)
     //
-    // The triangle has 3 vertical tiers advancing rightward to form the apex:
-    // Tier 1 (x = 530 + 105 = 635): 5 points corresponding to rows 0 to 4 bounded by slope
-    // In traditional Komikan boards, the triangle is divided by 2 or 3 vertical cuts and horizontal lines.
-    // To reach exactly 38 points total (25 + 13):
-    // Tier 1 (x = 640): 5 points (rows 0, 1, 2, 3, 4) -> ids 25, 26, 27, 28, 29
-    // Tier 2 (x = 730): 5 points (rows 0.5, 1, 2, 3, 3.5 or straight lines converging)
-    // Standard Komikan layout:
-    // Triangle has base on column 4 (height 440), apex at (840, 270).
-    // Lines: Horizontals at r=0,1,2,3,4.
-    // Let's create the 13 points systematically matching the game diagram:
-    // Points in Tier 1 (x=635): 5 nodes (indices 25, 26, 27, 28, 29)
-    // Points in Tier 2 (x=735): 5 nodes (indices 30, 31, 32, 33, 34)
-    // Points at Apex / Tier 3: 3 nodes (indices 35 at y=160, 36 at y=270, 37 at y=380 or single apex + extensions)
-    // Specifically, looking at the authentic board:
-    // Column 5 (x=635): 5 points (y = 50, 160, 270, 380, 490) -> ids 25, 26, 27, 28, 29
-    // Column 6 (x=730): 5 points (y = 50, 160, 270, 380, 490) -> ids 30, 31, 32, 33, 34
-    // Column 7 (x=835): 3 points converging: (y = 160, 270, 380) -> ids 35, 36, 37
-    // Total: 25 + 5 + 5 + 3 = 38 nodes!
-    
-    // Tier 1 (Col 5)
-    for (let r = 0; r < 5; r++) {
-      const id = 25 + r;
-      NODES[id] = {
-        id: id,
-        c: 5,
-        r: r,
-        x: 635,
-        y: SQ_OFFSET_Y + r * SQ_STEP,
-        isCave: true
-      };
-      ADJ[id] = [];
-    }
+    // Total extension: 1 + 2 + 3 + 2 + 1 = 9 points (Total board = 25 + 9 = 34 points)
+    // Node indexing for extension:
+    // Node 25: (c=5, r=2) - apex connected to (c=4, r=2)
+    // Node 26: (c=6, r=1) - inner vertical top
+    // Node 27: (c=6, r=2) - inner vertical center (Puma initial spot)
+    // Node 28: (c=6, r=3) - inner vertical bottom
+    // Node 29: (c=7, r=0) - outer vertical top apex
+    // Node 30: (c=7, r=1) - outer vertical row 1
+    // Node 31: (c=7, r=2) - outer vertical center
+    // Node 32: (c=7, r=3) - outer vertical row 3
+    // Node 33: (c=7, r=4) - outer vertical bottom apex
 
-    // Tier 2 (Col 6)
-    for (let r = 0; r < 5; r++) {
-      const id = 30 + r;
-      NODES[id] = {
-        id: id,
-        c: 6,
-        r: r,
-        x: 735,
-        y: SQ_OFFSET_Y + r * SQ_STEP,
-        isCave: true
-      };
-      ADJ[id] = [];
-    }
+    const extensionDefs = [
+      { id: 25, c: 5, r: 2 },
+      { id: 26, c: 6, r: 1 },
+      { id: 27, c: 6, r: 2 },
+      { id: 28, c: 6, r: 3 },
+      { id: 29, c: 7, r: 0 },
+      { id: 30, c: 7, r: 1 },
+      { id: 31, c: 7, r: 2 },
+      { id: 32, c: 7, r: 3 },
+      { id: 33, c: 7, r: 4 }
+    ];
 
-    // Tier 3 (Apex triangle closure, Col 7)
-    const apexRows = [1, 2, 3];
-    apexRows.forEach((r, idx) => {
-      const id = 35 + idx;
-      NODES[id] = {
-        id: id,
-        c: 7,
-        r: r,
-        x: 835,
-        y: SQ_OFFSET_Y + r * SQ_STEP,
+    extensionDefs.forEach(d => {
+      NODES[d.id] = {
+        id: d.id,
+        c: d.c,
+        r: d.r,
+        x: SQ_OFFSET_X + d.c * SQ_STEP,
+        y: SQ_OFFSET_Y + d.r * SQ_STEP,
         isCave: true
       };
-      ADJ[id] = [];
+      ADJ[d.id] = [];
     });
 
     // Helper to connect bidirectional edge
     function addEdge(u, v) {
-      if (u < 0 || u >= 38 || v < 0 || v >= 38) return;
+      if (u < 0 || u >= NODES.length || v < 0 || v >= NODES.length) return;
       if (!ADJ[u].includes(v)) {
         ADJ[u].push(v);
         ADJ[v].push(u);
@@ -496,7 +470,7 @@
       }
     }
 
-    // 1. Grid connections (Alquerque standard 5x5)
+    // 1. Grid connections (Alquerque 5x5: all squares have horizontals, verticals, and diagonal crosses)
     for (let r = 0; r < 5; r++) {
       for (let c = 0; c < 5; c++) {
         const u = r * 5 + c;
@@ -504,61 +478,57 @@
         if (c < 4) addEdge(u, u + 1);
         // Vertical
         if (r < 4) addEdge(u, u + 5);
-        // Diagonals on points where (r + c) is even
-        if ((r + c) % 2 === 0) {
-          if (r < 4 && c < 4) addEdge(u, (r + 1) * 5 + (c + 1));
-          if (r < 4 && c > 0) addEdge(u, (r + 1) * 5 + (c - 1));
+        // Diagonals on all 1x1 cells
+        if (r < 4 && c < 4) {
+          addEdge(u, (r + 1) * 5 + (c + 1));
+          addEdge(u + 1, (r + 1) * 5 + c);
         }
       }
     }
 
-    // 2. Connections inside the Cave & connecting to Col 4 (Square boundary)
-    // Col 4 connects horizontally to Col 5:
-    for (let r = 0; r < 5; r++) {
-      const u4 = r * 5 + 4;
-      const u5 = 25 + r;
-      const u6 = 30 + r;
-      addEdge(u4, u5);
-      addEdge(u5, u6);
-    }
-    // Col 6 connects to Col 7 on rows 1, 2, 3:
-    addEdge(31, 35); // r=1
-    addEdge(32, 36); // r=2 (center line)
-    addEdge(33, 37); // r=3
+    // 2. Triangle connections matching the user diagram and video layout:
+    // Connecting square to apex:
+    // Node 14 is (c=4, r=2) -> connects to Node 25 (c=5, r=2)
+    addEdge(14, 25);
 
-    // Vertical connections inside Cave
-    for (let r = 0; r < 4; r++) {
-      addEdge(25 + r, 25 + r + 1); // Col 5 vertical
-      addEdge(30 + r, 30 + r + 1); // Col 6 vertical
-    }
-    addEdge(35, 36); // Col 7 vertical
-    addEdge(36, 37);
+    // From apex (25):
+    // Horizontal line through midline:
+    addEdge(25, 27); // (c=5, r=2) to (c=6, r=2)
+    addEdge(27, 31); // (c=6, r=2) to (c=7, r=2)
 
-    // Diagonal connections inside Cave & Boundary Slopes
-    // Diagonals between Col 4 and Col 5:
-    addEdge(4, 26);  addEdge(9, 25);  addEdge(9, 27);  addEdge(14, 26);
-    addEdge(14, 28); addEdge(19, 27); addEdge(19, 29); addEdge(24, 28);
+    // Slanted outer edges:
+    // Top slope: (c=5, r=2) -> (c=6, r=1) -> (c=7, r=0)
+    addEdge(25, 26);
+    addEdge(26, 29);
 
-    // Diagonals between Col 5 and Col 6:
-    addEdge(25, 31); addEdge(26, 30); addEdge(26, 32); addEdge(27, 31);
-    addEdge(27, 33); addEdge(28, 32); addEdge(28, 34); addEdge(29, 33);
+    // Bottom slope: (c=5, r=2) -> (c=6, r=3) -> (c=7, r=4)
+    addEdge(25, 28);
+    addEdge(28, 33);
 
-    // Diagonals connecting into the Apex (Col 6 to Col 7 and sloped envelope)
-    addEdge(30, 35); // top outer diagonal
-    addEdge(34, 37); // bottom outer diagonal
-    addEdge(31, 36); addEdge(32, 35);
-    addEdge(32, 37); addEdge(33, 36);
+    // Inner vertical line (Col 6):
+    addEdge(26, 27); // (c=6, r=1) to (c=6, r=2)
+    addEdge(27, 28); // (c=6, r=2) to (c=6, r=3)
+
+    // Outer vertical line (Col 7):
+    addEdge(29, 30); // (c=7, r=0) to (c=7, r=1)
+    addEdge(30, 31); // (c=7, r=1) to (c=7, r=2)
+    addEdge(31, 32); // (c=7, r=2) to (c=7, r=3)
+    addEdge(32, 33); // (c=7, r=3) to (c=7, r=4)
+
+    // Horizontal bars at rows 1 and 3:
+    addEdge(26, 30); // row 1: (c=6, r=1) to (c=7, r=1)
+    addEdge(28, 32); // row 3: (c=6, r=3) to (c=7, r=3)
 
     /* =========================================================================
        GAME STATE
-       - pumaNode: index (0..37)
+       - pumaNode: index (0..33)
        - dogs: Set of node indices
        - turn: 'DOGS' or 'PUMA'
        - humanSide: 'DOGS' or 'PUMA'
        - capturedDogs: number (0..12)
        ========================================================================= */
     const STATE = {
-      pumaNode: 32, // Starts inside the cave (Tier 2, center point)
+      pumaNode: 27, // Starts inside the cave at the inner vertical intersection (Col 6, Row 2)
       dogs: new Set(),
       turn: 'DOGS', // Dogs move first in traditional Komikan
       humanSide: 'DOGS',
@@ -574,16 +544,15 @@
 
     // Initial 12 dogs layout according to traditional diagram & video:
     // Leftmost two columns completely filled (5 + 5 = 10 dogs)
-    // plus 2 dogs flanking at Column 2 (row 0 and row 4 or row 1 and row 3).
-    // In the video/historical notes: 10 dogs in col 0 and 1, plus 2 dogs in col 2 (rows 0 and 4).
+    // plus 2 dogs flanking at Column 2 (row 0 and row 4).
     function initDogPositions() {
       const set = new Set();
-      // Col 0 (0..4) and Col 1 (5..9)
+      // Col 0 (0, 5, 10, 15, 20) and Col 1 (1, 6, 11, 16, 21)
       for (let r = 0; r < 5; r++) {
-        set.add(r * 5 + 0); // 0, 5, 10, 15, 20
-        set.add(r * 5 + 1); // 1, 6, 11, 16, 21
+        set.add(r * 5 + 0);
+        set.add(r * 5 + 1);
       }
-      // Col 2 edges
+      // Col 2 flanks
       set.add(2);  // r=0, c=2
       set.add(22); // r=4, c=2
       return set;
@@ -1323,7 +1292,7 @@
        INITIALIZATION & RESTART
        ========================================================================= */
     function restartGame() {
-      STATE.pumaNode = 32; // In cave
+      STATE.pumaNode = 27; // In cave (Col 6, Row 2)
       STATE.dogs = initDogPositions();
       STATE.turn = 'DOGS';
       STATE.selectedNode = null;
