@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Leftraru: Guerrero del Wallmapu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: #0b1118;
+      overflow: hidden;
+    }
+    canvas {
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .fretwork-border {
+      background: repeating-linear-gradient(90deg, #1b3b5f 0px, #1b3b5f 16px, #c5832b 16px, #c5832b 20px, #0f1d2d 20px, #0f1d2d 36px);
+      height: 8px;
+    }
+    .hud-text {
+      text-shadow: 2px 2px 0px #000;
+    }
+    .touch-btn {
+      background: rgba(18, 30, 49, 0.75);
+      border: 3px solid rgba(245, 158, 11, 0.8);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.6);
+      border-radius: 14px;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .touch-btn:active {
+      transform: translateY(2px);
+      background: rgba(245, 158, 11, 0.4);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center text-slate-100">
+
+  <!-- TOP HEADER & RETRO HUD -->
+  <header class="w-full bg-[#0d1722] border-b-2 border-amber-600/70 z-10 flex flex-col items-center">
+    <div class="fretwork-border w-full"></div>
+    <div class="w-full max-w-5xl px-3 py-2 flex items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="text-amber-400 text-sm hidden sm:inline">🌲</span>
+        <h1 class="text-[10px] sm:text-xs text-amber-300 tracking-wider">LEFTRARU <span class="text-sky-300 text-[8px] sm:text-[10px]">v1.1</span></h1>
+      </div>
+
+      <div class="flex items-center gap-3 sm:gap-6 text-[9px] sm:text-[10px]">
+        <div class="flex items-center gap-1.5">
+          <span class="text-red-400">♥</span>
+          <div class="w-16 sm:w-24 h-3 bg-slate-900 border border-slate-600 rounded-sm overflow-hidden p-0.5">
+            <div id="uiHealthFill" class="h-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-150" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-amber-400">🌰</span>
+          <span id="uiPinonCount" class="text-amber-200">0</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-yellow-400">PTS:</span>
+          <span id="uiScore" class="text-yellow-300">00000</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btnSound" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-amber-300">🔊</button>
+        <button id="btnHelp" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- GAME VIEWPORT -->
+  <main class="w-full flex-1 flex flex-col items-center justify-center p-1 sm:p-3 relative max-w-5xl">
+    <div class="relative w-full aspect-[16/9] max-h-[70vh] bg-black border-4 border-[#1c2e42] rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
+      
+      <canvas id="gameCanvas" width="480" height="270" class="w-full h-full object-contain"></canvas>
+
+      <!-- OVERLAY: START SCREEN -->
+      <div id="startOverlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-4 text-center z-20">
+        <span class="text-3xl mb-2">🏔️🦅</span>
+        <h2 class="text-sm sm:text-lg text-amber-400 mb-2 leading-relaxed">LEFTRARU: GUERRERO DEL WALLMAPU</h2>
+        <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-4 leading-normal font-sans font-semibold">
+          Guía al toqui Leftraru por los bosques ancestrales de la Araucanía. Empuña tu lanza contra las tropas invasoras, recolecta piñones sagrados y protege las tierras del Wallmapu.
+        </p>
+        <button id="btnStartGame" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 border-2 border-amber-300 text-slate-950 text-xs sm:text-sm font-bold rounded shadow-lg active:scale-95 transition">
+          ¡INICIAR EXPEDICIÓN!
+        </button>
+        <div class="mt-4 text-[8px] sm:text-[9px] text-slate-400 space-y-1">
+          <p>⌨️ <span class="text-amber-300">A/D o Flechas</span>: Correr | <span class="text-amber-300">W / Espacio</span>: Saltar</p>
+          <p>⚔️ <span class="text-amber-300">X / J / Enter</span>: Ataque de Lanza</p>
+        </div>
+      </div>
+
+      <!-- OVERLAY: GAME OVER -->
+      <div id="gameOverOverlay" class="absolute inset-0 bg-black/85 flex flex-col items-center justify-center p-4 text-center z-20 hidden">
+        <h2 class="text-base sm:text-xl text-red-500 mb-2">¡CAÍDO EN COMBATE!</h2>
+        <p class="text-[9px] sm:text-[11px] text-slate-300 mb-4 font-sans">El espíritu de la tierra te llama a levantarte una vez más.</p>
+        <div class="text-[10px] text-amber-300 mb-4">
+          Puntaje Final: <span id="finalScore" class="text-white">0</span>
+        </div>
+        <button id="btnRestartGame" class="px-5 py-2.5 bg-red-600 hover:bg-red-500 border-2 border-red-300 text-white text-xs font-bold rounded active:scale-95 transition">
+          REINTENTAR
+        </button>
+      </div>
+
+      <!-- OVERLAY: VICTORY -->
+      <div id="victoryOverlay" class="absolute inset-0 bg-black/85 flex flex-col items-center justify-center p-4 text-center z-20 hidden">
+        <span class="text-3xl mb-1">👑✨</span>
+        <h2 class="text-base sm:text-xl text-amber-400 mb-2">¡VICTORIA EN EL NGWILLATUN!</h2>
+        <p class="text-[9px] sm:text-[11px] text-slate-200 mb-4 font-sans">Leftraru ha despejado el paso de la cordillera protegiendo a su pueblo.</p>
+        <div class="text-[10px] text-yellow-300 mb-4 space-y-1">
+          <div>Puntaje Total: <span id="vicScore" class="text-white">0</span></div>
+          <div>Piñones Ofrendados: <span id="vicPinones" class="text-white">0</span></div>
+        </div>
+        <button id="btnPlayAgain" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 border-2 border-amber-200 text-slate-950 text-xs font-bold rounded active:scale-95 transition">
+          JUGAR OTRA VEZ
+        </button>
+      </div>
+
+    </div>
+
+    <!-- TOUCH CONTROLS -->
+    <div id="touchControls" class="w-full max-w-4xl flex items-center justify-between px-2 pt-2 pb-1 select-none md:hidden">
+      <div class="flex gap-2">
+        <button id="tBtnLeft" class="touch-btn w-12 h-12 text-lg font-bold">◀</button>
+        <button id="tBtnRight" class="touch-btn w-12 h-12 text-lg font-bold">▶</button>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="tBtnAttack" class="touch-btn w-14 h-12 px-2 text-[10px] font-bold bg-rose-950/70 border-rose-500 text-rose-200">⚔ LANZA</button>
+        <button id="tBtnJump" class="touch-btn w-12 h-12 text-sm font-bold bg-sky-950/70 border-sky-400 text-sky-200">▲</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- PROGRESS BAR -->
+  <footer class="w-full bg-[#0d1722] border-t border-slate-800 py-1.5 px-4 text-center text-[9px] text-slate-400 flex items-center justify-center gap-3">
+    <span>Progreso del Territorio:</span>
+    <div class="w-48 sm:w-64 h-2 bg-slate-950 rounded-full border border-slate-700 overflow-hidden">
+      <div id="uiProgressBar" class="h-full bg-amber-500 w-0 transition-all duration-100"></div>
+    </div>
+    <span id="uiDistance">0%</span>
+  </footer>
+
+  <script>
+    /* =========================================================================
+       1. SYNTHESIZED SOUND ENGINE (Web Audio API)
+       ========================================================================= */
+    class RetroAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        try {
+          if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.ctx = new AudioContext();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+        } catch (e) {}
+      }
+      playJump() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(450, now + 0.12);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      }
+      playAttack() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(380, now);
+        osc.frequency.linearRampToValueAtTime(120, now + 0.09);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      }
+      playHit() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(60, now + 0.18);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+      playCoin() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.setValueAtTime(990, now + 0.07);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      }
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const notes = [440, 554, 659, 880];
+        const now = this.ctx.currentTime;
+        notes.forEach((f, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(f, now + i * 0.12);
+          gain.gain.setValueAtTime(0.12, now + i * 0.12);
+          gain.gain.linearRampToValueAtTime(0.001, now + i * 0.12 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.12);
+          osc.stop(now + i * 0.12 + 0.25);
+        });
+      }
+    }
+    const audio = new RetroAudio();
+
+    /* =========================================================================
+       2. RETRO CANVAS GAME ENGINE SETUP
+       ========================================================================= */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+
+    const V_WIDTH = 480;
+    const V_HEIGHT = 270;
+    const LEVEL_LENGTH = 3600;
+
+    const GAME = {
+      running: false,
+      score: 0,
+      pinones: 0,
+      cameraX: 0,
+      levelLength: LEVEL_LENGTH,
+      keys: { left: false, right: false, jump: false, attack: false },
+      particles: []
+    };
+
+    /* =========================================================================
+       3. CHARACTER SPRITE RENDERER (LEFTRARU - PALETA Y TRAJE NUEVO)
+       ========================================================================= */
+    class Player {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.w = 18;
+        this.h = 30;
+        this.vx = 0;
+        this.vy = 0;
+        this.speed = 2.4;
+        this.jumpPower = -6.8;
+        this.gravity = 0.28;
+        this.grounded = false;
+        this.facing = 1;
+
+        this.hp = 100;
+        this.maxHp = 100;
+        this.invulnerable = 0;
+
+        this.attacking = false;
+        this.attackTimer = 0;
+        this.attackDuration = 14;
+        this.attackCooldown = 0;
+
+        this.animTick = 0;
+      }
+
+      update(platforms, enemies) {
+        this.animTick++;
+        if (this.invulnerable > 0) this.invulnerable--;
+        if (this.attackCooldown > 0) this.attackCooldown--;
+
+        if (GAME.keys.left) {
+          this.vx = -this.speed;
+          this.facing = -1;
+        } else if (GAME.keys.right) {
+          this.vx = this.speed;
+          this.facing = 1;
+        } else {
+          this.vx *= 0.65;
+          if (Math.abs(this.vx) < 0.1) this.vx = 0;
+        }
+
+        if (GAME.keys.jump && this.grounded) {
+          this.vy = this.jumpPower;
+          this.grounded = false;
+          audio.playJump();
+          createDustParticles(this.x + this.w / 2, this.y + this.h, 6);
+        }
+
+        if (GAME.keys.attack && !this.attacking && this.attackCooldown <= 0) {
+          this.attacking = true;
+          this.attackTimer = this.attackDuration;
+          this.attackCooldown = 20;
+          audio.playAttack();
+        }
+
+        if (this.attacking) {
+          this.attackTimer--;
+          if (this.attackTimer <= 0) {
+            this.attacking = false;
+          }
+        }
+
+        this.vy += this.gravity;
+        if (this.vy > 8) this.vy = 8;
+
+        this.x += this.vx;
+        if (this.x < 0) this.x = 0;
+        if (this.x > LEVEL_LENGTH - 60) this.x = LEVEL_LENGTH - 60;
+
+        this.y += this.vy;
+        this.grounded = false;
+
+        for (const p of platforms) {
+          if (
+            this.x + this.w > p.x &&
+            this.x < p.x + p.w &&
+            this.y + this.h >= p.y &&
+            this.y + this.h <= p.y + p.h + 8 &&
+            this.vy >= 0
+          ) {
+            this.y = p.y - this.h;
+            this.vy = 0;
+            this.grounded = true;
+          }
+        }
+
+        if (this.attacking) {
+          const hitbox = {
+            x: this.facing === 1 ? this.x + this.w - 2 : this.x - 24,
+            y: this.y + 6,
+            w: 26,
+            h: 18
+          };
+
+          for (const en of enemies) {
+            if (en.alive && checkAABB(hitbox, en)) {
+              en.hit(1);
+              audio.playHit();
+              createSparkParticles(en.x + en.w / 2, en.y + en.h / 2, 8, '#f59e0b');
+              GAME.score += 150;
+            }
+          }
+        }
+
+        if (this.y > V_HEIGHT + 30) {
+          this.takeDamage(100);
+        }
+      }
+
+      takeDamage(amount) {
+        if (this.invulnerable > 0) return;
+        this.hp -= amount;
+        this.invulnerable = 45;
+        audio.playHit();
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
+        if (this.hp <= 0) {
+          this.hp = 0;
+          gameOver();
+        }
+        updateHUD();
+      }
+
+      draw(c, camX) {
+        if (this.invulnerable > 0 && Math.floor(this.animTick / 4) % 2 === 0) {
+          return;
+        }
+
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        this.drawLeftraruPixels(c);
+        c.restore();
+      }
+
+      drawLeftraruPixels(c) {
+        const isRunning = Math.abs(this.vx) > 0.2 && this.grounded;
+        const legOffset = isRunning ? Math.sin(this.animTick * 0.3) * 3 : 0;
+
+        // 1. PIERNAS Y BOTAS DE CUERO
+        c.fillStyle = '#2c1810'; // Faldón oscuro interior
+        c.fillRect(3, 20, 5, 5);
+        c.fillRect(10, 20, 5, 5);
+
+        c.fillStyle = '#9b5338'; // Tono de piel mapuche
+        c.fillRect(4, 23, 3, 3);
+        c.fillRect(11, 23, 3, 3);
+
+        c.fillStyle = '#5c3a21'; // Botines de cuero curtido
+        c.fillRect(3, 26 + legOffset, 5, 4);
+        c.fillRect(10, 26 - legOffset, 5, 4);
+
+        // 2. MAKÜN (PONCHO OCRE TERROSO CON PATRÓN MAPUCHE)
+        c.fillStyle = '#9c663b'; // Ocre/tierra cálido como la referencia
+        c.beginPath();
+        c.moveTo(1, 11);
+        c.lineTo(16, 11);
+        c.lineTo(13, 22);
+        c.lineTo(4, 22);
+        c.closePath();
+        c.fill();
+
+        // Guarda bordada en forma de rombo/escalonada (terracota)
+        c.fillStyle = '#6a2415';
+        c.fillRect(4, 15, 9, 2);
+        c.fillRect(6, 13, 5, 2);
+        c.fillRect(7, 17, 3, 2);
+
+        // Flecos y borde inferior del poncho
+        c.fillStyle = '#4a2511';
+        c.fillRect(4, 21, 9, 1);
+
+        // Brazalete de cuero en el brazo visible
+        c.fillStyle = '#5c3a21';
+        c.fillRect(11, 15, 3, 2);
+
+        // 3. CABEZA, ROSTRO Y TRARILONKO (SIN PLUMAS)
+        c.fillStyle = '#111827'; // Pelo negro azabache largo
+        c.fillRect(2, 3, 4, 12);  // Caída de pelo por la espalda
+        c.fillRect(4, 2, 9, 4);   // Cabellera superior
+
+        c.fillStyle = '#9b5338'; // Rostro
+        c.fillRect(6, 4, 7, 7);
+
+        // Trarilonko: Banda plateada limpia con discos/tachas
+        c.fillStyle = '#cbd5e1'; // Plata
+        c.fillRect(5, 4, 8, 2);
+        c.fillStyle = '#64748b'; // Relieve tachas
+        c.fillRect(6, 4, 1, 2);
+        c.fillRect(8, 4, 1, 2);
+        c.fillRect(10, 4, 1, 2);
+
+        // Mirada firme
+        c.fillStyle = '#0f172a';
+        c.fillRect(10, 6, 2, 1);
+        c.fillStyle = '#7a3e28'; // Sombra bajo la mandíbula
+        c.fillRect(7, 10, 5, 1);
+
+        // 4. WAYKI / LANZA (MADERA DE COLIHUE Y OBSIDIANA PURA, SIN PLUMA)
+        const spearY = 14;
+        if (this.attacking) {
+          const thrustX = 12 + Math.sin((this.attackTimer / this.attackDuration) * Math.PI) * 16;
+
+          // Brazo estirado hacia adelante
+          c.fillStyle = '#9b5338';
+          c.fillRect(9, 13, 7, 3);
+
+          // Astil de la lanza
+          c.fillStyle = '#633c1f';
+          c.fillRect(thrustX - 16, spearY, 26, 2);
+
+          // Amarras de tendón en la punta
+          c.fillStyle = '#854d0e';
+          c.fillRect(thrustX + 8, spearY - 1, 2, 4);
+
+          // Punta de obsidiana negra knappeada
+          c.fillStyle = '#18181b';
+          c.beginPath();
+          c.moveTo(thrustX + 10, spearY - 2);
+          c.lineTo(thrustX + 17, spearY + 1);
+          c.lineTo(thrustX + 10, spearY + 4);
+          c.closePath();
+          c.fill();
+          c.fillStyle = '#94a3b8'; // Brillo mineral
+          c.fillRect(thrustX + 13, spearY, 2, 1);
+        } else {
+          // Lanza descansando en el hombro
+          c.fillStyle = '#633c1f';
+          c.fillRect(7, 0, 2, 28);
+
+          // Amarras
+          c.fillStyle = '#854d0e';
+          c.fillRect(6, 0, 4, 2);
+
+          // Punta de obsidiana superior
+          c.fillStyle = '#18181b';
+          c.beginPath();
+          c.moveTo(5, 0);
+          c.lineTo(8, -6);
+          c.lineTo(11, 0);
+          c.closePath();
+          c.fill();
+          c.fillStyle = '#94a3b8';
+          c.fillRect(7, -3, 2, 2);
+
+          // Brazo sosteniendo la lanza
+          c.fillStyle = '#9b5338';
+          c.fillRect(7, 14, 4, 4);
+        }
+      }
+    }
+
+    /* =========================================================================
+       4. INVADER ENEMIES
+       ========================================================================= */
+    class Enemy {
+      constructor(x, y, patrolRange = 70) {
+        this.x = x;
+        this.y = y;
+        this.startX = x;
+        this.w = 18;
+        this.h = 28;
+        this.patrolRange = patrolRange;
+        this.vx = 0.7;
+        this.hp = 1;
+        this.alive = true;
+        this.facing = 1;
+        this.animTick = Math.floor(Math.random() * 20);
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        this.animTick++;
+
+        this.x += this.vx;
+        if (this.x > this.startX + this.patrolRange) {
+          this.vx = -Math.abs(this.vx);
+          this.facing = -1;
+        } else if (this.x < this.startX - this.patrolRange) {
+          this.vx = Math.abs(this.vx);
+          this.facing = 1;
+        }
+
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.8;
+            audio.playHit();
+            GAME.score += 200;
+          } else {
+            player.takeDamage(20);
+          }
+        }
+      }
+
+      hit(dmg) {
+        this.hp -= dmg;
+        if (this.hp <= 0) {
+          this.alive = false;
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        const legWalk = Math.sin(this.animTick * 0.2) * 2;
+
+        c.fillStyle = '#451a03';
+        c.fillRect(3, 20, 4, 8 + legWalk);
+        c.fillRect(11, 20, 4, 8 - legWalk);
+
+        c.fillStyle = '#94a3b8';
+        c.fillRect(3, 9, 12, 12);
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(5, 10, 3, 10);
+
+        c.fillStyle = '#fbcfe8';
+        c.fillRect(6, 4, 6, 6);
+        c.fillStyle = '#1e293b';
+        c.fillRect(7, 8, 4, 3);
+
+        c.fillStyle = '#64748b';
+        c.fillRect(4, 1, 10, 4);
+        c.fillRect(2, 4, 14, 2);
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(7, -2, 3, 4);
+
+        c.fillStyle = '#e2e8f0';
+        c.fillRect(15, 6, 2, 16);
+        c.fillStyle = '#eab308';
+        c.fillRect(13, 17, 6, 2);
+
+        c.restore();
+      }
+    }
+
+    /* =========================================================================
+       5. COLLECTIBLES
+       ========================================================================= */
+    class Collectible {
+      constructor(x, y, type = 'pinon') {
+        this.x = x;
+        this.y = y;
+        this.w = 12;
+        this.h = 12;
+        this.type = type;
+        this.collected = false;
+        this.tick = Math.random() * 10;
+      }
+
+      update(player) {
+        if (this.collected) return;
+        this.tick += 0.08;
+
+        if (checkAABB(this, player)) {
+          this.collected = true;
+          audio.playCoin();
+          if (this.type === 'pinon') {
+            GAME.pinones++;
+            GAME.score += 50;
+            player.hp = Math.min(player.maxHp, player.hp + 12);
+            createSparkParticles(this.x + 6, this.y + 6, 6, '#f59e0b');
+          } else if (this.type === 'kultrun') {
+            GAME.score += 300;
+            player.invulnerable = 90;
+            createSparkParticles(this.x + 6, this.y + 6, 12, '#38bdf8');
+          }
+          updateHUD();
+        }
+      }
+
+      draw(c, camX) {
+        if (this.collected) return;
+        const screenX = Math.round(this.x - camX);
+        const floatY = Math.round(this.y + Math.sin(this.tick) * 2.5);
+
+        if (screenX < -20 || screenX > V_WIDTH + 20) return;
+
+        if (this.type === 'pinon') {
+          c.fillStyle = '#b45309';
+          c.beginPath();
+          c.ellipse(screenX + 6, floatY + 6, 5, 7, 0.2, 0, Math.PI * 2);
+          c.fill();
+          c.fillStyle = '#fef08a';
+          c.fillRect(screenX + 5, floatY + 2, 2, 3);
+        } else {
+          c.fillStyle = '#451a03';
+          c.beginPath();
+          c.arc(screenX + 6, floatY + 6, 7, 0, Math.PI * 2);
+          c.fill();
+          c.fillStyle = '#fde047';
+          c.fillRect(screenX + 5, floatY + 1, 2, 10);
+          c.fillRect(screenX + 1, floatY + 5, 10, 2);
+        }
+      }
+    }
+
+    /* =========================================================================
+       6. PARTICLES
+       ========================================================================= */
+    function createDustParticles(x, y, count = 5) {
+      for (let i = 0; i < count; i++) {
+        GAME.particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: -Math.random() * 1.2,
+          life: 18 + Math.random() * 10,
+          color: '#d97706',
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    function createSparkParticles(x, y, count = 8, color = '#f59e0b') {
+      for (let i = 0; i < count; i++) {
+        GAME.particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 3,
+          vy: (Math.random() - 0.5) * 3,
+          life: 14 + Math.random() * 8,
+          color: color,
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    /* =========================================================================
+       7. LEVEL GENERATION
+       ========================================================================= */
+    let player = new Player(40, 160);
+    let platforms = [];
+    let enemies = [];
+    let collectibles = [];
+
+    function generateLevel() {
+      platforms = [];
+      enemies = [];
+      collectibles = [];
+
+      let curX = 0;
+      while (curX < LEVEL_LENGTH) {
+        const segWidth = 260 + Math.floor(Math.random() * 220);
+        const segHeight = 220 + Math.floor(Math.random() * 25);
+
+        platforms.push({
+          x: curX,
+          y: segHeight,
+          w: segWidth,
+          h: 60
+        });
+
+        if (curX > 200 && curX < LEVEL_LENGTH - 300) {
+          const platY = segHeight - 45 - Math.floor(Math.random() * 30);
+          platforms.push({
+            x: curX + 70,
+            y: platY,
+            w: 80 + Math.floor(Math.random() * 50),
+            h: 12
+          });
+
+          collectibles.push(new Collectible(curX + 100, platY - 18, 'pinon'));
+          if (Math.random() > 0.6) {
+            collectibles.push(new Collectible(curX + 130, platY - 18, 'kultrun'));
+          }
+
+          if (Math.random() > 0.4) {
+            enemies.push(new Enemy(curX + 110, segHeight - 28, 45));
+          }
+        }
+
+        const gap = (curX >= LEVEL_LENGTH - 400) ? 0 : (40 + Math.floor(Math.random() * 35));
+        curX += segWidth + gap;
+      }
+
+      platforms.push({
+        x: LEVEL_LENGTH - 260,
+        y: 210,
+        w: 260,
+        h: 60
+      });
+    }
+
+    /* =========================================================================
+       8. PARALLAX BACKGROUND
+       ========================================================================= */
+    function drawParallaxBackground(c, camX) {
+      const skyGrad = c.createLinearGradient(0, 0, 0, V_HEIGHT);
+      skyGrad.addColorStop(0, '#122538');
+      skyGrad.addColorStop(0.5, '#2b4764');
+      skyGrad.addColorStop(0.8, '#9a5332');
+      skyGrad.addColorStop(1, '#c27847');
+      c.fillStyle = skyGrad;
+      c.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+      c.fillStyle = '#fef08a';
+      c.beginPath();
+      c.arc(380 - (camX * 0.02) % 480, 50, 16, 0, Math.PI * 2);
+      c.fill();
+
+      const vX = 140 - (camX * 0.04) % 600;
+      c.fillStyle = '#374151';
+      c.beginPath();
+      c.moveTo(vX, 175);
+      c.lineTo(vX + 75, 75);
+      c.lineTo(vX + 90, 75);
+      c.lineTo(vX + 165, 175);
+      c.fill();
+
+      c.fillStyle = '#f1f5f9';
+      c.beginPath();
+      c.moveTo(vX + 55, 102);
+      c.lineTo(vX + 75, 75);
+      c.lineTo(vX + 90, 75);
+      c.lineTo(vX + 110, 102);
+      c.lineTo(vX + 95, 96);
+      c.lineTo(vX + 80, 104);
+      c.lineTo(vX + 68, 97);
+      c.fill();
+
+      c.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      const smokeTick = Date.now() * 0.002;
+      for (let s = 0; s < 4; s++) {
+        const smX = vX + 82 + Math.sin(smokeTick + s) * 8 - s * 6;
+        const smY = 70 - s * 12;
+        c.beginPath();
+        c.arc(smX, smY, 6 + s * 3, 0, Math.PI * 2);
+        c.fill();
+      }
+
+      c.fillStyle = '#1e293b';
+      c.beginPath();
+      c.moveTo(0, V_HEIGHT);
+      for (let x = 0; x <= V_WIDTH; x += 30) {
+        const mx = x + (camX * 0.08);
+        const my = 135 + Math.sin(mx * 0.015) * 25 + Math.cos(mx * 0.03) * 12;
+        c.lineTo(x, my);
+      }
+      c.lineTo(V_WIDTH, V_HEIGHT);
+      c.fill();
+
+      drawAraucariaLayer(c, camX * 0.22, 160, '#0f291e', 14);
+      drawAraucariaLayer(c, camX * 0.45, 185, '#091c14', 18);
+    }
+
+    function drawAraucariaLayer(c, scrollOffset, baseY, color, treeCount) {
+      c.fillStyle = color;
+      const spacing = 75;
+      const startIdx = Math.floor(scrollOffset / spacing);
+
+      for (let i = 0; i < treeCount; i++) {
+        const treeIdx = startIdx + i;
+        const screenX = Math.round(treeIdx * spacing - scrollOffset);
+        const h = 55 + ((treeIdx * 19) % 25);
+        const topY = baseY - h;
+
+        c.fillRect(screenX + 5, topY + 12, 4, h);
+
+        c.beginPath();
+        c.ellipse(screenX + 7, topY + 10, 18, 7, 0, 0, Math.PI * 2);
+        c.fill();
+
+        c.beginPath();
+        c.ellipse(screenX + 7, topY + 4, 13, 5, 0, 0, Math.PI * 2);
+        c.fill();
+
+        c.fillRect(screenX - 8, topY + 18, 7, 3);
+        c.fillRect(screenX + 15, topY + 18, 7, 3);
+      }
+    }
+
+    /* =========================================================================
+       9. LOOP & UPDATES
+       ========================================================================= */
+    function checkAABB(a, b) {
+      return (
+        a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y
+      );
+    }
+
+    function update() {
+      if (!GAME.running) return;
+
+      player.update(platforms, enemies);
+
+      const targetCamX = player.x - V_WIDTH * 0.35;
+      GAME.cameraX += (targetCamX - GAME.cameraX) * 0.12;
+      if (GAME.cameraX < 0) GAME.cameraX = 0;
+      if (GAME.cameraX > LEVEL_LENGTH - V_WIDTH) GAME.cameraX = LEVEL_LENGTH - V_WIDTH;
+
+      enemies.forEach(en => en.update(player));
+      collectibles.forEach(col => col.update(player));
+
+      for (let i = GAME.particles.length - 1; i >= 0; i--) {
+        const p = GAME.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) {
+          GAME.particles.splice(i, 1);
+        }
+      }
+
+      if (player.x >= LEVEL_LENGTH - 100) {
+        victory();
+      }
+
+      const progressPercent = Math.min(100, Math.round((player.x / (LEVEL_LENGTH - 120)) * 100));
+      document.getElementById('uiProgressBar').style.width = progressPercent + '%';
+      document.getElementById('uiDistance').textContent = progressPercent + '%';
+    }
+
+    function render() {
+      drawParallaxBackground(ctx, GAME.cameraX);
+
+      platforms.forEach(p => {
+        const sx = Math.round(p.x - GAME.cameraX);
+        if (sx + p.w < -20 || sx > V_WIDTH + 20) return;
+
+        ctx.fillStyle = '#22543d';
+        ctx.fillRect(sx, p.y, p.w, 5);
+        ctx.fillStyle = '#2f855a';
+        for (let g = 0; g < p.w; g += 8) {
+          ctx.fillRect(sx + g, p.y - 2, 3, 2);
+        }
+
+        ctx.fillStyle = '#3b2313';
+        ctx.fillRect(sx, p.y + 5, p.w, p.h);
+
+        ctx.fillStyle = '#543824';
+        for (let s = 10; s < p.w - 10; s += 24) {
+          ctx.fillRect(sx + s, p.y + 9, 6, 5);
+        }
+      });
+
+      const shrineX = LEVEL_LENGTH - 150 - GAME.cameraX;
+      if (shrineX > -50 && shrineX < V_WIDTH + 50) {
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(shrineX + 30, 150, 12, 60);
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(shrineX + 28, 140, 16, 12);
+        ctx.fillStyle = '#0284c7';
+        ctx.fillRect(shrineX + 42, 145, 18, 12);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(shrineX + 48, 149, 5, 5);
+      }
+
+      collectibles.forEach(col => col.draw(ctx, GAME.cameraX));
+      enemies.forEach(en => en.draw(ctx, GAME.cameraX));
+      player.draw(ctx, GAME.cameraX);
+
+      GAME.particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(Math.round(p.x - GAME.cameraX), Math.round(p.y), p.size, p.size);
+      });
+    }
+
+    function gameLoop() {
+      update();
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    /* =========================================================================
+       10. STATE TRANSITIONS
+       ========================================================================= */
+    function updateHUD() {
+      document.getElementById('uiHealthFill').style.width = Math.max(0, player.hp) + '%';
+      document.getElementById('uiPinonCount').textContent = GAME.pinones;
+      document.getElementById('uiScore').textContent = String(GAME.score).padStart(5, '0');
+    }
+
+    function startGame() {
+      audio.init();
+      document.getElementById('startOverlay').classList.add('hidden');
+      document.getElementById('gameOverOverlay').classList.add('hidden');
+      document.getElementById('victoryOverlay').classList.add('hidden');
+
+      GAME.score = 0;
+      GAME.pinones = 0;
+      GAME.cameraX = 0;
+      GAME.particles = [];
+      player = new Player(40, 160);
+      generateLevel();
+      updateHUD();
+      GAME.running = true;
+    }
+
+    function gameOver() {
+      GAME.running = false;
+      document.getElementById('finalScore').textContent = GAME.score;
+      document.getElementById('gameOverOverlay').classList.remove('hidden');
+    }
+
+    function victory() {
+      GAME.running = false;
+      audio.playFanfare();
+      document.getElementById('vicScore').textContent = GAME.score + 1000;
+      document.getElementById('vicPinones').textContent = GAME.pinones;
+      document.getElementById('victoryOverlay').classList.remove('hidden');
+    }
+
+    /* =========================================================================
+       11. INPUT LISTENERS
+       ========================================================================= */
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+      switch (e.code) {
+        case 'KeyA':
+        case 'ArrowLeft':
+          GAME.keys.left = true;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          GAME.keys.right = true;
+          break;
+        case 'KeyW':
+        case 'ArrowUp':
+        case 'Space':
+          GAME.keys.jump = true;
+          break;
+        case 'KeyX':
+        case 'KeyJ':
+        case 'KeyK':
+        case 'Enter':
+          GAME.keys.attack = true;
+          break;
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      switch (e.code) {
+        case 'KeyA':
+        case 'ArrowLeft':
+          GAME.keys.left = false;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          GAME.keys.right = false;
+          break;
+        case 'KeyW':
+        case 'ArrowUp':
+        case 'Space':
+          GAME.keys.jump = false;
+          break;
+        case 'KeyX':
+        case 'KeyJ':
+        case 'KeyK':
+        case 'Enter':
+          GAME.keys.attack = false;
+          break;
+      }
+    });
+
+    function bindTouchBtn(btnId, keyName) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+
+      const press = (e) => {
+        e.preventDefault();
+        audio.init();
+        GAME.keys[keyName] = true;
+      };
+      const release = (e) => {
+        e.preventDefault();
+        GAME.keys[keyName] = false;
+      };
+
+      btn.addEventListener('touchstart', press, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('mousedown', press);
+      btn.addEventListener('mouseup', release);
+      btn.addEventListener('mouseleave', release);
+    }
+
+    bindTouchBtn('tBtnLeft', 'left');
+    bindTouchBtn('tBtnRight', 'right');
+    bindTouchBtn('tBtnJump', 'jump');
+    bindTouchBtn('tBtnAttack', 'attack');
+
+    document.getElementById('btnStartGame').addEventListener('click', startGame);
+    document.getElementById('btnRestartGame').addEventListener('click', startGame);
+    document.getElementById('btnPlayAgain').addEventListener('click', startGame);
+
+    const btnSound = document.getElementById('btnSound');
+    btnSound.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      btnSound.textContent = audio.enabled ? '🔊' : '🔇';
+    });
+
+    document.getElementById('btnHelp').addEventListener('click', () => {
+      alert('Controles:\n- A/D o Flechas: Mover a Leftraru\n- W / Espacio: Saltar (puedes rebotar sobre enemigos)\n- X / J / Enter: Estocada de lanza\n\nRecolecta Piñones sagrados para curar tu vida y Kultrunes para obtener inmunidad temporal.');
+    });
+
+    window.addEventListener('load', () => {
+      generateLevel();
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>
