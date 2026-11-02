@@ -29,9 +29,6 @@
       background: repeating-linear-gradient(90deg, #1b3b5f 0px, #1b3b5f 16px, #c5832b 16px, #c5832b 20px, #0f1d2d 20px, #0f1d2d 36px);
       height: 8px;
     }
-    .hud-text {
-      text-shadow: 2px 2px 0px #000;
-    }
     .touch-btn {
       background: rgba(18, 30, 49, 0.75);
       border: 3px solid rgba(245, 158, 11, 0.8);
@@ -56,7 +53,7 @@
     <div class="w-full max-w-5xl px-3 py-2 flex items-center justify-between gap-2 text-xs">
       <div class="flex items-center gap-2">
         <span class="text-amber-400 text-sm hidden sm:inline">🌲</span>
-        <h1 class="text-[10px] sm:text-xs text-amber-300 tracking-wider">LEFTRARU <span class="text-sky-300 text-[8px] sm:text-[10px]">v1.1</span></h1>
+        <h1 class="text-[10px] sm:text-xs text-amber-300 tracking-wider">LEFTRARU <span class="text-sky-300 text-[8px] sm:text-[10px]">v1.3</span></h1>
       </div>
 
       <div class="flex items-center gap-3 sm:gap-6 text-[9px] sm:text-[10px]">
@@ -93,13 +90,13 @@
       <div id="startOverlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-4 text-center z-20">
         <span class="text-3xl mb-2">🏔️🦅</span>
         <h2 class="text-sm sm:text-lg text-amber-400 mb-2 leading-relaxed">LEFTRARU: GUERRERO DEL WALLMAPU</h2>
-        <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-4 leading-normal font-sans font-semibold">
-          Guía al toqui Leftraru por los bosques ancestrales de la Araucanía. Empuña tu lanza contra las tropas invasoras, recolecta piñones sagrados y protege las tierras del Wallmapu.
+        <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
+          Los invasores se vuelven más duros a medida que avanzas: tropas novatas (1 estocada), veteranos (2 estocadas), caballeros de élite (3 estocadas) y capitanes blindados (4 estocadas).
         </p>
         <button id="btnStartGame" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 border-2 border-amber-300 text-slate-950 text-xs sm:text-sm font-bold rounded shadow-lg active:scale-95 transition">
           ¡INICIAR EXPEDICIÓN!
         </button>
-        <div class="mt-4 text-[8px] sm:text-[9px] text-slate-400 space-y-1">
+        <div class="mt-3 text-[8px] sm:text-[9px] text-slate-400 space-y-1">
           <p>⌨️ <span class="text-amber-300">A/D o Flechas</span>: Correr | <span class="text-amber-300">W / Espacio</span>: Saltar</p>
           <p>⚔️ <span class="text-amber-300">X / J / Enter</span>: Ataque de Lanza</p>
         </div>
@@ -121,7 +118,7 @@
       <div id="victoryOverlay" class="absolute inset-0 bg-black/85 flex flex-col items-center justify-center p-4 text-center z-20 hidden">
         <span class="text-3xl mb-1">👑✨</span>
         <h2 class="text-base sm:text-xl text-amber-400 mb-2">¡VICTORIA EN EL NGWILLATUN!</h2>
-        <p class="text-[9px] sm:text-[11px] text-slate-200 mb-4 font-sans">Leftraru ha despejado el paso de la cordillera protegiendo a su pueblo.</p>
+        <p class="text-[9px] sm:text-[11px] text-slate-200 mb-4 font-sans">¡Leftraru ha derrotado a las legiones enemigas y asegurado el Wallmapu!</p>
         <div class="text-[10px] text-yellow-300 mb-4 space-y-1">
           <div>Puntaje Total: <span id="vicScore" class="text-white">0</span></div>
           <div>Piñones Ofrendados: <span id="vicPinones" class="text-white">0</span></div>
@@ -210,16 +207,33 @@
         osc.start(now);
         osc.stop(now + 0.09);
       }
-      playHit() {
+      playShot() {
         if (!this.enabled) return;
         this.init();
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(220, now);
-        osc.frequency.exponentialRampToValueAtTime(60, now + 0.18);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.18);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+      playHit(heavy = false) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = heavy ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(heavy ? 120 : 220, now);
+        osc.frequency.exponentialRampToValueAtTime(heavy ? 20 : 60, now + 0.18);
         gain.gain.setValueAtTime(0.25, now);
         gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
         osc.connect(gain);
@@ -267,7 +281,7 @@
     const audio = new RetroAudio();
 
     /* =========================================================================
-       2. RETRO CANVAS GAME ENGINE SETUP
+       2. RETRO CANVAS ENGINE SETUP
        ========================================================================= */
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -275,7 +289,7 @@
 
     const V_WIDTH = 480;
     const V_HEIGHT = 270;
-    const LEVEL_LENGTH = 3600;
+    const LEVEL_LENGTH = 3800;
 
     const GAME = {
       running: false,
@@ -284,11 +298,12 @@
       cameraX: 0,
       levelLength: LEVEL_LENGTH,
       keys: { left: false, right: false, jump: false, attack: false },
-      particles: []
+      particles: [],
+      projectiles: []
     };
 
     /* =========================================================================
-       3. CHARACTER SPRITE RENDERER (LEFTRARU - PALETA Y TRAJE NUEVO)
+       3. CHARACTER SPRITE RENDERER (LEFTRARU)
        ========================================================================= */
     class Player {
       constructor(x, y) {
@@ -342,7 +357,7 @@
         if (GAME.keys.attack && !this.attacking && this.attackCooldown <= 0) {
           this.attacking = true;
           this.attackTimer = this.attackDuration;
-          this.attackCooldown = 20;
+          this.attackCooldown = 18;
           audio.playAttack();
         }
 
@@ -377,7 +392,7 @@
           }
         }
 
-        if (this.attacking) {
+        if (this.attacking && this.attackTimer === Math.floor(this.attackDuration * 0.7)) {
           const hitbox = {
             x: this.facing === 1 ? this.x + this.w - 2 : this.x - 24,
             y: this.y + 6,
@@ -387,10 +402,7 @@
 
           for (const en of enemies) {
             if (en.alive && checkAABB(hitbox, en)) {
-              en.hit(1);
-              audio.playHit();
-              createSparkParticles(en.x + en.w / 2, en.y + en.h / 2, 8, '#f59e0b');
-              GAME.score += 150;
+              en.hit(1, this.facing);
             }
           }
         }
@@ -404,7 +416,7 @@
         if (this.invulnerable > 0) return;
         this.hp -= amount;
         this.invulnerable = 45;
-        audio.playHit();
+        audio.playHit(true);
         createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
         if (this.hp <= 0) {
           this.hp = 0;
@@ -437,21 +449,19 @@
         const isRunning = Math.abs(this.vx) > 0.2 && this.grounded;
         const legOffset = isRunning ? Math.sin(this.animTick * 0.3) * 3 : 0;
 
-        // 1. PIERNAS Y BOTAS DE CUERO
-        c.fillStyle = '#2c1810'; // Faldón oscuro interior
+        c.fillStyle = '#2c1810';
         c.fillRect(3, 20, 5, 5);
         c.fillRect(10, 20, 5, 5);
 
-        c.fillStyle = '#9b5338'; // Tono de piel mapuche
+        c.fillStyle = '#9b5338';
         c.fillRect(4, 23, 3, 3);
         c.fillRect(11, 23, 3, 3);
 
-        c.fillStyle = '#5c3a21'; // Botines de cuero curtido
+        c.fillStyle = '#5c3a21';
         c.fillRect(3, 26 + legOffset, 5, 4);
         c.fillRect(10, 26 - legOffset, 5, 4);
 
-        // 2. MAKÜN (PONCHO OCRE TERROSO CON PATRÓN MAPUCHE)
-        c.fillStyle = '#9c663b'; // Ocre/tierra cálido como la referencia
+        c.fillStyle = '#9c663b';
         c.beginPath();
         c.moveTo(1, 11);
         c.lineTo(16, 11);
@@ -460,60 +470,48 @@
         c.closePath();
         c.fill();
 
-        // Guarda bordada en forma de rombo/escalonada (terracota)
         c.fillStyle = '#6a2415';
         c.fillRect(4, 15, 9, 2);
         c.fillRect(6, 13, 5, 2);
         c.fillRect(7, 17, 3, 2);
 
-        // Flecos y borde inferior del poncho
         c.fillStyle = '#4a2511';
         c.fillRect(4, 21, 9, 1);
 
-        // Brazalete de cuero en el brazo visible
         c.fillStyle = '#5c3a21';
         c.fillRect(11, 15, 3, 2);
 
-        // 3. CABEZA, ROSTRO Y TRARILONKO (SIN PLUMAS)
-        c.fillStyle = '#111827'; // Pelo negro azabache largo
-        c.fillRect(2, 3, 4, 12);  // Caída de pelo por la espalda
-        c.fillRect(4, 2, 9, 4);   // Cabellera superior
+        c.fillStyle = '#111827';
+        c.fillRect(2, 3, 4, 12);
+        c.fillRect(4, 2, 9, 4);
 
-        c.fillStyle = '#9b5338'; // Rostro
+        c.fillStyle = '#9b5338';
         c.fillRect(6, 4, 7, 7);
 
-        // Trarilonko: Banda plateada limpia con discos/tachas
-        c.fillStyle = '#cbd5e1'; // Plata
+        c.fillStyle = '#cbd5e1';
         c.fillRect(5, 4, 8, 2);
-        c.fillStyle = '#64748b'; // Relieve tachas
+        c.fillStyle = '#64748b';
         c.fillRect(6, 4, 1, 2);
         c.fillRect(8, 4, 1, 2);
         c.fillRect(10, 4, 1, 2);
 
-        // Mirada firme
         c.fillStyle = '#0f172a';
         c.fillRect(10, 6, 2, 1);
-        c.fillStyle = '#7a3e28'; // Sombra bajo la mandíbula
+        c.fillStyle = '#7a3e28';
         c.fillRect(7, 10, 5, 1);
 
-        // 4. WAYKI / LANZA (MADERA DE COLIHUE Y OBSIDIANA PURA, SIN PLUMA)
         const spearY = 14;
         if (this.attacking) {
           const thrustX = 12 + Math.sin((this.attackTimer / this.attackDuration) * Math.PI) * 16;
-
-          // Brazo estirado hacia adelante
           c.fillStyle = '#9b5338';
           c.fillRect(9, 13, 7, 3);
 
-          // Astil de la lanza
           c.fillStyle = '#633c1f';
           c.fillRect(thrustX - 16, spearY, 26, 2);
 
-          // Amarras de tendón en la punta
           c.fillStyle = '#854d0e';
           c.fillRect(thrustX + 8, spearY - 1, 2, 4);
 
-          // Punta de obsidiana negra knappeada
           c.fillStyle = '#18181b';
           c.beginPath();
           c.moveTo(thrustX + 10, spearY - 2);
@@ -521,18 +519,15 @@
           c.lineTo(thrustX + 10, spearY + 4);
           c.closePath();
           c.fill();
-          c.fillStyle = '#94a3b8'; // Brillo mineral
+          c.fillStyle = '#94a3b8';
           c.fillRect(thrustX + 13, spearY, 2, 1);
         } else {
-          // Lanza descansando en el hombro
           c.fillStyle = '#633c1f';
           c.fillRect(7, 0, 2, 28);
 
-          // Amarras
           c.fillStyle = '#854d0e';
           c.fillRect(6, 0, 4, 2);
 
-          // Punta de obsidiana superior
           c.fillStyle = '#18181b';
           c.beginPath();
           c.moveTo(5, 0);
@@ -543,7 +538,6 @@
           c.fillStyle = '#94a3b8';
           c.fillRect(7, -3, 2, 2);
 
-          // Brazo sosteniendo la lanza
           c.fillStyle = '#9b5338';
           c.fillRect(7, 14, 4, 4);
         }
@@ -551,10 +545,33 @@
     }
 
     /* =========================================================================
-       4. INVADER ENEMIES
+       4. ENEMIGOS CON SISTEMA DE HP (STABS / ESTOCADAS) Y MARCADORES RETRO
        ========================================================================= */
-    class Enemy {
-      constructor(x, y, patrolRange = 70) {
+
+    function drawStabPips(c, screenX, screenY, hp, maxHp, width = 18) {
+      if (maxHp <= 1 && hp <= 0) return;
+      const pipSize = 3;
+      const spacing = 1;
+      const totalWidth = maxHp * pipSize + (maxHp - 1) * spacing;
+      const startX = screenX + (width - totalWidth) / 2;
+      const y = screenY - 7;
+
+      c.fillStyle = 'rgba(0,0,0,0.7)';
+      c.fillRect(startX - 1, y - 1, totalWidth + 2, pipSize + 2);
+
+      for (let i = 0; i < maxHp; i++) {
+        if (i < hp) {
+          c.fillStyle = (maxHp >= 4) ? '#ef4444' : (maxHp === 3 ? '#a855f7' : (maxHp === 2 ? '#38bdf8' : '#22c55e'));
+        } else {
+          c.fillStyle = '#475569';
+        }
+        c.fillRect(startX + i * (pipSize + spacing), y, pipSize, pipSize);
+      }
+    }
+
+    // Soldado de Infantería común (1 Estocada en T1, 2 en T2)
+    class Soldier {
+      constructor(x, y, maxHp = 1, patrolRange = 70) {
         this.x = x;
         this.y = y;
         this.startX = x;
@@ -562,15 +579,18 @@
         this.h = 28;
         this.patrolRange = patrolRange;
         this.vx = 0.7;
-        this.hp = 1;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
         this.alive = true;
         this.facing = 1;
+        this.hitFlash = 0;
         this.animTick = Math.floor(Math.random() * 20);
       }
 
       update(player) {
         if (!this.alive) return;
         this.animTick++;
+        if (this.hitFlash > 0) this.hitFlash--;
 
         this.x += this.vx;
         if (this.x > this.startX + this.patrolRange) {
@@ -585,18 +605,22 @@
           if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
             this.hit(1);
             player.vy = player.jumpPower * 0.8;
-            audio.playHit();
-            GAME.score += 200;
           } else {
-            player.takeDamage(20);
+            player.takeDamage(18);
           }
         }
       }
 
-      hit(dmg) {
+      hit(dmg, facingDir = 1) {
         this.hp -= dmg;
+        this.hitFlash = 8;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
+        this.x += (facingDir === 1 ? 4 : -4); // Retroceso
+
         if (this.hp <= 0) {
           this.alive = false;
+          GAME.score += 150 * this.maxHp;
           createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
         }
       }
@@ -608,6 +632,8 @@
 
         if (screenX < -30 || screenX > V_WIDTH + 30) return;
 
+        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
+
         c.save();
         if (this.facing === -1) {
           c.translate(screenX + this.w, screenY);
@@ -616,13 +642,20 @@
           c.translate(screenX, screenY);
         }
 
-        const legWalk = Math.sin(this.animTick * 0.2) * 2;
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
 
+        const legWalk = Math.sin(this.animTick * 0.2) * 2;
         c.fillStyle = '#451a03';
         c.fillRect(3, 20, 4, 8 + legWalk);
         c.fillRect(11, 20, 4, 8 - legWalk);
 
-        c.fillStyle = '#94a3b8';
+        // Si tiene 2 estocadas (Veterano), la armadura es más oscura / bruñida
+        c.fillStyle = (this.maxHp >= 2) ? '#475569' : '#94a3b8';
         c.fillRect(3, 9, 12, 12);
         c.fillStyle = '#cbd5e1';
         c.fillRect(5, 10, 3, 10);
@@ -642,6 +675,343 @@
         c.fillRect(15, 6, 2, 16);
         c.fillStyle = '#eab308';
         c.fillRect(13, 17, 6, 2);
+        c.restore();
+      }
+    }
+
+    // Arcabucero a Distancia (1 o 2 Estocadas)
+    class Arquebusier {
+      constructor(x, y, maxHp = 1) {
+        this.x = x;
+        this.y = y;
+        this.w = 18;
+        this.h = 28;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = -1;
+        this.hitFlash = 0;
+        this.shootTimer = 100 + Math.floor(Math.random() * 50);
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        this.facing = (player.x > this.x) ? 1 : -1;
+
+        const dist = Math.abs(player.x - this.x);
+        if (dist < 260) {
+          this.shootTimer--;
+          if (this.shootTimer <= 0) {
+            this.shoot();
+            this.shootTimer = 150 + Math.floor(Math.random() * 40);
+          }
+        }
+
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.8;
+          } else {
+            player.takeDamage(15);
+          }
+        }
+      }
+
+      shoot() {
+        audio.playShot();
+        const bulletSpeed = this.facing * 3.8;
+        GAME.projectiles.push({
+          x: this.facing === 1 ? this.x + 20 : this.x - 6,
+          y: this.y + 12,
+          vx: bulletSpeed,
+          life: 90
+        });
+        createDustParticles(this.facing === 1 ? this.x + 22 : this.x - 8, this.y + 12, 8);
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
+        this.x += (facingDir === 1 ? 4 : -4);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          GAME.score += 250 * this.maxHp;
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        c.fillStyle = (this.maxHp >= 2) ? '#581c87' : '#78350f'; // Abrigo púrpura si es T2
+        c.fillRect(3, 9, 12, 12);
+
+        c.fillStyle = '#1e293b';
+        c.fillRect(3, 21, 4, 7);
+        c.fillRect(11, 21, 4, 7);
+
+        c.fillStyle = '#fbcfe8';
+        c.fillRect(6, 4, 6, 6);
+
+        c.fillStyle = '#0f172a';
+        c.fillRect(2, 2, 14, 2);
+        c.fillRect(5, -1, 8, 3);
+
+        c.fillStyle = '#451a03';
+        c.fillRect(10, 12, 8, 3);
+        c.fillStyle = '#334155';
+        c.fillRect(16, 11, 14, 2);
+
+        c.fillStyle = (Math.floor(Date.now() / 150) % 2 === 0) ? '#f97316' : '#ef4444';
+        c.fillRect(12, 10, 2, 2);
+
+        c.restore();
+      }
+    }
+
+    // Caballero Montado (3 Estocadas)
+    class HorseKnight {
+      constructor(x, y, maxHp = 3, patrolRange = 140) {
+        this.x = x;
+        this.y = y - 8;
+        this.startX = x;
+        this.w = 36;
+        this.h = 36;
+        this.patrolRange = patrolRange;
+        this.vx = 1.6;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = 1;
+        this.hitFlash = 0;
+        this.animTick = 0;
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        this.animTick++;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        this.x += this.vx;
+        if (this.x > this.startX + this.patrolRange) {
+          this.vx = -Math.abs(this.vx);
+          this.facing = -1;
+        } else if (this.x < this.startX - this.patrolRange) {
+          this.vx = Math.abs(this.vx);
+          this.facing = 1;
+        }
+
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 16) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.9;
+          } else {
+            player.takeDamage(25);
+          }
+        }
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 9, '#f59e0b');
+        this.x += (facingDir === 1 ? 3 : -3);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          GAME.score += 500;
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 22);
+        } else {
+          // Acelera al recibir daño
+          this.vx = (this.vx > 0 ? 2.2 : -2.2);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -40 || screenX > V_WIDTH + 40) return;
+
+        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        const trot = Math.sin(this.animTick * 0.3) * 3;
+
+        c.fillStyle = '#5c2d16';
+        c.fillRect(4, 18 + trot, 26, 12);
+        c.fillRect(24, 10 + trot, 8, 12);
+        c.fillRect(28, 8 + trot, 6, 8);
+
+        c.fillStyle = '#1c1917';
+        c.fillRect(2, 19 + trot, 3, 10);
+        c.fillRect(24, 8 + trot, 3, 8);
+
+        c.fillStyle = '#3d1a0c';
+        c.fillRect(6, 30, 4, 8 + trot);
+        c.fillRect(24, 30, 4, 8 - trot);
+
+        c.fillStyle = '#64748b';
+        c.fillRect(12, 8 + trot, 10, 11);
+
+        c.fillStyle = '#94a3b8';
+        c.fillRect(14, 2 + trot, 8, 7);
+
+        c.fillStyle = '#ef4444';
+        c.fillRect(12, 0 + trot, 4, 3);
+
+        c.fillStyle = '#a16207';
+        c.fillRect(16, 12 + trot, 26, 2);
+        c.fillStyle = '#e2e8f0';
+        c.fillRect(42, 11 + trot, 6, 4);
+
+        c.restore();
+      }
+    }
+
+    // Capitán con Rodela / Boss (4 Estocadas, Bloqueo frontal)
+    class ShieldCaptain {
+      constructor(x, y, maxHp = 4) {
+        this.x = x;
+        this.y = y - 4;
+        this.w = 22;
+        this.h = 32;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = -1;
+        this.hitFlash = 0;
+        this.animTick = 0;
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        this.animTick++;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        this.facing = (player.x > this.x) ? 1 : -1;
+
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 14) {
+            this.hit(1, 0, true);
+            player.vy = player.jumpPower * 0.9;
+          } else {
+            player.takeDamage(30);
+          }
+        }
+      }
+
+      hit(dmg, attackFacing = 1, isJump = false) {
+        const isFrontal = (attackFacing === 1 && this.facing === -1) || (attackFacing === -1 && this.facing === 1);
+        if (isFrontal && !isJump) {
+          audio.playHit(false);
+          createSparkParticles(this.facing === 1 ? this.x + 22 : this.x - 2, this.y + 12, 10, '#94a3b8');
+          return; // Escudo bloquea la estocada
+        }
+
+        this.hp -= dmg;
+        this.hitFlash = 10;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
+        this.x += (attackFacing === 1 ? 5 : -5);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          GAME.score += 800;
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 28);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        c.fillStyle = '#b91c1c';
+        c.fillRect(1, 8, 6, 18);
+
+        c.fillStyle = '#1e293b';
+        c.fillRect(5, 22, 4, 10);
+        c.fillRect(13, 22, 4, 10);
+
+        c.fillStyle = '#d97706';
+        c.fillRect(5, 10, 12, 13);
+
+        c.fillStyle = '#fbcfe8';
+        c.fillRect(8, 4, 6, 6);
+        c.fillStyle = '#b45309';
+        c.fillRect(5, 1, 12, 4);
+
+        c.fillStyle = '#f8fafc';
+        c.fillRect(16, 4, 2, 18);
+
+        c.fillStyle = '#94a3b8';
+        c.beginPath();
+        c.arc(17, 16, 9, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#d97706';
+        c.fillRect(15, 14, 4, 4);
 
         c.restore();
       }
@@ -709,7 +1079,7 @@
     }
 
     /* =========================================================================
-       6. PARTICLES
+       6. PARTICLES & PROJECTILES
        ========================================================================= */
     function createDustParticles(x, y, count = 5) {
       for (let i = 0; i < count; i++) {
@@ -740,7 +1110,7 @@
     }
 
     /* =========================================================================
-       7. LEVEL GENERATION
+       7. LEVEL GENERATION CON ESCALADO PROGRESIVO DE DIFICULTAD (TIERS)
        ========================================================================= */
     let player = new Player(40, 160);
     let platforms = [];
@@ -751,6 +1121,7 @@
       platforms = [];
       enemies = [];
       collectibles = [];
+      GAME.projectiles = [];
 
       let curX = 0;
       while (curX < LEVEL_LENGTH) {
@@ -764,7 +1135,7 @@
           h: 60
         });
 
-        if (curX > 200 && curX < LEVEL_LENGTH - 300) {
+        if (curX > 200 && curX < LEVEL_LENGTH - 400) {
           const platY = segHeight - 45 - Math.floor(Math.random() * 30);
           platforms.push({
             x: curX + 70,
@@ -778,14 +1149,43 @@
             collectibles.push(new Collectible(curX + 130, platY - 18, 'kultrun'));
           }
 
-          if (Math.random() > 0.4) {
-            enemies.push(new Enemy(curX + 110, segHeight - 28, 45));
+          // ESCALADO SEGÚN EL AVANCE EN EL MAPA:
+          // Zona 1 (curX < 1200): Enemigos de 1 estocada
+          // Zona 2 (1200 <= curX < 2400): Veteranos de 2 estocadas
+          // Zona 3 (curX >= 2400): Élite / Caballeros de 3 estocadas
+          const progress = curX / LEVEL_LENGTH;
+
+          if (progress < 0.33) {
+            // Zona Inicial: 1 Estocada
+            if (Math.random() < 0.6) {
+              enemies.push(new Soldier(curX + 110, segHeight - 28, 1, 50));
+            } else {
+              enemies.push(new Arquebusier(curX + 120, segHeight - 28, 1));
+            }
+          } else if (progress < 0.66) {
+            // Zona Media: 2 Estocadas
+            if (Math.random() < 0.5) {
+              enemies.push(new Soldier(curX + 110, segHeight - 28, 2, 60));
+            } else {
+              enemies.push(new Arquebusier(curX + 120, segHeight - 28, 2));
+            }
+          } else {
+            // Zona Avanzada: 2 a 3 Estocadas
+            if (Math.random() < 0.5) {
+              enemies.push(new HorseKnight(curX + 90, segHeight - 28, 3, 120));
+            } else {
+              enemies.push(new Soldier(curX + 110, segHeight - 28, 2, 70));
+            }
           }
         }
 
-        const gap = (curX >= LEVEL_LENGTH - 400) ? 0 : (40 + Math.floor(Math.random() * 35));
+        const gap = (curX >= LEVEL_LENGTH - 500) ? 0 : (40 + Math.floor(Math.random() * 35));
         curX += segWidth + gap;
       }
+
+      // Desafío Final: Capitán con Escudo de 4 Estocadas
+      enemies.push(new ShieldCaptain(LEVEL_LENGTH - 500, 192, 4));
+      enemies.push(new HorseKnight(LEVEL_LENGTH - 360, 192, 3));
 
       platforms.push({
         x: LEVEL_LENGTH - 260,
@@ -908,6 +1308,27 @@
       enemies.forEach(en => en.update(player));
       collectibles.forEach(col => col.update(player));
 
+      for (let i = GAME.projectiles.length - 1; i >= 0; i--) {
+        const proj = GAME.projectiles[i];
+        proj.x += proj.vx;
+        proj.life--;
+
+        if (
+          player.x < proj.x + 4 &&
+          player.x + player.w > proj.x &&
+          player.y < proj.y + 4 &&
+          player.y + player.h > proj.y
+        ) {
+          player.takeDamage(18);
+          GAME.projectiles.splice(i, 1);
+          continue;
+        }
+
+        if (proj.life <= 0) {
+          GAME.projectiles.splice(i, 1);
+        }
+      }
+
       for (let i = GAME.particles.length - 1; i >= 0; i--) {
         const p = GAME.particles[i];
         p.x += p.vx;
@@ -964,6 +1385,14 @@
 
       collectibles.forEach(col => col.draw(ctx, GAME.cameraX));
       enemies.forEach(en => en.draw(ctx, GAME.cameraX));
+
+      GAME.projectiles.forEach(proj => {
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(Math.round(proj.x - GAME.cameraX), Math.round(proj.y), 4, 3);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(Math.round(proj.x - GAME.cameraX - 2), Math.round(proj.y + 1), 2, 1);
+      });
+
       player.draw(ctx, GAME.cameraX);
 
       GAME.particles.forEach(p => {
@@ -979,7 +1408,7 @@
     }
 
     /* =========================================================================
-       10. STATE TRANSITIONS
+       10. UI & TRANSITIONS
        ========================================================================= */
     function updateHUD() {
       document.getElementById('uiHealthFill').style.width = Math.max(0, player.hp) + '%';
@@ -1108,7 +1537,7 @@
     });
 
     document.getElementById('btnHelp').addEventListener('click', () => {
-      alert('Controles:\n- A/D o Flechas: Mover a Leftraru\n- W / Espacio: Saltar (puedes rebotar sobre enemigos)\n- X / J / Enter: Estocada de lanza\n\nRecolecta Piñones sagrados para curar tu vida y Kultrunes para obtener inmunidad temporal.');
+      alert('Resistencia de Invasores:\n- Pips verdes (1 estocada): Soldados rasos y exploradores.\n- Pips celestes (2 estocadas): Veteranos con armadura reforzada.\n- Pips morados (3 estocadas): Jinetes montados veloces.\n- Pips rojos (4 estocadas): Capitanes con rodela pesada (atacarlos por la espalda o saltando sobre ellos).');
     });
 
     window.addEventListener('load', () => {
