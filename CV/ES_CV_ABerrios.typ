@@ -407,7 +407,6 @@ practitioners use language documentation? [El rol de las personas frente a los d
 
 Epu awkiñ che dungun DISTÜRIFUSIYON ALTERNANTE KAM VARIYASIYON LIFÜREMU mülele, 
 
-Si hay dos sonidos en DA o VL, entonces cualquier contexto que tenga un sonido en estudio el otro sonido tambíen tiene el mismo contexto. y tienen los mismos contextos (vecino). Las dos palabras son similares (se pueden confundir una con otra), que están en par mínimo, pero no entregan significados distintos, entonces los sonidos bajo estudio integran un solo fonema.
-
+Si hay dos sonidos en DA o VL, entonces cualquier contexto que tenga un sonido en estudio el otro sonido también tiene el mismo contexto. y tienen los mismos contextos (vecino). Las dos palabras son similares (se pueden confundir una con otra), que están en par mínimo, pero no entregan significados distintos, entonces los sonidos bajo estudio integran un solo fonema.
 
 fey chem karukatu ñi niyen kiñe awkiñ chilhkatupeyel kangelu awkiñ ka chilhkatupeyeyel fey ka femuechi karukatu pu awkiñ che dungun niyey, keñawüngekey reke ti epu n´emül´ par minimu mülelu, welu wülnole kake pin engu, fey may ta ti epu awkiñ chilhkatupeyeel koneltuleyngu kiñe fonemamu müten.

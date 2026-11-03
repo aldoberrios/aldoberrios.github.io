@@ -43,40 +43,69 @@
       transform: translateY(2px);
       background: rgba(245, 158, 11, 0.4);
     }
+    .health-pip {
+      width: 14px;
+      height: 10px;
+      background: #ef4444;
+      border: 1px solid #7f1d1d;
+      box-shadow: inset 1px 1px 0 #fca5a5;
+      transition: background-color 0.15s;
+    }
+    .health-pip.empty {
+      background: #1e293b;
+      border-color: #0f172a;
+      box-shadow: none;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center text-slate-100">
 
-  <!-- TOP HEADER & RETRO HUD -->
+  <!-- TOP HEADER & RETRO HUD WITH MC STATUS CARD -->
   <header class="w-full bg-[#0d1722] border-b-2 border-amber-600/70 z-10 flex flex-col items-center">
     <div class="fretwork-border w-full"></div>
-    <div class="w-full max-w-5xl px-3 py-2 flex items-center justify-between gap-2 text-xs">
-      <div class="flex items-center gap-2">
-        <span class="text-amber-400 text-sm hidden sm:inline">🌲</span>
-        <h1 class="text-[10px] sm:text-xs text-amber-300 tracking-wider">LEFTRARU <span class="text-sky-300 text-[8px] sm:text-[10px]">v1.3</span></h1>
-      </div>
+    <div class="w-full max-w-5xl px-3 py-2 flex items-center justify-between gap-3 text-xs">
+      
+      <!-- MAIN CHARACTER PROFILE CARD -->
+      <div class="flex items-center gap-3 bg-[#111e2e] border-2 border-amber-600/60 rounded-md px-2.5 py-1.5 shadow-md">
+        <!-- Pixel Portrait Canvas -->
+        <canvas id="portraitCanvas" width="32" height="32" class="w-8 h-8 rounded border border-amber-500/80 bg-slate-950"></canvas>
+        
+        <!-- Info Column -->
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-[9px] sm:text-[10px] text-amber-300 tracking-wider font-bold">LEFTRARU</span>
+            <div class="flex items-center gap-1 text-[8px] sm:text-[9px] text-amber-200">
+              <span title="Ngülliw (Piñones)">🌰</span>
+              <span id="uiPinonCount" class="text-amber-300 font-bold">0</span>
+            </div>
+          </div>
 
-      <div class="flex items-center gap-3 sm:gap-6 text-[9px] sm:text-[10px]">
-        <div class="flex items-center gap-1.5">
-          <span class="text-red-400">♥</span>
-          <div class="w-16 sm:w-24 h-3 bg-slate-900 border border-slate-600 rounded-sm overflow-hidden p-0.5">
-            <div id="uiHealthFill" class="h-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-150" style="width: 100%;"></div>
+          <!-- Discrete Life Gauge -->
+          <div class="flex items-center gap-1.5">
+            <span class="text-[7px] sm:text-[8px] text-red-400 font-bold">VIDA</span>
+            <div id="uiHealthPips" class="flex gap-1 p-0.5 bg-slate-950 border border-slate-700 rounded-sm">
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+            </div>
           </div>
         </div>
-        <div class="flex items-center gap-1">
-          <span class="text-amber-400">🌰</span>
-          <span id="uiPinonCount" class="text-amber-200">0</span>
-        </div>
+      </div>
+
+      <!-- SCORE & CONTROLS -->
+      <div class="flex items-center gap-3 sm:gap-6 text-[9px] sm:text-[10px]">
         <div class="flex items-center gap-1">
           <span class="text-yellow-400">PTS:</span>
           <span id="uiScore" class="text-yellow-300">00000</span>
         </div>
+        <div class="flex items-center gap-2">
+          <button id="btnSound" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-amber-300">🔊</button>
+          <button id="btnHelp" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
+        </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button id="btnSound" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-amber-300">🔊</button>
-        <button id="btnHelp" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
-      </div>
     </div>
   </header>
 
@@ -91,7 +120,7 @@
         <span class="text-3xl mb-2">🏔️🦅</span>
         <h2 class="text-sm sm:text-lg text-amber-400 mb-2 leading-relaxed">LEFTRARU: GUERRERO DEL WALLMAPU</h2>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
-          Los invasores se vuelven más duros a medida que avanzas: tropas novatas (1 estocada), veteranos (2 estocadas), caballeros de élite (3 estocadas) y capitanes blindados (4 estocadas).
+          Revisa el panel superior de Leftraru para monitorear tu vitalidad (5 impactos) y los piñones (ngülliw) recolectados.
         </p>
         <button id="btnStartGame" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 border-2 border-amber-300 text-slate-950 text-xs sm:text-sm font-bold rounded shadow-lg active:scale-95 transition">
           ¡INICIAR EXPEDICIÓN!
@@ -118,7 +147,7 @@
       <div id="victoryOverlay" class="absolute inset-0 bg-black/85 flex flex-col items-center justify-center p-4 text-center z-20 hidden">
         <span class="text-3xl mb-1">👑✨</span>
         <h2 class="text-base sm:text-xl text-amber-400 mb-2">¡VICTORIA EN EL NGWILLATUN!</h2>
-        <p class="text-[9px] sm:text-[11px] text-slate-200 mb-4 font-sans">¡Leftraru ha derrotado a las legiones enemigas y asegurado el Wallmapu!</p>
+        <p class="text-[9px] sm:text-[11px] text-slate-200 mb-4 font-sans">¡Leftraru ha despejado el territorio y honrado al Wallmapu!</p>
         <div class="text-[10px] text-yellow-300 mb-4 space-y-1">
           <div>Puntaje Total: <span id="vicScore" class="text-white">0</span></div>
           <div>Piñones Ofrendados: <span id="vicPinones" class="text-white">0</span></div>
@@ -155,7 +184,62 @@
 
   <script>
     /* =========================================================================
-       1. SYNTHESIZED SOUND ENGINE (Web Audio API)
+       1. PORTRAIT RENDERER (LEFTRARU PIXEL-ART AVATAR)
+       ========================================================================= */
+    function renderPortrait() {
+      const pCanvas = document.getElementById('portraitCanvas');
+      if (!pCanvas) return;
+      const pc = pCanvas.getContext('2d');
+      pc.imageSmoothingEnabled = false;
+      pc.clearRect(0, 0, 32, 32);
+
+      // Fondo azul noche cordillerano
+      pc.fillStyle = '#0f172a';
+      pc.fillRect(0, 0, 32, 32);
+
+      // Pelo negro largo por detrás
+      pc.fillStyle = '#111827';
+      pc.fillRect(4, 6, 24, 24);
+
+      // Rostro
+      pc.fillStyle = '#9b5338';
+      pc.fillRect(8, 10, 16, 14);
+
+      // Sombra pómulo / mentón
+      pc.fillStyle = '#7a3e28';
+      pc.fillRect(10, 21, 12, 3);
+
+      // Cuello y poncho ocre
+      pc.fillStyle = '#9c663b';
+      pc.fillRect(6, 24, 20, 8);
+      pc.fillStyle = '#6a2415';
+      pc.fillRect(10, 26, 12, 2);
+
+      // Trarilonko de plata sin plumas
+      pc.fillStyle = '#cbd5e1';
+      pc.fillRect(7, 9, 18, 3);
+      pc.fillStyle = '#64748b'; // Discos de plata
+      pc.fillRect(9, 10, 2, 2);
+      pc.fillRect(13, 10, 2, 2);
+      pc.fillRect(17, 10, 2, 2);
+      pc.fillRect(21, 10, 2, 2);
+
+      // Flequillo / Pelo frontal
+      pc.fillStyle = '#111827';
+      pc.fillRect(6, 4, 20, 6);
+      pc.fillRect(6, 10, 3, 10);
+      pc.fillRect(23, 10, 3, 10);
+
+      // Ojos y cejas
+      pc.fillStyle = '#111827';
+      pc.fillRect(10, 13, 4, 1);
+      pc.fillRect(18, 13, 4, 1);
+      pc.fillRect(11, 15, 2, 2);
+      pc.fillRect(19, 15, 2, 2);
+    }
+
+    /* =========================================================================
+       2. SYNTHESIZED SOUND ENGINE (Web Audio API)
        ========================================================================= */
     class RetroAudio {
       constructor() {
@@ -215,7 +299,7 @@
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'square';
-        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.setValueAtTime(450, now);
         osc.frequency.exponentialRampToValueAtTime(40, now + 0.18);
         gain.gain.setValueAtTime(0.25, now);
         gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
@@ -281,7 +365,7 @@
     const audio = new RetroAudio();
 
     /* =========================================================================
-       2. RETRO CANVAS ENGINE SETUP
+       3. RETRO CANVAS ENGINE SETUP
        ========================================================================= */
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -303,7 +387,7 @@
     };
 
     /* =========================================================================
-       3. CHARACTER SPRITE RENDERER (LEFTRARU)
+       4. CHARACTER LOGIC (LEFTRARU)
        ========================================================================= */
     class Player {
       constructor(x, y) {
@@ -319,8 +403,8 @@
         this.grounded = false;
         this.facing = 1;
 
-        this.hp = 100;
-        this.maxHp = 100;
+        this.hitsMax = 5;
+        this.hits = 5;
         this.invulnerable = 0;
 
         this.attacking = false;
@@ -408,20 +492,25 @@
         }
 
         if (this.y > V_HEIGHT + 30) {
-          this.takeDamage(100);
+          this.takeDamage(5);
         }
       }
 
-      takeDamage(amount) {
+      takeDamage(hitsTaken = 1) {
         if (this.invulnerable > 0) return;
-        this.hp -= amount;
+        this.hits -= hitsTaken;
         this.invulnerable = 45;
         audio.playHit(true);
         createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
-        if (this.hp <= 0) {
-          this.hp = 0;
+        if (this.hits <= 0) {
+          this.hits = 0;
           gameOver();
         }
+        updateHUD();
+      }
+
+      heal(amount = 1) {
+        this.hits = Math.min(this.hitsMax, this.hits + amount);
         updateHUD();
       }
 
@@ -545,31 +634,8 @@
     }
 
     /* =========================================================================
-       4. ENEMIGOS CON SISTEMA DE HP (STABS / ESTOCADAS) Y MARCADORES RETRO
+       5. ENEMIES (CLEAN PIXEL LOOK, WITHOUT OVERHEAD LIFEBARS)
        ========================================================================= */
-
-    function drawStabPips(c, screenX, screenY, hp, maxHp, width = 18) {
-      if (maxHp <= 1 && hp <= 0) return;
-      const pipSize = 3;
-      const spacing = 1;
-      const totalWidth = maxHp * pipSize + (maxHp - 1) * spacing;
-      const startX = screenX + (width - totalWidth) / 2;
-      const y = screenY - 7;
-
-      c.fillStyle = 'rgba(0,0,0,0.7)';
-      c.fillRect(startX - 1, y - 1, totalWidth + 2, pipSize + 2);
-
-      for (let i = 0; i < maxHp; i++) {
-        if (i < hp) {
-          c.fillStyle = (maxHp >= 4) ? '#ef4444' : (maxHp === 3 ? '#a855f7' : (maxHp === 2 ? '#38bdf8' : '#22c55e'));
-        } else {
-          c.fillStyle = '#475569';
-        }
-        c.fillRect(startX + i * (pipSize + spacing), y, pipSize, pipSize);
-      }
-    }
-
-    // Soldado de Infantería común (1 Estocada en T1, 2 en T2)
     class Soldier {
       constructor(x, y, maxHp = 1, patrolRange = 70) {
         this.x = x;
@@ -606,7 +672,7 @@
             this.hit(1);
             player.vy = player.jumpPower * 0.8;
           } else {
-            player.takeDamage(18);
+            player.takeDamage(1);
           }
         }
       }
@@ -616,7 +682,7 @@
         this.hitFlash = 8;
         audio.playHit(this.hp <= 0);
         createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
-        this.x += (facingDir === 1 ? 4 : -4); // Retroceso
+        this.x += (facingDir === 1 ? 4 : -4);
 
         if (this.hp <= 0) {
           this.alive = false;
@@ -631,8 +697,6 @@
         const screenY = Math.round(this.y);
 
         if (screenX < -30 || screenX > V_WIDTH + 30) return;
-
-        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
 
         c.save();
         if (this.facing === -1) {
@@ -654,7 +718,6 @@
         c.fillRect(3, 20, 4, 8 + legWalk);
         c.fillRect(11, 20, 4, 8 - legWalk);
 
-        // Si tiene 2 estocadas (Veterano), la armadura es más oscura / bruñida
         c.fillStyle = (this.maxHp >= 2) ? '#475569' : '#94a3b8';
         c.fillRect(3, 9, 12, 12);
         c.fillStyle = '#cbd5e1';
@@ -679,7 +742,6 @@
       }
     }
 
-    // Arcabucero a Distancia (1 o 2 Estocadas)
     class Arquebusier {
       constructor(x, y, maxHp = 1) {
         this.x = x;
@@ -691,7 +753,8 @@
         this.alive = true;
         this.facing = -1;
         this.hitFlash = 0;
-        this.shootTimer = 100 + Math.floor(Math.random() * 50);
+        this.shootTimer = 35 + Math.floor(Math.random() * 20);
+        this.hasSpotted = false;
       }
 
       update(player) {
@@ -702,11 +765,18 @@
 
         const dist = Math.abs(player.x - this.x);
         if (dist < 260) {
+          if (!this.hasSpotted) {
+            this.hasSpotted = true;
+            this.shootTimer = 30;
+          }
+
           this.shootTimer--;
           if (this.shootTimer <= 0) {
             this.shoot();
-            this.shootTimer = 150 + Math.floor(Math.random() * 40);
+            this.shootTimer = 110 + Math.floor(Math.random() * 25);
           }
+        } else {
+          this.hasSpotted = false;
         }
 
         if (checkAABB(this, player)) {
@@ -714,7 +784,7 @@
             this.hit(1);
             player.vy = player.jumpPower * 0.8;
           } else {
-            player.takeDamage(15);
+            player.takeDamage(1);
           }
         }
       }
@@ -752,8 +822,6 @@
 
         if (screenX < -30 || screenX > V_WIDTH + 30) return;
 
-        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
-
         c.save();
         if (this.facing === -1) {
           c.translate(screenX + this.w, screenY);
@@ -769,7 +837,7 @@
           return;
         }
 
-        c.fillStyle = (this.maxHp >= 2) ? '#581c87' : '#78350f'; // Abrigo púrpura si es T2
+        c.fillStyle = (this.maxHp >= 2) ? '#581c87' : '#78350f';
         c.fillRect(3, 9, 12, 12);
 
         c.fillStyle = '#1e293b';
@@ -788,14 +856,15 @@
         c.fillStyle = '#334155';
         c.fillRect(16, 11, 14, 2);
 
-        c.fillStyle = (Math.floor(Date.now() / 150) % 2 === 0) ? '#f97316' : '#ef4444';
-        c.fillRect(12, 10, 2, 2);
+        if (this.shootTimer < 25) {
+          c.fillStyle = '#f97316';
+          c.fillRect(13, 9, 2, 2);
+        }
 
         c.restore();
       }
     }
 
-    // Caballero Montado (3 Estocadas)
     class HorseKnight {
       constructor(x, y, maxHp = 3, patrolRange = 140) {
         this.x = x;
@@ -832,7 +901,7 @@
             this.hit(1);
             player.vy = player.jumpPower * 0.9;
           } else {
-            player.takeDamage(25);
+            player.takeDamage(1);
           }
         }
       }
@@ -849,7 +918,6 @@
           GAME.score += 500;
           createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 22);
         } else {
-          // Acelera al recibir daño
           this.vx = (this.vx > 0 ? 2.2 : -2.2);
         }
       }
@@ -860,8 +928,6 @@
         const screenY = Math.round(this.y);
 
         if (screenX < -40 || screenX > V_WIDTH + 40) return;
-
-        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
 
         c.save();
         if (this.facing === -1) {
@@ -911,114 +977,8 @@
       }
     }
 
-    // Capitán con Rodela / Boss (4 Estocadas, Bloqueo frontal)
-    class ShieldCaptain {
-      constructor(x, y, maxHp = 4) {
-        this.x = x;
-        this.y = y - 4;
-        this.w = 22;
-        this.h = 32;
-        this.maxHp = maxHp;
-        this.hp = maxHp;
-        this.alive = true;
-        this.facing = -1;
-        this.hitFlash = 0;
-        this.animTick = 0;
-      }
-
-      update(player) {
-        if (!this.alive) return;
-        this.animTick++;
-        if (this.hitFlash > 0) this.hitFlash--;
-
-        this.facing = (player.x > this.x) ? 1 : -1;
-
-        if (checkAABB(this, player)) {
-          if (player.vy > 1.2 && player.y + player.h <= this.y + 14) {
-            this.hit(1, 0, true);
-            player.vy = player.jumpPower * 0.9;
-          } else {
-            player.takeDamage(30);
-          }
-        }
-      }
-
-      hit(dmg, attackFacing = 1, isJump = false) {
-        const isFrontal = (attackFacing === 1 && this.facing === -1) || (attackFacing === -1 && this.facing === 1);
-        if (isFrontal && !isJump) {
-          audio.playHit(false);
-          createSparkParticles(this.facing === 1 ? this.x + 22 : this.x - 2, this.y + 12, 10, '#94a3b8');
-          return; // Escudo bloquea la estocada
-        }
-
-        this.hp -= dmg;
-        this.hitFlash = 10;
-        audio.playHit(this.hp <= 0);
-        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
-        this.x += (attackFacing === 1 ? 5 : -5);
-
-        if (this.hp <= 0) {
-          this.alive = false;
-          GAME.score += 800;
-          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 28);
-        }
-      }
-
-      draw(c, camX) {
-        if (!this.alive) return;
-        const screenX = Math.round(this.x - camX);
-        const screenY = Math.round(this.y);
-
-        if (screenX < -30 || screenX > V_WIDTH + 30) return;
-
-        drawStabPips(c, screenX, screenY, this.hp, this.maxHp, this.w);
-
-        c.save();
-        if (this.facing === -1) {
-          c.translate(screenX + this.w, screenY);
-          c.scale(-1, 1);
-        } else {
-          c.translate(screenX, screenY);
-        }
-
-        if (this.hitFlash > 0) {
-          c.fillStyle = '#ffffff';
-          c.fillRect(0, 0, this.w, this.h);
-          c.restore();
-          return;
-        }
-
-        c.fillStyle = '#b91c1c';
-        c.fillRect(1, 8, 6, 18);
-
-        c.fillStyle = '#1e293b';
-        c.fillRect(5, 22, 4, 10);
-        c.fillRect(13, 22, 4, 10);
-
-        c.fillStyle = '#d97706';
-        c.fillRect(5, 10, 12, 13);
-
-        c.fillStyle = '#fbcfe8';
-        c.fillRect(8, 4, 6, 6);
-        c.fillStyle = '#b45309';
-        c.fillRect(5, 1, 12, 4);
-
-        c.fillStyle = '#f8fafc';
-        c.fillRect(16, 4, 2, 18);
-
-        c.fillStyle = '#94a3b8';
-        c.beginPath();
-        c.arc(17, 16, 9, 0, Math.PI * 2);
-        c.fill();
-        c.fillStyle = '#d97706';
-        c.fillRect(15, 14, 4, 4);
-
-        c.restore();
-      }
-    }
-
     /* =========================================================================
-       5. COLLECTIBLES
+       6. COLLECTIBLES: PIÑÓN & FOYKE
        ========================================================================= */
     class Collectible {
       constructor(x, y, type = 'pinon') {
@@ -1041,12 +1001,12 @@
           if (this.type === 'pinon') {
             GAME.pinones++;
             GAME.score += 50;
-            player.hp = Math.min(player.maxHp, player.hp + 12);
+            player.heal(1);
             createSparkParticles(this.x + 6, this.y + 6, 6, '#f59e0b');
-          } else if (this.type === 'kultrun') {
+          } else if (this.type === 'foyke') {
             GAME.score += 300;
             player.invulnerable = 90;
-            createSparkParticles(this.x + 6, this.y + 6, 12, '#38bdf8');
+            createSparkParticles(this.x + 6, this.y + 6, 12, '#4ade80');
           }
           updateHUD();
         }
@@ -1067,19 +1027,19 @@
           c.fillStyle = '#fef08a';
           c.fillRect(screenX + 5, floatY + 2, 2, 3);
         } else {
-          c.fillStyle = '#451a03';
-          c.beginPath();
-          c.arc(screenX + 6, floatY + 6, 7, 0, Math.PI * 2);
-          c.fill();
-          c.fillStyle = '#fde047';
-          c.fillRect(screenX + 5, floatY + 1, 2, 10);
-          c.fillRect(screenX + 1, floatY + 5, 10, 2);
+          c.fillStyle = '#15803d';
+          c.fillRect(screenX + 2, floatY + 4, 8, 4);
+          c.fillRect(screenX + 4, floatY + 1, 4, 8);
+          c.fillStyle = '#ffffff';
+          c.fillRect(screenX + 5, floatY + 4, 3, 3);
+          c.fillStyle = '#fef08a';
+          c.fillRect(screenX + 6, floatY + 5, 1, 1);
         }
       }
     }
 
     /* =========================================================================
-       6. PARTICLES & PROJECTILES
+       7. PARTICLES & PROJECTILES
        ========================================================================= */
     function createDustParticles(x, y, count = 5) {
       for (let i = 0; i < count; i++) {
@@ -1110,7 +1070,7 @@
     }
 
     /* =========================================================================
-       7. LEVEL GENERATION CON ESCALADO PROGRESIVO DE DIFICULTAD (TIERS)
+       8. LEVEL GENERATION
        ========================================================================= */
     let player = new Player(40, 160);
     let platforms = [];
@@ -1146,35 +1106,31 @@
 
           collectibles.push(new Collectible(curX + 100, platY - 18, 'pinon'));
           if (Math.random() > 0.6) {
-            collectibles.push(new Collectible(curX + 130, platY - 18, 'kultrun'));
+            collectibles.push(new Collectible(curX + 130, platY - 18, 'foyke'));
           }
 
-          // ESCALADO SEGÚN EL AVANCE EN EL MAPA:
-          // Zona 1 (curX < 1200): Enemigos de 1 estocada
-          // Zona 2 (1200 <= curX < 2400): Veteranos de 2 estocadas
-          // Zona 3 (curX >= 2400): Élite / Caballeros de 3 estocadas
           const progress = curX / LEVEL_LENGTH;
 
           if (progress < 0.33) {
-            // Zona Inicial: 1 Estocada
-            if (Math.random() < 0.6) {
+            if (Math.random() < 0.5) {
               enemies.push(new Soldier(curX + 110, segHeight - 28, 1, 50));
             } else {
-              enemies.push(new Arquebusier(curX + 120, segHeight - 28, 1));
+              enemies.push(new Arquebusier(curX + 150, segHeight - 28, 1));
+              enemies.push(new Soldier(curX + 100, segHeight - 28, 1, 35));
             }
           } else if (progress < 0.66) {
-            // Zona Media: 2 Estocadas
             if (Math.random() < 0.5) {
               enemies.push(new Soldier(curX + 110, segHeight - 28, 2, 60));
             } else {
-              enemies.push(new Arquebusier(curX + 120, segHeight - 28, 2));
+              enemies.push(new Arquebusier(curX + 160, segHeight - 28, 1));
+              enemies.push(new Soldier(curX + 110, segHeight - 28, 2, 40));
             }
           } else {
-            // Zona Avanzada: 2 a 3 Estocadas
             if (Math.random() < 0.5) {
               enemies.push(new HorseKnight(curX + 90, segHeight - 28, 3, 120));
             } else {
-              enemies.push(new Soldier(curX + 110, segHeight - 28, 2, 70));
+              enemies.push(new Arquebusier(curX + 170, segHeight - 28, 2));
+              enemies.push(new Soldier(curX + 120, segHeight - 28, 2, 45));
             }
           }
         }
@@ -1183,9 +1139,9 @@
         curX += segWidth + gap;
       }
 
-      // Desafío Final: Capitán con Escudo de 4 Estocadas
-      enemies.push(new ShieldCaptain(LEVEL_LENGTH - 500, 192, 4));
-      enemies.push(new HorseKnight(LEVEL_LENGTH - 360, 192, 3));
+      // Tramo final con patrulla de caballeros de élite
+      enemies.push(new HorseKnight(LEVEL_LENGTH - 480, 192, 3, 90));
+      enemies.push(new HorseKnight(LEVEL_LENGTH - 340, 192, 3, 90));
 
       platforms.push({
         x: LEVEL_LENGTH - 260,
@@ -1196,7 +1152,7 @@
     }
 
     /* =========================================================================
-       8. PARALLAX BACKGROUND
+       9. PARALLAX BACKGROUND
        ========================================================================= */
     function drawParallaxBackground(c, camX) {
       const skyGrad = c.createLinearGradient(0, 0, 0, V_HEIGHT);
@@ -1284,7 +1240,7 @@
     }
 
     /* =========================================================================
-       9. LOOP & UPDATES
+       10. LOOP & ACTUALIZACIONES
        ========================================================================= */
     function checkAABB(a, b) {
       return (
@@ -1319,7 +1275,7 @@
           player.y < proj.y + 4 &&
           player.y + player.h > proj.y
         ) {
-          player.takeDamage(18);
+          player.takeDamage(1);
           GAME.projectiles.splice(i, 1);
           continue;
         }
@@ -1408,10 +1364,18 @@
     }
 
     /* =========================================================================
-       10. UI & TRANSITIONS
+       11. UI & TRANSICIONES
        ========================================================================= */
     function updateHUD() {
-      document.getElementById('uiHealthFill').style.width = Math.max(0, player.hp) + '%';
+      const pips = document.querySelectorAll('#uiHealthPips .health-pip');
+      pips.forEach((pip, index) => {
+        if (index < player.hits) {
+          pip.classList.remove('empty');
+        } else {
+          pip.classList.add('empty');
+        }
+      });
+
       document.getElementById('uiPinonCount').textContent = GAME.pinones;
       document.getElementById('uiScore').textContent = String(GAME.score).padStart(5, '0');
     }
@@ -1429,6 +1393,7 @@
       player = new Player(40, 160);
       generateLevel();
       updateHUD();
+      renderPortrait();
       GAME.running = true;
     }
 
@@ -1447,7 +1412,7 @@
     }
 
     /* =========================================================================
-       11. INPUT LISTENERS
+       12. CONTROLES
        ========================================================================= */
     window.addEventListener('keydown', (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
@@ -1537,11 +1502,12 @@
     });
 
     document.getElementById('btnHelp').addEventListener('click', () => {
-      alert('Resistencia de Invasores:\n- Pips verdes (1 estocada): Soldados rasos y exploradores.\n- Pips celestes (2 estocadas): Veteranos con armadura reforzada.\n- Pips morados (3 estocadas): Jinetes montados veloces.\n- Pips rojos (4 estocadas): Capitanes con rodela pesada (atacarlos por la espalda o saltando sobre ellos).');
+      alert('Panel del Personaje:\n- A la izquierda de la barra superior tienes el retrato de Leftraru, su vitalidad (5 impactos) y el conteo de piñones sagrados (ngülliw).\n- Cada piñón recogido te sana 1 impacto.');
     });
 
     window.addEventListener('load', () => {
       generateLevel();
+      renderPortrait();
       requestAnimationFrame(gameLoop);
     });
   </script>
