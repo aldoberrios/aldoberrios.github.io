@@ -96,15 +96,32 @@
 
 #cv-section("Education")
 
+// Phd OLD
+
+// #cv-entry(
+//   "09.2023–present",
+//   "PhD in Linguistics",
+//   "University of Edinburgh (Edinburgh, Scotland, UK)",
+//   details: [
+//     Recipient of the *Becas Chile* scholarship granted by ANID (Chilean Government). Research focused on the historical trajectories of Mapudungun phonology and morphology utilising internal reconstruction techniques and the written record available for this language isolate. \
+//     *Interests:* Historical linguistics, Mapudungun morphology & phonology, Language Revitalization.
+//   ]
+// )
+
+//-- PHD --//
+
 #cv-entry(
   "09.2023–present",
   "PhD in Linguistics",
   "University of Edinburgh (Edinburgh, Scotland, UK)",
   details: [
-    Recipient of the *Becas Chile* scholarship granted by ANID (Chilean Government). Research focused on the historical trajectories of Mapudungun phonology and morphology utilising internal reconstruction techniques and the written record available for this language isolate. \
-    *Interests:* Historical linguistics, Mapudungun morphology & phonology, Language Revitalization.
+    Recipient of the *Becas Chile* scholarship granted by ANID (Chilean Government). \ Research focused on the historical trajectories of Mapudungun phonology and morphology utilising internal reconstruction techniques and the written record available for this language isolate.
+  \ Expected Defense: June 2027 (Thesis submission expected: April 2027)
+
   ]
 )
+
+
 
 #cv-entry(
   "03.2021–01.2023",
@@ -151,7 +168,7 @@
 )
 
 #cv-entry(
-  "05.2026–present",
+  "05.2026–07.2026",
   "Editorial Assistant",
   "University of Edinburgh (LEL / PPLS) (Edinburgh, Scotland, UK)",
   details: [Assist with the editing, typesetting, and production of a book and digital project of traditional Mapudungun texts.]
@@ -165,7 +182,7 @@
     *Course Lecturer* (2025): Taught a module in the course _Historical Phonology_, for Honours undergraduate and MSc postgraduate students. \
     *Academic Tutor* (2024–2026): Led weekly instructional tutorial groups, and mentored students in core linguistic areas:
     - _Linguistics and English Language 2D: Cross-linguistic Variation; Limits and Theories_ (2024, 2026)
-    - _Linguistics and English Language 2A: Linguistic Theory and the Structure of English_ (2025)
+    - _Linguistics and English Language 2A: Linguistic Theory and the Structure of English_ (2025, 2026)
   ]
 )
 

@@ -121,6 +121,7 @@
       <!-- CONTROLS & AUDIO -->
       <div class="flex items-center gap-2">
         <button id="btnSound" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-amber-300">🔊</button>
+        <button id="btnPause" title="Pausar (P o Escape)" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-[9px] text-emerald-300">⏸</button>
         <button id="btnHelp" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
       </div>
 
@@ -132,21 +133,47 @@
     <div class="relative w-full aspect-[16/9] max-h-[70vh] bg-black border-4 border-[#1c2e42] rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
       
       <canvas id="gameCanvas" width="480" height="270" class="w-full h-full object-contain"></canvas>
+      <div id="missionNotice" role="status" aria-live="polite" style="display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);width:max-content;max-width:92%;padding:9px 12px;background:rgba(9,19,29,.93);border:2px solid #34d399;border-radius:7px;color:#d1fae5;font:700 11px sans-serif;text-align:center;pointer-events:none;z-index:15"></div>
 
       <!-- OVERLAY: START SCREEN -->
       <div id="startOverlay" class="modal-layer">
         <span class="text-3xl mb-2">🌿🏹</span>
         <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.7 · PULIDO DE AVENTURA</p>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
           Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
         </p>
+        <div id="savePanel" class="mb-2 text-[9px] text-emerald-300 font-sans">Progress saved automatically on this browser.</div>
+        <div class="flex flex-wrap justify-center gap-2 mb-2">
+          <button id="btnContinue" type="button" class="hidden px-4 py-2 bg-emerald-700 border border-emerald-300 rounded text-[9px]">CONTINUAR PARTIDA</button>
+          <button id="btnLevels" type="button" class="px-4 py-2 bg-slate-700 border border-sky-400 rounded text-[9px]">EXPEDICIONES</button>
+        </div>
+        <div id="levelPanel" class="hidden mb-3 max-w-md w-full bg-slate-900 border border-amber-600 rounded p-2 text-[9px]">
+          <p class="mb-2 text-amber-300">Selecciona una expedición desbloqueada</p>
+          <div id="levelChoices" class="grid grid-cols-2 gap-2"></div>
+          <p id="achievementSummary" class="mt-2 text-emerald-300 font-sans"></p>
+        </div>
         <button id="btnStartGame" type="button" class="px-6 py-3.5 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 border-2 border-amber-300 text-slate-950 text-xs sm:text-sm font-bold rounded shadow-lg transition" style="cursor: pointer;">
           ¡INICIAR EXPEDICIÓN!
         </button>
+        <button id="btnNewSave" type="button" class="mt-2 text-[8px] text-rose-300 underline">BORRAR PROGRESO Y EMPEZAR DE NUEVO</button>
         <div class="mt-3 text-[8px] sm:text-[9px] text-slate-400 space-y-1">
           <p>⌨️ <span class="text-amber-300">A/D o Flechas</span>: Correr | <span class="text-amber-300">W / Espacio</span>: Saltar</p>
           <p>⚔️ <span class="text-amber-300">X / J / Enter</span>: Ataque (Lanza o Honda)</p>
         </div>
+      </div>
+
+      <!-- OVERLAY: PAUSE -->
+      <div id="pauseOverlay" class="modal-layer" style="display:none;z-index:30">
+        <h2 class="text-lg text-amber-300 mb-3">⏸ PAUSA</h2>
+        <p class="text-[9px] text-slate-300 mb-3">Tu progreso completado y tus mejoras se guardan automáticamente.</p>
+        <div class="flex flex-col gap-2 w-56">
+          <button id="btnResume" type="button" class="p-2 bg-emerald-700 border border-emerald-300 rounded">▶ CONTINUAR</button>
+          <button id="btnPauseControls" type="button" class="p-2 bg-slate-700 border border-slate-400 rounded">🎮 CONTROLES</button>
+          <button id="btnPauseSound" type="button" class="p-2 bg-slate-700 border border-slate-400 rounded">🔊 SONIDO</button>
+          <button id="btnPauseHome" type="button" class="p-2 bg-amber-700 border border-amber-400 rounded">⌂ MENÚ PRINCIPAL</button>
+        </div>
+        <p id="pauseControlsText" class="hidden mt-3 text-[9px] text-slate-200 leading-relaxed">A/D o ←/→: moverse · W/Espacio: saltar · X/J/Enter: atacar · Q: cambiar arma · P/Esc: pausa</p>
       </div>
 
       <!-- OVERLAY: GAME OVER -->
@@ -269,6 +296,7 @@
       </div>
 
       <div class="flex gap-2">
+        <button id="tBtnSwitch" class="touch-btn w-12 h-12 text-[9px] font-bold bg-amber-950/70 border-amber-500 text-amber-200">⇄ ARMA</button>
         <button id="tBtnAttack" class="touch-btn w-16 h-12 px-2 text-[9px] font-bold bg-rose-950/70 border-rose-500 text-rose-200">⚔ ATAQUE</button>
         <button id="tBtnJump" class="touch-btn w-12 h-12 text-sm font-bold bg-sky-950/70 border-sky-400 text-sky-200">▲</button>
       </div>
@@ -488,11 +516,15 @@
       // Arsenal system
       equippedWeapon: 'wayki', // 'wayki' or 'witruwe'
       unlockedWitruwe: false,
+      healthUpgrade: false,
+      noticeTimer: 0,
 
       keys: { left: false, right: false, jump: false, attack: false },
       particles: [],
       enemyProjectiles: [],
-      playerProjectiles: []
+      playerProjectiles: [],
+      stones: 5,
+      maxStones: 12
     };
 
     class Player {
@@ -509,8 +541,10 @@
         this.grounded = false;
         this.facing = 1;
 
-        this.hitsMax = 5;
-        this.hits = 5;
+        this.hitsMax = GAME.healthUpgrade ? 6 : 5;
+        this.hits = this.hitsMax;
+        this.jumpBuffer = 0;
+        this.coyoteTimer = 0;
         this.invulnerable = 0;
 
         this.attacking = false;
@@ -519,10 +553,17 @@
         this.attackCooldown = 0;
 
         this.animTick = 0;
+        this.landFlash = 0;
+        this.landSquash = 0;
+        this.attackHits = new Set();
+        this.slingReleased = false;
       }
 
       update(platforms, enemies) {
         this.animTick++;
+        if (this.landFlash > 0) this.landFlash--;
+        if (this.landSquash > 0) this.landSquash--;
+        const wasGrounded = this.grounded;
         if (this.invulnerable > 0) this.invulnerable--;
         if (this.attackCooldown > 0) this.attackCooldown--;
 
@@ -537,7 +578,14 @@
           if (Math.abs(this.vx) < 0.1) this.vx = 0;
         }
 
-        if (GAME.keys.jump && this.grounded) {
+        if (GAME.keys.jump) this.jumpBuffer = 7;
+        else if (this.jumpBuffer > 0) this.jumpBuffer--;
+        if (this.grounded) this.coyoteTimer = 7;
+        else if (this.coyoteTimer > 0) this.coyoteTimer--;
+
+        if (this.jumpBuffer > 0 && this.coyoteTimer > 0) {
+          this.jumpBuffer = 0;
+          this.coyoteTimer = 0;
           this.vy = this.jumpPower;
           this.grounded = false;
           audio.playJump();
@@ -548,27 +596,50 @@
         if (GAME.keys.attack && !this.attacking && this.attackCooldown <= 0) {
           this.attacking = true;
           this.attackTimer = this.attackDuration;
+          this.attackHits.clear();
 
           if (GAME.equippedWeapon === 'wayki') {
+            this.attackDuration = 14;
+            this.attackTimer = this.attackDuration;
             this.attackCooldown = 18;
             audio.playAttack();
+          } else if (GAME.stones > 0) {
+            // One-handed sling: wind-up first, release on animation frame 7.
+            this.attackCooldown = 38;
+            this.attackDuration = 22;
+            this.attackTimer = this.attackDuration;
+            this.slingReleased = false;
           } else {
-            // Witrüwe sling shot
-            this.attackCooldown = 24;
-            audio.playSling();
-            GAME.playerProjectiles.push({
-              x: this.facing === 1 ? this.x + 18 : this.x - 4,
-              y: this.y + 12,
-              vx: this.facing * 5.2,
-              life: 60
-            });
+            this.attacking = false;
+            GAME.equippedWeapon = 'wayki';
+            updateHUD();
           }
         }
 
         if (this.attacking) {
           this.attackTimer--;
+          if (GAME.equippedWeapon === 'witruwe' && !this.slingReleased && this.attackTimer === 7) {
+            this.slingReleased = true;
+            if (GAME.stones > 0) {
+              GAME.stones--;
+              audio.playSling();
+              GAME.playerProjectiles.push({
+                x: this.facing === 1 ? this.x + 20 : this.x - 5,
+                y: this.y + 7,
+                vx: this.facing * 5.2,
+                life: 60
+              });
+              if (GAME.stones === 0) this.autoSwitchAfterAttack = true;
+              updateHUD();
+            }
+          }
           if (this.attackTimer <= 0) {
             this.attacking = false;
+            if (this.autoSwitchAfterAttack) {
+              this.autoSwitchAfterAttack = false;
+              GAME.equippedWeapon = 'wayki';
+              updateHUD();
+            }
           }
         }
 
@@ -579,6 +650,7 @@
         if (this.x < 0) this.x = 0;
         if (this.x > LEVEL_LENGTH - 60) this.x = LEVEL_LENGTH - 60;
 
+        const previousFeet = this.y + this.h;
         this.y += this.vy;
         this.grounded = false;
 
@@ -586,8 +658,8 @@
           if (
             this.x + this.w > p.x &&
             this.x < p.x + p.w &&
+            previousFeet <= p.y + 3 &&
             this.y + this.h >= p.y &&
-            this.y + this.h <= p.y + p.h + 8 &&
             this.vy >= 0
           ) {
             this.y = p.y - this.h;
@@ -596,8 +668,14 @@
           }
         }
 
-        // Wayki melee collision check
-        if (GAME.equippedWeapon === 'wayki' && this.attacking && this.attackTimer === Math.floor(this.attackDuration * 0.7)) {
+        if (!wasGrounded && this.grounded && this.vy === 0) {
+          this.landFlash = 9;
+          this.landSquash = 5;
+          createDustParticles(this.x + this.w / 2, this.y + this.h, 5);
+        }
+
+        // Active spear window: each enemy can only be hit once per swing.
+        if (GAME.equippedWeapon === 'wayki' && this.attacking && this.attackTimer >= 5 && this.attackTimer <= 11) {
           const reach = 26;
           const hitbox = {
             x: this.facing === 1 ? this.x + this.w - 2 : this.x - reach,
@@ -607,13 +685,16 @@
           };
 
           for (const en of enemies) {
-            if (en.alive && checkAABB(hitbox, en)) {
+            if (en.alive && !this.attackHits.has(en) && checkAABB(hitbox, en)) {
+              this.attackHits.add(en);
               en.hit(1, this.facing);
+              createSparkParticles(en.x + en.w / 2, en.y + en.h / 2, 5, '#fde68a');
             }
           }
         }
 
         if (this.y > V_HEIGHT + 30) {
+          this.invulnerable = 0;
           this.takeDamage(this.hitsMax);
         }
       }
@@ -622,6 +703,8 @@
         if (this.invulnerable > 0) return;
         this.hits -= hitsTaken;
         this.invulnerable = 45;
+        this.vy = Math.min(this.vy, -2.4);
+        this.vx = -this.facing * 2.1;
         audio.playHit(true);
         createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
         updateHUD();
@@ -649,13 +732,29 @@
           c.translate(screenX, screenY);
         }
 
+        // Two-pixel knee bend on landing, without affecting hitboxes.
+        if (this.landSquash > 0) {
+          c.translate(0, 2);
+          c.scale(1, 0.94);
+        }
         this.drawLeftraruPixels(c);
         c.restore();
       }
 
       drawLeftraruPixels(c) {
         const isRunning = Math.abs(this.vx) > 0.2 && this.grounded;
-        const legOffset = isRunning ? Math.sin(this.animTick * 0.3) * 3 : 0;
+        const legOffset = isRunning ? Math.round(Math.sin(this.animTick * 0.3) * 3) : 0;
+        // Readable airborne silhouette, without replacing the original sprite.
+        if (!this.grounded) {
+          c.fillStyle = '#fbbf24';
+          c.fillRect(1, this.vy < 0 ? 25 : 28, 3, 2);
+          c.fillRect(14, this.vy < 0 ? 28 : 25, 3, 2);
+        }
+        if (this.landFlash > 0) {
+          c.fillStyle = '#d6b38a';
+          c.fillRect(-3, 29, 5, 1);
+          c.fillRect(16, 29, 5, 1);
+        }
 
         c.fillStyle = '#2c1810';
         c.fillRect(3, 20, 5, 5);
@@ -689,8 +788,29 @@
         c.fillStyle = '#5c3a21';
         c.fillRect(11, 15, 3, 2);
 
+        // The hair starts at the crown, so the whole silhouette trails back
+        // while running, rather than looking like a strand growing from the neck.
+        const hairFlutter = isRunning ? Math.round(Math.sin(this.animTick * 0.24)) : 0;
+        const falling = !this.grounded && this.vy > 0.4;
+        const hairAirLift = !this.grounded ? (this.vy < -0.4 ? 2 : falling ? -3 : 0) : 0;
+        const hairLanding = this.landFlash > 0 ? -Math.round(this.landFlash / 5) : 0;
+        const tipY = 15 + hairAirLift + hairLanding;
         c.fillStyle = '#111827';
-        c.fillRect(2, 3, 4, 12);
+        if (isRunning) {
+          // Crown/root remains at x=4; successive segments sweep backward
+          // from the TOP of the head. A one-pixel flutter animates the tips.
+          c.fillRect(3, 3, 5, 3);
+          c.fillRect(1, 5, 4, 3);
+          c.fillRect(-1, 7, 4, 3);
+          c.fillRect(-2 + hairFlutter, 10, 3, 4);
+          c.fillRect(-2 + hairFlutter, 13, 2, 3);
+        } else {
+          // Preserve the stronger falling / jumping motion from v1.6.3.
+          c.fillRect(2, 5, 3, 10);
+          c.fillRect(2, 14, 2, 3);
+          c.fillRect(1 + hairFlutter, tipY, falling ? 3 : 2, falling ? 6 : 4);
+          if (!this.grounded) c.fillRect(1 + hairFlutter, tipY + (falling ? 5 : 3), falling ? 2 : 1, 2);
+        }
         c.fillRect(4, 2, 9, 4);
 
         c.fillStyle = '#9b5338';
@@ -744,19 +864,48 @@
             c.fillRect(7, 14, 4, 4);
           }
         } else {
-          // Witrüwe (Sling)
-          c.fillStyle = '#78350f'; // Cuero tejido de la honda
+          // One-handed traditional cord sling: hand pivots, pouch circles,
+          // then the release cord swings forward. No two-handed slingshot.
+          c.fillStyle = '#9b5338';
+          c.fillRect(12, 12, 5, 3); // extended throwing arm
+          const handX = 17, handY = 13;
           if (this.attacking) {
-            c.fillRect(10, 11, 8, 2);
-            c.fillStyle = '#451a03';
-            c.fillRect(16, 9, 3, 5);
+            const progress = 1 - this.attackTimer / this.attackDuration;
+            const theta = progress < 0.69 ? (-Math.PI / 2 + progress * Math.PI * 5.4)
+                                         : (-Math.PI / 2 + 0.69 * Math.PI * 5.4 + (progress - 0.69) * 2);
+            const pouchX = Math.round(handX + Math.cos(theta) * 11);
+            const pouchY = Math.round(handY + Math.sin(theta) * 9);
+            c.strokeStyle = '#a16207';
+            c.lineWidth = 1;
+            c.beginPath();
+            c.moveTo(handX, handY);
+            c.lineTo(pouchX, pouchY);
+            c.stroke();
+            c.fillStyle = '#78350f';
+            c.fillRect(pouchX - 3, pouchY - 2, 6, 4);
+            if (!this.slingReleased) {
+              c.fillStyle = '#cbd5e1';
+              c.fillRect(pouchX - 1, pouchY - 1, 3, 3);
+            }
           } else {
-            c.fillRect(10, 14, 4, 7);
-            c.fillStyle = '#64748b'; // Piedra de río en la mano
-            c.fillRect(12, 13, 3, 3);
+            c.strokeStyle = '#a16207';
+            c.lineWidth = 1;
+            c.beginPath();
+            c.moveTo(handX, handY);
+            c.lineTo(15, 23);
+            c.stroke();
+            c.fillStyle = '#78350f';
+            c.fillRect(13, 22, 5, 3);
           }
         }
       }
+    }
+
+    function drawEnemyHealth(c, width, hp, maxHp) {
+      c.fillStyle = '#0f172a';
+      c.fillRect(0, -9, width, 4);
+      c.fillStyle = '#fb7185';
+      c.fillRect(1, -8, Math.max(0, (width - 2) * hp / maxHp), 2);
     }
 
     class Soldier {
@@ -768,12 +917,16 @@
         this.h = 28;
         this.patrolRange = patrolRange;
         this.vx = 0.7 * speedMultiplier;
+        this.patrolSpeed = this.vx;
         this.maxHp = maxHp;
         this.hp = maxHp;
         this.alive = true;
         this.facing = 1;
         this.hitFlash = 0;
         this.animTick = Math.floor(Math.random() * 20);
+        this.alertTimer = 0;
+        this.recovery = 0;
+        this.patrolDirection = 1;
       }
 
       update(player) {
@@ -781,15 +934,26 @@
         this.animTick++;
         if (this.hitFlash > 0) this.hitFlash--;
 
-        this.x += this.vx;
-        if (this.x > this.startX + this.patrolRange) {
-          this.vx = -Math.abs(this.vx);
-          this.facing = -1;
-        } else if (this.x < this.startX - this.patrolRange) {
-          this.vx = Math.abs(this.vx);
-          this.facing = 1;
+        if (this.recovery > 0) this.recovery--;
+        const dx = player.x - this.x;
+        const close = Math.abs(dx) < 120 && Math.abs(player.y - this.y) < 46;
+        if (close) this.alertTimer = 75;
+        else if (this.alertTimer > 0) this.alertTimer--;
+        const minX = this.startX - this.patrolRange;
+        const maxX = this.startX + this.patrolRange;
+        if (this.recovery > 0) {
+          this.vx = 0;
+        } else if (this.alertTimer > 0 && Math.abs(dx) > 24) {
+          this.vx = Math.sign(dx) * this.patrolSpeed * 1.18;
+        } else if (this.alertTimer > 0) {
+          this.vx = 0;
+        } else {
+          this.vx = this.patrolDirection * this.patrolSpeed;
         }
-
+        this.x = Math.max(minX, Math.min(maxX, this.x + this.vx));
+        if (this.x >= maxX) this.patrolDirection = -1;
+        if (this.x <= minX) this.patrolDirection = 1;
+        if (this.vx !== 0) this.facing = Math.sign(this.vx);
         if (checkAABB(this, player)) {
           if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
             this.hit(1);
@@ -803,12 +967,14 @@
       hit(dmg, facingDir = 1) {
         this.hp -= dmg;
         this.hitFlash = 8;
+        this.recovery = 16;
         audio.playHit(this.hp <= 0);
         createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
-        this.x += (facingDir === 1 ? 4 : -4);
+        this.x += (facingDir === 1 ? 7 : -7);
 
         if (this.hp <= 0) {
           this.alive = false;
+          maybeDropLoot(this);
           createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
         }
       }
@@ -835,6 +1001,12 @@
           return;
         }
 
+        if (this.alertTimer > 0) {
+          c.fillStyle = '#fbbf24';
+          c.fillRect(7, -13, 4, 7);
+          c.fillRect(7, -4, 4, 2);
+        }
+        if (this.maxHp > 1) drawEnemyHealth(c, this.w, this.hp, this.maxHp);
         const legWalk = Math.sin(this.animTick * 0.2) * 2;
         c.fillStyle = '#451a03';
         c.fillRect(3, 20, 4, 8 + legWalk);
@@ -878,30 +1050,35 @@
         this.baseReload = Math.round(110 / speedMultiplier);
         this.shootTimer = Math.round(35 / speedMultiplier);
         this.hasSpotted = false;
+        this.state = 'idle';
+        this.stateTimer = 0;
+        this.recovery = 0;
       }
 
       update(player) {
         if (!this.alive) return;
         if (this.hitFlash > 0) this.hitFlash--;
 
-        this.facing = (player.x > this.x) ? 1 : -1;
-
-        const dist = Math.abs(player.x - this.x);
-        if (dist < 260) {
-          if (!this.hasSpotted) {
-            this.hasSpotted = true;
-            this.shootTimer = 25;
+        if (this.recovery > 0) this.recovery--;
+        const dx = player.x - this.x;
+        const visible = Math.abs(dx) < 245 && Math.abs(player.y - this.y) < 85;
+        if (this.state === 'idle') {
+          if (visible) {
+            this.state = 'aim';
+            this.stateTimer = 48;
+            this.facing = dx >= 0 ? 1 : -1;
           }
-
-          this.shootTimer--;
-          if (this.shootTimer <= 0) {
+        } else if (this.state === 'aim') {
+          if (!visible || this.recovery > 0) {
+            this.state = 'idle';
+          } else if (--this.stateTimer <= 0) {
             this.shoot();
-            this.shootTimer = this.baseReload + Math.floor(Math.random() * 20);
+            this.state = 'reload';
+            this.stateTimer = this.baseReload;
           }
-        } else {
-          this.hasSpotted = false;
+        } else if (this.state === 'reload') {
+          if (--this.stateTimer <= 0) this.state = 'idle';
         }
-
         if (checkAABB(this, player)) {
           if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
             this.hit(1);
@@ -927,12 +1104,15 @@
       hit(dmg, facingDir = 1) {
         this.hp -= dmg;
         this.hitFlash = 8;
+        this.recovery = 14;
+        if (this.state === 'aim') this.state = 'idle';
         audio.playHit(this.hp <= 0);
         createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
-        this.x += (facingDir === 1 ? 4 : -4);
+        this.x += (facingDir === 1 ? 7 : -7);
 
         if (this.hp <= 0) {
           this.alive = false;
+          maybeDropLoot(this);
           createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
         }
       }
@@ -959,6 +1139,7 @@
           return;
         }
 
+        if (this.maxHp > 1) drawEnemyHealth(c, this.w, this.hp, this.maxHp);
         c.fillStyle = (this.maxHp >= 2) ? '#581c87' : '#78350f';
         c.fillRect(3, 9, 12, 12);
 
@@ -978,9 +1159,11 @@
         c.fillStyle = '#334155';
         c.fillRect(16, 11, 14, 2);
 
-        if (this.shootTimer < 25) {
+        if (this.state === 'aim') {
           c.fillStyle = '#f97316';
           c.fillRect(13, 9, 2, 2);
+          c.fillStyle = '#fbbf24';
+          c.fillRect(3, -12, Math.max(1, Math.round(12 * (1 - this.stateTimer / 48))), 3);
         }
 
         c.restore();
@@ -1002,6 +1185,11 @@
         this.facing = 1;
         this.hitFlash = 0;
         this.animTick = 0;
+        this.chargeWarning = 0;
+        this.chargeCooldown = 100;
+        this.chargeFrames = 0;
+        this.baseSpeed = Math.abs(this.vx);
+        this.recovery = 0;
       }
 
       update(player) {
@@ -1009,6 +1197,28 @@
         this.animTick++;
         if (this.hitFlash > 0) this.hitFlash--;
 
+        if (this.chargeCooldown > 0) this.chargeCooldown--;
+        if (this.recovery > 0) this.recovery--;
+        const distance = player.x - this.x;
+        if (this.recovery > 0) {
+          this.vx = 0;
+        } else if (this.chargeFrames > 0) {
+          this.chargeFrames--;
+          this.vx = this.facing * this.baseSpeed * 2.1;
+        } else if (this.chargeWarning > 0) {
+          this.chargeWarning--;
+          this.vx = 0;
+          if (this.chargeWarning === 0) {
+            this.chargeFrames = 32;
+            this.chargeCooldown = 135;
+          }
+        } else if (this.chargeCooldown === 0 && Math.abs(distance) < 175 && Math.abs(player.y - this.y) < 55) {
+          this.facing = distance >= 0 ? 1 : -1;
+          this.chargeWarning = 30;
+          this.vx = 0;
+        } else if (this.vx === 0) {
+          this.vx = this.facing * this.baseSpeed;
+        }
         this.x += this.vx;
         if (this.x > this.startX + this.patrolRange) {
           this.vx = -Math.abs(this.vx);
@@ -1018,6 +1228,11 @@
           this.facing = 1;
         }
 
+        if (this.x >= this.startX + this.patrolRange || this.x <= this.startX - this.patrolRange) {
+          if (this.chargeFrames > 0) this.recovery = 32;
+          this.chargeFrames = 0;
+          this.chargeWarning = 0;
+        }
         if (checkAABB(this, player)) {
           if (player.vy > 1.2 && player.y + player.h <= this.y + 16) {
             this.hit(1);
@@ -1031,15 +1246,17 @@
       hit(dmg, facingDir = 1) {
         this.hp -= dmg;
         this.hitFlash = 8;
+        this.recovery = 22;
+        this.chargeFrames = 0;
+        this.chargeWarning = 0;
         audio.playHit(this.hp <= 0);
         createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 9, '#f59e0b');
-        this.x += (facingDir === 1 ? 3 : -3);
+        this.x += (facingDir === 1 ? 4 : -4);
 
         if (this.hp <= 0) {
           this.alive = false;
+          maybeDropLoot(this);
           createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 22);
-        } else {
-          this.vx = (this.vx > 0 ? 2.2 : -2.2);
         }
       }
 
@@ -1065,7 +1282,13 @@
           return;
         }
 
+        if (this.maxHp > 1) drawEnemyHealth(c, this.w, this.hp, this.maxHp);
         const trot = Math.sin(this.animTick * 0.3) * 3;
+        if (this.chargeWarning > 0 && Math.floor(this.animTick / 5) % 2 === 0) {
+          c.fillStyle = '#f97316';
+          c.fillRect(12, -13, 10, 3);
+          c.fillRect(16, -18, 3, 4);
+        }
 
         c.fillStyle = '#5c2d16';
         c.fillRect(4, 18 + trot, 26, 12);
@@ -1095,6 +1318,27 @@
         c.fillRect(42, 11 + trot, 6, 4);
 
         c.restore();
+      }
+    }
+
+    class StonePickup {
+      constructor(x, y) { this.x=x; this.y=y; this.collected=false; }
+      update(hero) {
+        if (this.collected || GAME.stones >= GAME.maxStones) return;
+        if (hero.x < this.x+15 && hero.x+hero.w > this.x-3 &&
+            hero.y < this.y+12 && hero.y+hero.h > this.y-3) {
+          this.collected=true;
+          GAME.stones=Math.min(GAME.maxStones,GAME.stones+3);
+          createSparkParticles(this.x+6,this.y+4,5,'#cbd5e1');
+          updateHUD();
+        }
+      }
+      draw(c, camX) {
+        if (this.collected) return;
+        const x=Math.round(this.x-camX), y=Math.round(this.y);
+        c.fillStyle='#475569'; c.fillRect(x,y+4,13,5);
+        c.fillStyle='#94a3b8'; c.fillRect(x+2,y+1,6,5); c.fillRect(x+8,y+3,5,4);
+        c.fillStyle='#e2e8f0'; c.fillRect(x+4,y+2,2,1);
       }
     }
 
@@ -1221,12 +1465,49 @@
     let platforms = [];
     let enemies = [];
     let pinonesList = [];
+    let stonePickups = [];
     let targetPlant = null;
+
+    let lootDrops = [];
+    function maybeDropLoot(enemy) {
+      // Occasional small rewards; combat never becomes the primary source of supplies.
+      if (Math.random() >= 0.28) return;
+      const stones = Math.random() < 0.30;
+      lootDrops.push({x:enemy.x + enemy.w/2, y:enemy.y+enemy.h-8,
+        type: stones ? 'stone' : 'pinon', amount: stones ? 2 : (enemy instanceof HorseKnight ? 3 : 1),
+        collected:false});
+    }
+    function updateLoot() {
+      for (const loot of lootDrops) {
+        if (loot.collected || Math.abs(player.x + player.w/2-loot.x)>17 ||
+            Math.abs(player.y + player.h/2-loot.y)>27) continue;
+        if (loot.type === 'stone') {
+          if (GAME.stones >= GAME.maxStones) continue;
+          GAME.stones=Math.min(GAME.maxStones,GAME.stones+loot.amount);
+        } else GAME.levelPinones+=loot.amount;
+        loot.collected=true;
+        createSparkParticles(loot.x,loot.y,5,loot.type==='stone'?'#cbd5e1':'#fbbf24');
+        updateHUD();
+      }
+    }
+    function drawLoot(c,camX) {
+      for (const loot of lootDrops) {
+        if (loot.collected) continue;
+        const x=Math.round(loot.x-camX), y=Math.round(loot.y);
+        c.fillStyle=loot.type==='stone'?'#94a3b8':'#fbbf24';
+        c.fillRect(x-3,y-3,7,6);
+        c.fillStyle=loot.type==='stone'?'#e2e8f0':'#92400e';
+        c.fillRect(x-1,y-2,3,2);
+      }
+    }
 
     function generateLevel(levelIdx) {
       platforms = [];
       enemies = [];
       pinonesList = [];
+      stonePickups = [];
+      lootDrops = [];
+      GAME.stones = 5;
       GAME.enemyProjectiles = [];
       GAME.playerProjectiles = [];
       GAME.targetLawenCollected = false;
@@ -1260,11 +1541,13 @@
 
           pinonesList.push(new NgulliwPinon(curX + 90, platY - 18));
           pinonesList.push(new NgulliwPinon(curX + 120, segHeight - 16));
+          // Stone piles are placed on reachable ground, roughly every other segment.
+          if (Math.random() < 0.72) stonePickups.push(new StonePickup(curX + 40, segHeight - 9));
 
           // Density scaling: More enemy pairs in levels 2, 3 and 4
           if (levelIdx === 0) {
             // Level 1: Solo patrols
-            if (Math.random() < 0.6) {
+            if (Math.random() < 0.8) {
               enemies.push(new Soldier(curX + 110, segHeight - 28, 1, 50, speedMultiplier));
             } else {
               enemies.push(new Arquebusier(curX + 130, segHeight - 28, 1, speedMultiplier));
@@ -1292,8 +1575,17 @@
         curX += segWidth + gap;
       }
 
-      targetPlant = new TargetLawenPlant(LEVEL_LENGTH * 0.65, 150, currentLawen);
-      enemies.push(new HorseKnight(LEVEL_LENGTH - 480, 192, 3, 90, speedMultiplier));
+      const herbX = LEVEL_LENGTH * 0.65;
+      const herbPlatform = platforms.find(p => p.h === 60 && herbX >= p.x && herbX + 20 <= p.x + p.w);
+      if (!herbPlatform) {
+        platforms.push({ x: herbX - 45, y: 218, w: 130, h: 60 });
+      }
+      targetPlant = new TargetLawenPlant(herbX, (herbPlatform ? herbPlatform.y : 218) - 24, currentLawen);
+      if (levelIdx >= 1) {
+        enemies.push(new HorseKnight(LEVEL_LENGTH - 480, 192, levelIdx >= 3 ? 3 : 2, 90, speedMultiplier));
+      } else {
+        enemies.push(new Soldier(LEVEL_LENGTH - 480, 182, 1, 55, speedMultiplier));
+      }
 
       platforms.push({
         x: LEVEL_LENGTH - 300,
@@ -1303,115 +1595,206 @@
       });
     }
 
-    function drawParallaxBackground(c, camX) {
-      const skyGrad = c.createLinearGradient(0, 0, 0, V_HEIGHT);
-      skyGrad.addColorStop(0, '#122538');
-      skyGrad.addColorStop(0.5, '#2b4764');
-      skyGrad.addColorStop(0.8, '#9a5332');
-      skyGrad.addColorStop(1, '#c27847');
-      c.fillStyle = skyGrad;
-      c.fillRect(0, 0, V_WIDTH, V_HEIGHT);
-
-      c.fillStyle = '#fef08a';
-      c.beginPath();
-      c.arc(380 - (camX * 0.02) % 480, 50, 16, 0, Math.PI * 2);
-      c.fill();
-
-      const vX = 140 - (camX * 0.05);
-      c.fillStyle = '#374151';
-      c.beginPath();
-      c.moveTo(vX, 185);
-      c.lineTo(vX + 75, 75);
-      c.lineTo(vX + 90, 75);
-      c.lineTo(vX + 165, 185);
-      c.fill();
-
-      c.fillStyle = '#f1f5f9';
-      c.beginPath();
-      c.moveTo(vX + 55, 102);
-      c.lineTo(vX + 75, 75);
-      c.lineTo(vX + 90, 75);
-      c.lineTo(vX + 110, 102);
-      c.lineTo(vX + 95, 96);
-      c.lineTo(vX + 80, 104);
-      c.lineTo(vX + 68, 97);
-      c.fill();
-
-      const smokeTime = Date.now() * 0.002;
-      for (let s = 0; s < 6; s++) {
-        const loop = (smokeTime + s * 0.5) % 3;
-        const smY = 70 - loop * 18;
-        const smX = vX + 82 + Math.sin(smokeTime * 2 + s) * (4 + loop * 4) + (loop * 3);
-        const radius = 3 + loop * 4.5;
-        const alpha = Math.max(0, 0.45 - (loop * 0.14));
-
-        c.fillStyle = `rgba(240, 244, 248, ${alpha})`;
-        c.beginPath();
-        c.arc(smX, smY, radius, 0, Math.PI * 2);
-        c.fill();
-      }
-
-      c.fillStyle = '#1e293b';
-      c.beginPath();
-      c.moveTo(0, V_HEIGHT);
-      for (let x = 0; x <= V_WIDTH; x += 30) {
-        const mx = x + (camX * 0.08);
-        const my = 135 + Math.sin(mx * 0.015) * 25 + Math.cos(mx * 0.03) * 12;
-        c.lineTo(x, my);
-      }
-      c.lineTo(V_WIDTH, V_HEIGHT);
-      c.fill();
-
-      drawAraucariaLayer(c, camX * 0.22, 160, '#0f291e', 14);
-      drawAraucariaLayer(c, camX * 0.45, 185, '#091c14', 18);
+    // v1.4: deterministic scenery, animated atmosphere and four visual biomes.
+    // Animation time advances only while playing, so overlays do not animate the world.
+    let sceneryTime = 0;
+    const BIOMES = [
+      { sky: ['#142d4a','#547e94','#e3aa74'], far:'#647c8b', near:'#344f58', tree:'#193c35', front:'#102d2a', grass:'#4b8a56', earth:'#493224', weather:'clear' },
+      { sky: ['#19394b','#638b80','#c3bd8b'], far:'#627f79', near:'#375b51', tree:'#20483c', front:'#12372d', grass:'#5d9957', earth:'#463826', weather:'leaves' },
+      { sky: ['#1b2943','#596b88','#a6a6b1'], far:'#59657f', near:'#34465c', tree:'#203c43', front:'#142d37', grass:'#477b70', earth:'#3b3540', weather:'rain' },
+      { sky: ['#171e39','#55496c','#c37e71'], far:'#56516d', near:'#34384e', tree:'#2c3942', front:'#1c2938', grass:'#627a63', earth:'#42313b', weather:'mist' }
+    ];
+    function hashScenery(n) {
+      const v = Math.sin(n * 127.1 + 78.233) * 43758.5453;
+      return v - Math.floor(v);
     }
-
-    function drawAraucariaLayer(c, scrollOffset, baseY, color, treeCount) {
+    function drawMountainRange(c, camX, speed, baseline, height, color, seed) {
+      const step = 65;
+      const offset = (camX * speed) % step;
+      const start = Math.floor(camX * speed / step);
       c.fillStyle = color;
-      const spacing = 75;
-      const startIdx = Math.floor(scrollOffset / spacing);
-
+      c.beginPath(); c.moveTo(0, V_HEIGHT);
+      for (let i = -1; i < Math.ceil(V_WIDTH / step) + 2; i++) {
+        const x = i * step - offset;
+        const peak = baseline - (0.3 + hashScenery(start + i + seed) * 0.7) * height;
+        c.lineTo(x, peak);
+      }
+      c.lineTo(V_WIDTH, V_HEIGHT); c.closePath(); c.fill();
+    }
+    // v1.4.1: distant volcanic cones with drifting, looping smoke.
+    // World-anchored positions keep the peaks moving naturally with parallax.
+    function drawVolcanoes(c, camX, biome) {
+      const speed = 0.075;
+      const worldPeaks = [310, 1510, 2750];
+      for (let i = 0; i < worldPeaks.length; i++) {
+        const x = Math.round(worldPeaks[i] - camX * speed);
+        if (x < -145 || x > V_WIDTH + 145) continue;
+        const peakY = 76 + (i % 2) * 13;
+        const baseY = 188;
+        // Broad cone and an irregular snow cap.
+        c.fillStyle = biome.far;
+        c.beginPath();
+        c.moveTo(x - 118, baseY);
+        c.lineTo(x - 17, peakY + 9);
+        c.lineTo(x - 9, peakY);
+        c.lineTo(x + 11, peakY);
+        c.lineTo(x + 21, peakY + 10);
+        c.lineTo(x + 126, baseY);
+        c.closePath(); c.fill();
+        c.fillStyle = 'rgba(224,231,235,0.72)';
+        c.beginPath();
+        c.moveTo(x - 17, peakY + 9);
+        c.lineTo(x - 9, peakY);
+        c.lineTo(x + 11, peakY);
+        c.lineTo(x + 21, peakY + 10);
+        c.lineTo(x + 11, peakY + 8);
+        c.lineTo(x + 3, peakY + 14);
+        c.lineTo(x - 6, peakY + 9);
+        c.lineTo(x - 13, peakY + 16);
+        c.closePath(); c.fill();
+        // Smoke drifts to the right as it rises; puffs loop continuously.
+        for (let j = 0; j < 8; j++) {
+          const age = ((sceneryTime * 0.30 + j * 13 + i * 7) % 104);
+          const drift = age * 0.34 + Math.sin(age * 0.09 + i) * 4;
+          const radius = 3 + age * 0.10;
+          const opacity = (1 - age / 104) * (biome.weather === 'rain' ? 0.22 : 0.35);
+          c.fillStyle = `rgba(222,229,233,${opacity.toFixed(3)})`;
+          c.beginPath();
+          c.arc(Math.round(x + drift), Math.round(peakY - 3 - age * 0.55), radius, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+    }
+    function drawCloud(c, x, y, scale, alpha) {
+      c.fillStyle = `rgba(234,241,237,${alpha})`;
+      c.fillRect(Math.round(x), Math.round(y + 5 * scale), Math.round(42 * scale), Math.round(8 * scale));
+      c.fillRect(Math.round(x + 8 * scale), Math.round(y), Math.round(23 * scale), Math.round(12 * scale));
+      c.fillRect(Math.round(x + 27 * scale), Math.round(y + 3 * scale), Math.round(19 * scale), Math.round(9 * scale));
+    }
+    function drawParallaxBackground(c, camX) {
+      const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
+      const sky = c.createLinearGradient(0, 0, 0, V_HEIGHT);
+      sky.addColorStop(0, biome.sky[0]); sky.addColorStop(0.62, biome.sky[1]); sky.addColorStop(1, biome.sky[2]);
+      c.fillStyle = sky; c.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+      const sunX = Math.round(380 - camX * 0.018);
+      c.fillStyle = GAME.currentLevelIndex % 4 === 2 ? '#d8e1e8' : '#ffe6a1';
+      c.beginPath(); c.arc(sunX, 42, 13, 0, Math.PI * 2); c.fill();
+      for (let i = 0; i < 7; i++) {
+        const travel = (sceneryTime * (0.08 + i * 0.014) + camX * 0.035);
+        const x = ((i * 119 - travel) % 640 + 640) % 640 - 90;
+        drawCloud(c, x, 20 + hashScenery(i + 9) * 60, 0.6 + hashScenery(i + 4) * 0.6, 0.13 + hashScenery(i + 2) * 0.2);
+      }
+      drawMountainRange(c, camX, 0.055, 169, 83, biome.far, 30);
+      drawVolcanoes(c, camX, biome);
+      drawMountainRange(c, camX, 0.12, 194, 57, biome.near, 90);
+      drawAraucariaLayer(c, camX * 0.23, 185, biome.tree, 10);
+      drawAraucariaLayer(c, camX * 0.46, 213, biome.front, 13);
+      drawAtmosphere(c, camX, biome.weather);
+    }
+    function drawAraucariaLayer(c, scrollOffset, baseY, color, treeCount) {
+      const spacing = 52;
+      const startIdx = Math.floor(scrollOffset / spacing) - 1;
+      c.fillStyle = color;
       for (let i = 0; i < treeCount; i++) {
-        const treeIdx = startIdx + i;
-        const screenX = Math.round(treeIdx * spacing - scrollOffset);
-        const h = 55 + ((treeIdx * 19) % 25);
-        const topY = baseY - h;
-
-        c.fillRect(screenX + 5, topY + 12, 4, h);
-
+        const idx = startIdx + i;
+        const x = Math.round(idx * spacing - scrollOffset);
+        const height = 38 + Math.floor(hashScenery(idx + 20) * 42);
+        const top = baseY - height;
+        const crown = 10 + Math.floor(hashScenery(idx + 40) * 7);
+        // Fade the lower trunk into the distant hillside instead of ending
+        // in a hard horizontal line (which made the trees appear to float).
+        c.fillRect(x + 5, top + 5, 4, Math.max(0, height - 26));
+        const trunkFade = c.createLinearGradient(0, baseY - 27, 0, baseY + 2);
+        trunkFade.addColorStop(0, color);
+        trunkFade.addColorStop(1, 'rgba(0,0,0,0)');
+        c.fillStyle = trunkFade;
+        c.fillRect(x + 5, baseY - 27, 4, 29);
+        c.fillStyle = color;
+        // Pixel-art pewen crown with horizontal branches.
+        c.fillRect(x - crown + 7, top + 7, crown * 2, 5);
+        c.fillRect(x - crown + 10, top + 2, crown * 2 - 6, 6);
+        c.fillRect(x + 1, top - 2, 12, 7);
+        c.fillRect(x - crown + 3, top + 13, 8, 3);
+        c.fillRect(x + crown + 2, top + 13, 8, 3);
+      }
+    }
+    function drawAtmosphere(c, camX, weather) {
+      if (weather === 'rain') {
+        c.strokeStyle = 'rgba(190,219,235,0.32)'; c.lineWidth = 1;
         c.beginPath();
-        c.ellipse(screenX + 7, topY + 10, 18, 7, 0, 0, Math.PI * 2);
-        c.fill();
-
-        c.beginPath();
-        c.ellipse(screenX + 7, topY + 4, 13, 5, 0, 0, Math.PI * 2);
-        c.fill();
-
-        c.fillRect(screenX - 8, topY + 18, 7, 3);
-        c.fillRect(screenX + 15, topY + 18, 7, 3);
+        for (let i = 0; i < 75; i++) {
+          const x = ((hashScenery(i + 200) * 520 - sceneryTime * 2.4 - camX * 0.08) % 520 + 520) % 520;
+          const y = (hashScenery(i + 400) * 320 + sceneryTime * (2.5 + hashScenery(i) * 2)) % 320;
+          c.moveTo(Math.round(x), Math.round(y)); c.lineTo(Math.round(x - 3), Math.round(y + 9));
+        }
+        c.stroke();
+      } else if (weather === 'leaves') {
+        for (let i = 0; i < 24; i++) {
+          const x = ((hashScenery(i + 250) * 550 - sceneryTime * (0.3 + hashScenery(i) * 0.4)) % 550 + 550) % 550;
+          const y = (hashScenery(i + 350) * 280 + sceneryTime * (0.25 + hashScenery(i + 1) * 0.3)) % 280;
+          c.fillStyle = i % 3 ? 'rgba(176,155,76,0.55)' : 'rgba(112,171,94,0.5)';
+          c.fillRect(Math.round(x + Math.sin(sceneryTime * 0.03 + i) * 5), Math.round(y), 3, 2);
+        }
+      } else if (weather === 'mist') {
+        for (let i = 0; i < 6; i++) {
+          const x = ((i * 120 + sceneryTime * 0.09 - camX * 0.035) % 650 + 650) % 650 - 80;
+          c.fillStyle = 'rgba(202,212,224,0.075)';
+          c.fillRect(Math.round(x), 135 + (i % 3) * 22, 160, 20);
+        }
+      }
+    }
+    function drawNatureDetails(c, p, sx) {
+      if (p.h < 25) return;
+      const biomeIndex = GAME.currentLevelIndex % 4;
+      const start = Math.max(0, Math.floor((GAME.cameraX - p.x) / 38));
+      const end = Math.min(Math.ceil(p.w / 38), start + 17);
+      for (let i = start; i < end; i++) {
+        const x = Math.round(sx + i * 38 + 13), y = Math.round(p.y);
+        const seed = Math.abs(Math.sin((Math.floor(p.x / 20) + i * 31) * 12.9898));
+        if (seed < 0.23) { // low fern
+          c.fillStyle = biomeIndex === 2 ? '#4d8074' : '#376f48';
+          c.fillRect(x, y-7, 2, 7); c.fillRect(x-4,y-5,4,2);
+          c.fillRect(x+2,y-6,5,2); c.fillRect(x-2,y-9,2,3);
+        } else if (seed < 0.40) { // mossy rock
+          c.fillStyle='#64746a'; c.fillRect(x-3,y-5,9,5);
+          c.fillStyle='#74965b'; c.fillRect(x-2,y-6,5,2);
+        } else if (seed > 0.91) { // tiny mushroom
+          c.fillStyle='#e2c7a0'; c.fillRect(x,y-4,2,4);
+          c.fillStyle='#a84d3d'; c.fillRect(x-2,y-6,6,3);
+        }
       }
     }
 
-    function drawRuka(c, x, y) {
-      c.fillStyle = '#5c3a21';
-      c.beginPath();
-      c.moveTo(x, y + 50);
-      c.quadraticCurveTo(x + 40, y - 10, x + 80, y + 50);
-      c.closePath();
-      c.fill();
-
-      c.fillStyle = '#78350f';
-      for (let layer = 0; layer < 4; layer++) {
-        c.fillRect(x + 10 + layer * 6, y + 10 + layer * 10, 60 - layer * 12, 3);
+    function drawGroundDetails(c, p, sx) {
+      const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
+      c.fillStyle = biome.grass; c.fillRect(sx, p.y, p.w, 5);
+      c.fillStyle = '#8ca96b';
+      for (let g = 4; g < p.w; g += 11) {
+        const world = Math.floor((p.x + g) / 11);
+        const sway = Math.round(Math.sin(sceneryTime * 0.055 + world) * 1);
+        c.fillRect(sx + g + sway, p.y - 3 - Math.floor(hashScenery(world) * 3), 2, 5);
       }
-
-      c.fillStyle = '#1c1917';
-      c.fillRect(x + 28, y + 22, 24, 28);
-
-      c.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      const s = Math.sin(Date.now() * 0.003) * 3;
-      c.fillRect(x + 38 + s, y - 8, 4, 6);
-      c.fillRect(x + 40 - s, y - 16, 6, 6);
+      c.fillStyle = biome.earth; c.fillRect(sx, p.y + 5, p.w, p.h);
+      c.fillStyle = '#6b5140';
+      for (let g = 10; g < p.w - 5; g += 24) c.fillRect(sx + g, p.y + 12 + (g % 3) * 4, 5, 3);
+    }
+    function drawRuka(c, x, y) {
+      // Rounded thatch roof, timber ribs, doorway and animated hearth smoke.
+      c.fillStyle = '#3c2b22'; c.fillRect(x + 8, y + 24, 66, 29);
+      c.fillStyle = '#8c623c';
+      c.beginPath(); c.moveTo(x, y + 28); c.quadraticCurveTo(x + 40, y - 22, x + 82, y + 28); c.lineTo(x + 75, y + 33); c.quadraticCurveTo(x + 40, y - 6, x + 7, y + 33); c.fill();
+      c.strokeStyle = '#b58a4d'; c.lineWidth = 2;
+      for (let i = 0; i < 6; i++) {
+        c.beginPath(); c.moveTo(x + 6 + i * 12, y + 27); c.lineTo(x + 38 + (i - 2.5) * 5, y + 3); c.stroke();
+      }
+      c.fillStyle = '#211a17'; c.fillRect(x + 31, y + 28, 20, 25);
+      c.fillStyle = '#b77a38'; c.fillRect(x + 29, y + 28, 2, 25); c.fillRect(x + 51, y + 28, 2, 25);
+      c.fillStyle = '#e4a04a'; c.fillRect(x + 37, y + 43, 6, 5);
+      for (let i = 0; i < 5; i++) {
+        const rise = (sceneryTime * 0.4 + i * 10) % 58;
+        c.fillStyle = `rgba(222,226,221,${(1 - rise / 58) * 0.35})`;
+        c.fillRect(Math.round(x + 41 + Math.sin(sceneryTime * 0.025 + i) * 7), Math.round(y + 7 - rise), 5 + Math.floor(rise / 15), 4);
+      }
     }
 
     function checkAABB(a, b) {
@@ -1425,6 +1808,7 @@
 
     function update() {
       if (!GAME.running) return;
+      sceneryTime++;
 
       player.update(platforms, enemies);
 
@@ -1433,8 +1817,12 @@
       if (GAME.cameraX < 0) GAME.cameraX = 0;
       if (GAME.cameraX > LEVEL_LENGTH - V_WIDTH) GAME.cameraX = LEVEL_LENGTH - V_WIDTH;
 
-      enemies.forEach(en => en.update(player));
+      if (!GAME.running) return;
+      enemies.forEach(en => { if (GAME.running) en.update(player); });
+      if (!GAME.running) return;
       pinonesList.forEach(p => p.update(player));
+      stonePickups.forEach(p => p.update(player));
+      updateLoot();
       if (targetPlant) targetPlant.update(player);
 
       // Arcabucero enemy bullets
@@ -1474,6 +1862,7 @@
             en.y + en.h > stone.y
           ) {
             en.hit(1, stone.vx > 0 ? 1 : -1);
+            createSparkParticles(stone.x, stone.y, 5, '#cbd5e1');
             stone.life = 0;
             break;
           }
@@ -1494,8 +1883,18 @@
         }
       }
 
-      if (player.x >= LEVEL_LENGTH - 180) {
-        reachRuka();
+      if (GAME.noticeTimer > 0) {
+        GAME.noticeTimer--;
+        if (GAME.noticeTimer === 0) document.getElementById("missionNotice").style.display = "none";
+      }
+      if (GAME.running && player.x >= LEVEL_LENGTH - 180) {
+        if (GAME.targetLawenCollected) reachRuka();
+        else if (GAME.noticeTimer === 0) {
+          const notice = document.getElementById("missionNotice");
+          notice.textContent = "🌿 ¡Falta el lawen! Regresa a recoger la planta brillante.";
+          notice.style.display = "block";
+          GAME.noticeTimer = 150;
+        }
       }
 
       const progressPercent = Math.min(100, Math.round((player.x / (LEVEL_LENGTH - 180)) * 100));
@@ -1509,21 +1908,8 @@
       platforms.forEach(p => {
         const sx = Math.round(p.x - GAME.cameraX);
         if (sx + p.w < -20 || sx > V_WIDTH + 20) return;
-
-        ctx.fillStyle = '#22543d';
-        ctx.fillRect(sx, p.y, p.w, 5);
-        ctx.fillStyle = '#2f855a';
-        for (let g = 0; g < p.w; g += 8) {
-          ctx.fillRect(sx + g, p.y - 2, 3, 2);
-        }
-
-        ctx.fillStyle = '#3b2313';
-        ctx.fillRect(sx, p.y + 5, p.w, p.h);
-
-        ctx.fillStyle = '#543824';
-        for (let s = 10; s < p.w - 10; s += 24) {
-          ctx.fillRect(sx + s, p.y + 9, 6, 5);
-        }
+        drawGroundDetails(ctx, p, sx);
+        drawNatureDetails(ctx, p, sx);
       });
 
       const rukaScreenX = Math.round(LEVEL_LENGTH - 190 - GAME.cameraX);
@@ -1532,6 +1918,8 @@
       }
 
       pinonesList.forEach(p => p.draw(ctx, GAME.cameraX));
+      stonePickups.forEach(p => p.draw(ctx, GAME.cameraX));
+      drawLoot(ctx, GAME.cameraX);
       if (targetPlant) targetPlant.draw(ctx, GAME.cameraX);
       enemies.forEach(en => en.draw(ctx, GAME.cameraX));
 
@@ -1559,14 +1947,33 @@
       });
     }
 
-    function gameLoop() {
-      update();
+    // Fixed 60 Hz simulation: stable physics on high/low refresh-rate screens.
+    const FIXED_STEP = 1000 / 60;
+    let previousFrame = 0;
+    let accumulated = 0;
+    function gameLoop(timestamp) {
+      if (!previousFrame) previousFrame = timestamp;
+      accumulated += Math.min(timestamp - previousFrame, 100);
+      previousFrame = timestamp;
+      let steps = 0;
+      while (accumulated >= FIXED_STEP && steps < 6) {
+        update();
+        accumulated -= FIXED_STEP;
+        steps++;
+      }
       render();
       requestAnimationFrame(gameLoop);
     }
 
     function updateHUD() {
-      const pips = document.querySelectorAll('#uiHealthPips .health-pip');
+      const pipContainer = document.getElementById('uiHealthPips');
+      while (pipContainer.children.length < player.hitsMax) {
+        const pip = document.createElement('div');
+        pip.className = 'health-pip';
+        pipContainer.appendChild(pip);
+      }
+      while (pipContainer.children.length > player.hitsMax) pipContainer.lastChild.remove();
+      const pips = pipContainer.querySelectorAll('.health-pip');
       pips.forEach((pip, index) => {
         if (index < player.hits) {
           pip.classList.remove('empty');
@@ -1580,7 +1987,9 @@
 
       const currentLawen = LAWEN_DATABASE[GAME.currentLevelIndex % LAWEN_DATABASE.length];
       document.getElementById('uiCurrentLawen').textContent = `${currentLawen.nameMapu} ('${currentLawen.nameSpan}')`;
-      document.getElementById('uiCurrentWeapon').textContent = GAME.equippedWeapon === 'wayki' ? 'WAYKI (LANZA)' : 'WITRÜWE (HONDA)';
+      document.getElementById('uiCurrentWeapon').textContent = GAME.equippedWeapon === 'wayki'
+        ? `WAYKI (LANZA) · 🪨 ${GAME.stones}/${GAME.maxStones}`
+        : `WITRÜWE (HONDA) · 🪨 ${GAME.stones}/${GAME.maxStones}`;
     }
 
     function renderEduHerbIllustration(lawen) {
@@ -1612,8 +2021,13 @@
       GAME.running = false;
       audio.playFanfare();
 
-      GAME.bankedPinones += GAME.levelPinones;
+      const earned = GAME.levelPinones;
+      GAME.bankedPinones += earned;
+      GAME.totalPinonesCollected += earned;
       GAME.levelPinones = 0;
+      GAME.completedLevels = [...new Set([...GAME.completedLevels, GAME.currentLevelIndex % 4])];
+      GAME.maxUnlockedLevel = Math.max(GAME.maxUnlockedLevel, Math.min(3, GAME.currentLevelIndex + 1));
+      saveProgress();
 
       const currentLawen = LAWEN_DATABASE[GAME.currentLevelIndex % LAWEN_DATABASE.length];
 
@@ -1630,6 +2044,9 @@
 
     function updateShopUI() {
       document.getElementById('shopPinonCount').textContent = GAME.bankedPinones;
+      const healthButton = document.getElementById('btnBuyHealth');
+      healthButton.disabled = GAME.healthUpgrade;
+      healthButton.textContent = GAME.healthUpgrade ? 'COMPRADO ✓' : '12 🌰';
 
       const btnWayki = document.getElementById('btnEquipWayki');
       const btnWitruwe = document.getElementById('btnEquipWitruwe');
@@ -1665,13 +2082,24 @@
       document.getElementById('rukaOverlay').style.display = 'flex';
     }
 
+    function resetControls() {
+      Object.keys(GAME.keys).forEach(key => GAME.keys[key] = false);
+      GAME.cameraX = 0;
+      GAME.particles = [];
+      GAME.noticeTimer = 0;
+      document.getElementById("missionNotice").style.display = "none";
+    }
+
     function startNextExpedition() {
+      if (GAME.running) return;
       document.getElementById('rukaOverlay').style.display = 'none';
       document.getElementById('shopOverlay').style.display = 'none';
       document.getElementById('gameOverOverlay').style.display = 'none';
       document.getElementById('startOverlay').style.display = 'none';
 
-      GAME.currentLevelIndex++;
+      GAME.currentLevelIndex = Math.min(3, GAME.currentLevelIndex + 1);
+      saveProgress();
+      resetControls();
       player = new Player(40, 160);
       generateLevel(GAME.currentLevelIndex);
       updateHUD();
@@ -1680,6 +2108,7 @@
     }
 
     function restartCurrentExpedition() {
+      resetControls();
       document.getElementById('gameOverOverlay').style.display = 'none';
       document.getElementById('rukaOverlay').style.display = 'none';
       document.getElementById('shopOverlay').style.display = 'none';
@@ -1692,24 +2121,90 @@
       GAME.running = true;
     }
 
-    function startGame() {
-      try { audio.init(); } catch (err) {}
+    const SAVE_KEY = 'leftraru_save_v1_5';
+    const SAVE_FIELDS = ['bankedPinones','healthUpgrade','unlockedWitruwe','equippedWeapon',
+      'currentLevelIndex','maxUnlockedLevel','completedLevels','totalPinonesCollected'];
+    Object.assign(GAME, {healthUpgrade:false,maxUnlockedLevel:0,completedLevels:[],totalPinonesCollected:0});
 
-      document.getElementById('startOverlay').style.display = 'none';
-      document.getElementById('gameOverOverlay').style.display = 'none';
-      document.getElementById('rukaOverlay').style.display = 'none';
-      document.getElementById('shopOverlay').style.display = 'none';
-
-      GAME.bankedPinones = 0;
-      GAME.levelPinones = 0;
-      GAME.currentLevelIndex = 0;
+    function saveProgress() {
+      try {
+        const data = {version:1};
+        for (const key of SAVE_FIELDS) data[key] = GAME[key];
+        localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+      } catch(e) { /* private browsing / storage blocked: game still playable */ }
+      refreshSaveUI();
+    }
+    function loadProgress() {
+      try {
+        const data = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+        if (!data || data.version !== 1) return false;
+        GAME.bankedPinones = Math.max(0, Math.floor(Number(data.bankedPinones) || 0));
+        GAME.totalPinonesCollected = Math.max(0, Math.floor(Number(data.totalPinonesCollected) || 0));
+        GAME.healthUpgrade = data.healthUpgrade === true;
+        GAME.unlockedWitruwe = data.unlockedWitruwe === true;
+        GAME.equippedWeapon = data.equippedWeapon === 'witruwe' && GAME.unlockedWitruwe ? 'witruwe' : 'wayki';
+        GAME.maxUnlockedLevel = Math.min(3, Math.max(0, Math.floor(Number(data.maxUnlockedLevel) || 0)));
+        GAME.currentLevelIndex = Math.min(GAME.maxUnlockedLevel, Math.max(0, Math.floor(Number(data.currentLevelIndex) || 0)));
+        GAME.completedLevels = Array.isArray(data.completedLevels)
+          ? [...new Set(data.completedLevels.filter(n => Number.isInteger(n) && n >= 0 && n <= 3))] : [];
+        return true;
+      } catch(e) { return false; }
+    }
+    function refreshSaveUI() {
+      const exists = (() => { try { return !!localStorage.getItem(SAVE_KEY); } catch(e) {return false;} })();
+      document.getElementById('btnContinue').classList.toggle('hidden', !exists);
+      document.getElementById('savePanel').textContent = exists
+        ? `Guardado • ${GAME.bankedPinones} ngülliw • ${GAME.completedLevels.length}/4 lawen`
+        : 'Partida nueva • el progreso se guardará automáticamente';
+      const box = document.getElementById('levelChoices');
+      box.replaceChildren();
+      LAWEN_DATABASE.forEach((herb, index) => {
+        const btn = document.createElement('button');
+        const unlocked = index <= GAME.maxUnlockedLevel;
+        btn.textContent = `${GAME.completedLevels.includes(index) ? '✓ ' : ''}${index + 1}. ${herb.nameMapu}${unlocked ? '' : ' 🔒'}`;
+        btn.disabled = !unlocked;
+        btn.className = 'p-2 rounded border ' + (unlocked
+          ? 'border-emerald-500 bg-slate-800 text-white' : 'border-slate-700 text-slate-500');
+        btn.addEventListener('click', () => launchExpedition(index));
+        box.appendChild(btn);
+      });
+      const achievements = [
+        ['Primera expedición', GAME.completedLevels.length > 0],
+        ['Recolector (20 ngülliw)', GAME.totalPinonesCollected >= 20],
+        ['Witrüwe forjada', GAME.unlockedWitruwe],
+        ['Cuatro lawen', GAME.completedLevels.length === 4]
+      ];
+      document.getElementById('achievementSummary').textContent = 'Logros: ' +
+        achievements.map(([label, done]) => (done ? '🏆 ' : '○ ') + label).join(' · ');
+    }
+    function launchExpedition(index) {
+      paused = false;
+      document.getElementById('pauseOverlay').style.display = 'none';
+      if (index > GAME.maxUnlockedLevel || index < 0 || index > 3) return;
+      try { audio.init(); } catch(e) {}
+      for (const id of ['startOverlay','gameOverOverlay','rukaOverlay','shopOverlay'])
+        document.getElementById(id).style.display = 'none';
+      GAME.currentLevelIndex = index;
+      resetControls();
       player = new Player(40, 160);
-      generateLevel(0);
+      generateLevel(index);
       updateHUD();
       renderPortrait();
       GAME.running = true;
+      saveProgress();
     }
-
+    function startGame() {
+      // The normal start button resumes existing progress instead of wiping it.
+      launchExpedition(GAME.currentLevelIndex);
+    }
+    function newSave() {
+      if (!window.confirm('¿Borrar todo el progreso guardado? Esta acción no se puede deshacer.')) return;
+      try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+      Object.assign(GAME, {bankedPinones:0,levelPinones:0,healthUpgrade:false,
+        unlockedWitruwe:false,equippedWeapon:'wayki',currentLevelIndex:0,
+        maxUnlockedLevel:0,completedLevels:[],totalPinonesCollected:0});
+      launchExpedition(0);
+    }
     function gameOver() {
       GAME.running = false;
       document.getElementById('gameOverPinones').textContent = GAME.bankedPinones;
@@ -1767,6 +2262,7 @@
       GAME.equippedWeapon = 'wayki';
       updateShopUI();
       updateHUD();
+      saveProgress();
       audio.playCoin();
     });
 
@@ -1785,11 +2281,13 @@
       }
       updateShopUI();
       updateHUD();
+      saveProgress();
     });
 
     document.getElementById('btnBuyHealth').addEventListener('click', () => {
-      if (GAME.bankedPinones >= 12 && player.hitsMax === 5) {
+      if (GAME.bankedPinones >= 12 && !GAME.healthUpgrade) {
         GAME.bankedPinones -= 12;
+        GAME.healthUpgrade = true;
         player.hitsMax = 6;
         player.hits = 6;
         audio.playCoin();
@@ -1797,6 +2295,7 @@
         document.getElementById('btnBuyHealth').textContent = 'COMPRADO ✓';
         document.getElementById('btnBuyHealth').disabled = true;
         updateHUD();
+        saveProgress();
       }
     });
 
@@ -1807,22 +2306,67 @@
         if (e.cancelable) e.preventDefault();
         callback();
       };
-      el.addEventListener('pointerdown', handler, { passive: false });
       el.addEventListener('click', handler);
     }
 
     bindAction('btnStartGame', startGame);
+    bindAction('btnContinue', startGame);
+    bindAction('btnNewSave', newSave);
+    bindAction('btnLevels', () => document.getElementById('levelPanel').classList.toggle('hidden'));
+    loadProgress();
+    refreshSaveUI();
     bindAction('btnRestartGame', restartCurrentExpedition);
     bindAction('btnGoShop', openShop);
     bindAction('btnBackToRuka', backToRuka);
     bindAction('btnStartFromShop', startNextExpedition);
     bindAction('btnNextLevel', startNextExpedition);
 
+    let paused = false;
+    function setPaused(value) {
+      if (value && !GAME.running) return;
+      paused = value;
+      GAME.running = !value;
+      document.getElementById('pauseOverlay').style.display = value ? 'flex' : 'none';
+      document.getElementById('btnPause').textContent = value ? '▶' : '⏸';
+      Object.keys(GAME.keys).forEach(k => GAME.keys[k] = false);
+    }
+    function pauseToggle() {
+      if (paused) setPaused(false);
+      else if (GAME.running) setPaused(true);
+    }
+    bindAction('btnPause', pauseToggle);
+    bindAction('btnResume', () => setPaused(false));
+    bindAction('btnPauseControls', () => document.getElementById('pauseControlsText').classList.toggle('hidden'));
+    bindAction('btnPauseSound', () => document.getElementById('btnSound').click());
+    bindAction('btnPauseHome', () => {
+      paused=false;
+      GAME.running=false;
+      document.getElementById('pauseOverlay').style.display='none';
+      document.getElementById('btnPause').textContent='⏸';
+      saveProgress();
+      document.getElementById('startOverlay').style.display='flex';
+    });
+
+    function switchWeapon() {
+      if (!GAME.running || !GAME.unlockedWitruwe || player.attacking) return;
+      if (GAME.equippedWeapon === 'witruwe') GAME.equippedWeapon = 'wayki';
+      else if (GAME.stones > 0) GAME.equippedWeapon = 'witruwe';
+      updateHUD();
+      saveProgress();
+    }
+    bindAction('tBtnSwitch', switchWeapon);
     window.addEventListener('keydown', (e) => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
         e.preventDefault();
       }
       switch (e.code) {
+        case 'KeyP':
+        case 'Escape':
+          if (!e.repeat) pauseToggle();
+          break;
+        case 'KeyQ':
+          if (!e.repeat) switchWeapon();
+          break;
         case 'KeyA':
         case 'ArrowLeft':
           GAME.keys.left = true;
@@ -1883,11 +2427,19 @@
         GAME.keys[keyName] = false;
       };
 
-      btn.addEventListener('pointerdown', press, { passive: false });
+      btn.addEventListener('pointerdown', e => {
+        btn.setPointerCapture?.(e.pointerId);
+        press(e);
+      }, { passive: false });
       btn.addEventListener('pointerup', release, { passive: false });
       btn.addEventListener('pointercancel', release, { passive: false });
       btn.addEventListener('pointerleave', release, { passive: false });
     }
+
+    window.addEventListener('blur', () => {
+      if (GAME.running) setPaused(true);
+      Object.keys(GAME.keys).forEach(key => GAME.keys[key] = false);
+    });
 
     bindTouchBtn('tBtnLeft', 'left');
     bindTouchBtn('tBtnRight', 'right');
