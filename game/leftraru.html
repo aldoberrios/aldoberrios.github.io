@@ -251,9 +251,19 @@
         object-fit: contain;
         flex: 0 0 auto;
         transform: scale(3.0);
-        transform-origin: 34% 79%;
+        transform-origin: var(--portrait-origin-x, 10%) 79%;
       }
       #touchControls { flex-shrink: 0; padding-top: 5px; }
+    }
+    /* v1.7.11: Firefox's dynamic browser chrome must never hide touch controls. */
+    @media (orientation: landscape) and (max-height: 600px) {
+      html, body { height: var(--visible-height, 100dvh) !important; min-height: 0 !important; }
+      main { height: var(--visible-height, 100dvh) !important; max-height: var(--visible-height, 100dvh) !important;
+             flex: 1 1 auto; overflow: hidden; padding: 2px 3px !important; }
+      #gameFrame { height: 100% !important; max-height: 100% !important; min-height: 0 !important; }
+      #touchControls { bottom: max(9px, env(safe-area-inset-bottom)) !important;
+                       padding-bottom: 3px !important; }
+      #touchControls .touch-btn { height: clamp(39px, 11vh, 52px); }
     }
     /* Start/pause/other modal content must cover the HUD and stay clickable. */
     #gameFrame .modal-layer { z-index: 40; }
@@ -325,7 +335,7 @@
       <div id="startOverlay" class="modal-layer">
         <span class="text-3xl mb-2">🌿🏹</span>
         <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
-        <p class="text-[8px] text-emerald-300 mb-2">v1.7.10 · CÁMARA EQUILIBRADA</p>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.7.12 · ESTACAS REFINADAS</p>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
           Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
         </p>
@@ -715,11 +725,22 @@
       V_WIDTH = nextWidth;
       ctx.imageSmoothingEnabled = false;
     }
-    window.addEventListener('resize', fitGameCanvas);
+    // Mobile Firefox can change the *visual* viewport without a normal resize.
+    // Sync the real visible height so the bottom controls stay above browser UI.
+    function syncVisibleViewport() {
+      const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty('--visible-height', Math.max(100, Math.floor(vh)) + 'px');
+      fitGameCanvas();
+    }
+    window.addEventListener('resize', syncVisibleViewport);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', syncVisibleViewport);
+      window.visualViewport.addEventListener('scroll', syncVisibleViewport);
+    }
     window.addEventListener('orientationchange', () => {
       requestAnimationFrame(() => requestAnimationFrame(fitGameCanvas));
     });
-    fitGameCanvas();
+    syncVisibleViewport();
     const V_HEIGHT = 270;
     const LEVEL_LENGTH = 3600;
 
@@ -776,6 +797,9 @@
         this.landSquash = 0;
         this.attackHits = new Set();
         this.slingReleased = false;
+        this.lastSafeX = 40;
+        this.lastSafeY = 160;
+        this.pitRecoveryCooldown = 0;
       }
 
       update(platforms, enemies) {
@@ -784,6 +808,7 @@
         if (this.landSquash > 0) this.landSquash--;
         const wasGrounded = this.grounded;
         if (this.invulnerable > 0) this.invulnerable--;
+        if (this.pitRecoveryCooldown > 0) this.pitRecoveryCooldown--;
         if (this.attackCooldown > 0) this.attackCooldown--;
 
         if (GAME.keys.left) {
@@ -887,6 +912,17 @@
           }
         }
 
+        // Checkpoints only on wide ground, away from either edge; never on
+        // a narrow floating platform or directly above another pit.
+        if (this.grounded) {
+          const safeGround = platforms.find(p => p.h >= 45 &&
+            this.x >= p.x + 24 && this.x + this.w <= p.x + p.w - 24 &&
+            Math.abs(this.y + this.h - p.y) < 2);
+          if (safeGround) {
+            this.lastSafeX = this.x;
+            this.lastSafeY = safeGround.y - this.h;
+          }
+        }
         if (!wasGrounded && this.grounded && this.vy === 0) {
           this.landFlash = 9;
           this.landSquash = 5;
@@ -912,9 +948,23 @@
           }
         }
 
-        if (this.y > V_HEIGHT + 30) {
+        // Pit damage: one heart, then respawn at the last verified safe spot.
+        // Invulnerability does not prevent a fresh pit fall from recovering.
+        if (this.y + this.h >= V_HEIGHT + 4 && !this.grounded && this.pitRecoveryCooldown <= 0) {
+          this.pitRecoveryCooldown = 35;
           this.invulnerable = 0;
-          this.takeDamage(this.hitsMax);
+          this.takeDamage(1);
+          if (GAME.running) {
+            this.x = this.lastSafeX;
+            this.y = this.lastSafeY;
+            this.vx = 0; this.vy = 0;
+            this.grounded = false;
+            this.coyoteTimer = 0;
+            this.jumpBuffer = 0;
+            this.invulnerable = Math.max(this.invulnerable, 100);
+            GAME.cameraX = Math.max(0, this.x - V_WIDTH * 0.31);
+            createDustParticles(this.x + this.w / 2, this.y + this.h, 8);
+          }
         }
       }
 
@@ -1731,6 +1781,7 @@
       GAME.playerProjectiles = [];
       GAME.targetLawenCollected = false;
       GAME.levelPinones = 0;
+      if (player) { player.lastSafeX = 40; player.lastSafeY = 160; }
 
       const currentLawen = LAWEN_DATABASE[levelIdx % LAWEN_DATABASE.length];
 
@@ -1997,6 +2048,50 @@
       c.fillStyle = '#6b5140';
       for (let g = 10; g < p.w - 5; g += 24) c.fillRect(sx + g, p.y + 12 + (g % 3) * 4, 5, 3);
     }
+    function drawPitWarnings(c, camX) {
+      const ground = platforms.filter(p => p.h >= 45).sort((a,b) => a.x-b.x);
+      for (let i=0; i<ground.length-1; i++) {
+        const left=ground[i], right=ground[i+1];
+        const start=left.x+left.w, end=right.x, gap=end-start;
+        if (gap < 12 || end < camX-30 || start > camX+V_WIDTH+30) continue;
+        const a=Math.round(start-camX), b=Math.round(end-camX);
+        // A few loose pebbles and broken twigs signal the edge in advance.
+        c.fillStyle='#c5a06d';
+        c.fillRect(a-15,left.y-3,4,2); c.fillRect(a-9,left.y-5,2,4);
+        c.fillRect(b+8,right.y-4,4,2); c.fillRect(b+16,right.y-5,2,3);
+        c.fillStyle='#3a2620';
+        c.fillRect(a,248,Math.max(0,gap),22);
+        // Each stake is ONE continuous tapered silhouette. The pointed tip
+        // narrows smoothly into a shaft of the same width (no separate triangle).
+        for (let x = start + 5; x < end - 3; x += 11) {
+          const sx = Math.round(x - camX);
+          const h = 15 + Math.floor(hashScenery(x) * 5);
+          const tipY = 270 - h;
+          const shoulderY = tipY + 7;
+          c.fillStyle = '#422819';
+          c.beginPath();
+          c.moveTo(sx, tipY);
+          c.lineTo(sx + 4, shoulderY);
+          c.lineTo(sx + 4, 270);
+          c.lineTo(sx - 4, 270);
+          c.lineTo(sx - 4, shoulderY);
+          c.closePath();
+          c.fill();
+          // Thin wood grain highlight follows the same taper.
+          c.fillStyle = '#a86b3c';
+          c.beginPath();
+          c.moveTo(sx, tipY + 3);
+          c.lineTo(sx + 2, shoulderY + 1);
+          c.lineTo(sx + 2, 270);
+          c.lineTo(sx, 270);
+          c.closePath();
+          c.fill();
+          c.fillStyle = '#e6bd84';
+          c.fillRect(sx, tipY + 2, 1, 2);
+        }
+      }
+    }
+
     function drawRuka(c, x, y) {
       // Rounded thatch roof, timber ribs, doorway and animated hearth smoke.
       c.fillStyle = '#3c2b22'; c.fillRect(x + 8, y + 24, 66, 29);
@@ -2030,6 +2125,10 @@
       sceneryTime++;
 
       player.update(platforms, enemies);
+      if (window.matchMedia('(orientation: portrait) and (max-width: 767px)').matches) {
+        const blend = Math.max(0, Math.min(1, (player.x - 40) / 170));
+        canvas.style.setProperty('--portrait-origin-x', (10 + 24 * blend).toFixed(1) + '%');
+      } else canvas.style.removeProperty('--portrait-origin-x');
 
       // Direction-aware look-ahead for portrait: show more terrain in the
       // direction of travel, and ease across when Leftraru turns around.
@@ -2151,6 +2250,7 @@
         drawNatureDetails(ctx, p, sx);
       });
 
+      drawPitWarnings(ctx, GAME.cameraX);
       const rukaScreenX = Math.round(LEVEL_LENGTH - 190 - GAME.cameraX);
       if (rukaScreenX > -90 && rukaScreenX < V_WIDTH + 90) {
         drawRuka(ctx, rukaScreenX, 160);
@@ -2337,6 +2437,9 @@
     function resetControls() {
       Object.keys(GAME.keys).forEach(key => GAME.keys[key] = false);
       GAME.cameraX = 0;
+      canvas.style.setProperty('--portrait-origin-x', '10%');
+      GAME.portraitLookAnchor = 0.31;
+      GAME.portraitLookTarget = 0.31;
       GAME.particles = [];
       GAME.noticeTimer = 0;
       document.getElementById("missionNotice").style.display = "none";
