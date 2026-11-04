@@ -1,0 +1,3193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Leftraru: Kintun Lawen (En Busca del Lawen)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: #0b1118;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    canvas {
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .fretwork-border {
+      background: repeating-linear-gradient(90deg, #1b3b5f 0px, #1b3b5f 16px, #c5832b 16px, #c5832b 20px, #0f1d2d 20px, #0f1d2d 36px);
+      height: 8px;
+    }
+    .touch-btn {
+      background: rgba(18, 30, 49, 0.75);
+      border: 3px solid rgba(245, 158, 11, 0.8);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.6);
+      border-radius: 14px;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+    }
+    .touch-btn:active {
+      transform: translateY(2px);
+      background: rgba(245, 158, 11, 0.4);
+    }
+    .health-pip {
+      width: 14px;
+      height: 10px;
+      background: #ef4444;
+      border: 1px solid #7f1d1d;
+      box-shadow: inset 1px 1px 0 #fca5a5;
+      transition: background-color 0.15s;
+    }
+    .health-pip.empty {
+      background: #1e293b;
+      border-color: #0f172a;
+      box-shadow: none;
+    }
+    .modal-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      text-align: center;
+      background: rgba(7, 17, 27, 0.94);
+    }
+    /* v1.7.1: use the actual mobile viewport instead of distributing empty space. */
+    html, body { width: 100%; min-height: 100%; }
+    body { min-height: 100dvh; height: 100dvh; overflow: hidden; justify-content: flex-start !important; }
+    header, footer { flex-shrink: 0; }
+    main { flex: 1 1 auto; min-height: 0; justify-content: flex-start !important; gap: 6px; overflow: hidden; }
+    #gameFrame { flex: 0 1 auto; max-height: min(70dvh, calc(100dvh - 180px)); }
+    .modal-layer { overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; justify-content: flex-start; gap: 3px; }
+    .modal-layer > * { flex-shrink: 0; }
+    #btnFullscreen { min-width: 32px; }
+    @media (max-width: 767px) and (orientation: portrait) {
+      main { padding-top: 10px !important; }
+      #gameFrame { max-height: none; }
+      #touchControls { padding-top: 6px; }
+      .modal-layer { padding: 10px 12px; }
+      #startOverlay > span:first-child { font-size: 16px; margin-bottom: 0; }
+      #startOverlay h2 { font-size: 9px; }
+      #startOverlay p { margin-bottom: 5px; }
+      #btnStartGame { padding: 9px 12px; font-size: 10px; }
+    }
+    @media (max-width: 950px) and (orientation: landscape) {
+      header .fretwork-border { height: 4px; }
+      header > div:nth-child(2) { padding: 3px 8px; }
+      header #portraitCanvas { width: 26px !important; height: 26px !important; }
+      header .health-pip { width: 11px; height: 8px; }
+      header .gap-3 { gap: 5px; }
+      header .gap-1\.5 { gap: 3px; }
+      main { padding: 3px 5px !important; gap: 3px; }
+      #gameFrame { width: 100%; max-width: 100%; height: calc(100dvh - 132px); max-height: none; aspect-ratio: auto; align-self: stretch; flex: 1 1 auto; min-height: 110px; }
+      #touchControls { width: min(100%, 780px); padding: 2px 4px 0; flex: 0 0 auto; }
+      #touchControls .touch-btn { height: 42px; min-width: 44px; }
+      footer { display: none !important; }
+      .modal-layer { padding: 7px 12px; gap: 2px; }
+      #startOverlay > span:first-child { display: none; }
+      #startOverlay h2 { font-size: 10px; margin: 0; }
+      #startOverlay p { font-size: 9px; margin: 2px 0; line-height: 1.3; }
+      #startOverlay #savePanel { margin: 2px 0; }
+      #startOverlay #btnStartGame { padding: 8px 12px; font-size: 10px; }
+      #startOverlay .mt-3 { margin-top: 4px; }
+    }
+    @media (max-width: 950px) and (orientation: landscape) and (max-height: 440px) {
+      header #portraitCanvas { width: 22px !important; height: 22px !important; }
+      header > div:nth-child(2) { padding: 2px 6px; }
+      #gameFrame { height: calc(100dvh - 108px); max-height: none; }
+      #touchControls .touch-btn { height: 36px; }
+    }
+    /* v1.7.3: landscape HUD belongs to the game, not a separate vertical row. */
+    @media (orientation: landscape) and (max-height: 600px) {
+      body { height: 100dvh; min-height: 0; }
+      main { width: 100%; max-width: none; flex: 1 1 auto; min-height: 0;
+             padding: 2px 5px 3px !important; gap: 3px; }
+      #gameFrame { position: relative; width: 100%; height: auto; min-height: 0;
+                   flex: 1 1 auto; max-height: none; border-width: 2px;
+                   aspect-ratio: auto; align-self: stretch; }
+      #gameCanvas { width: 100%; height: 100%; object-fit: cover; object-position: center 56%; }
+      header.hud-in-game { position: absolute; z-index: 22; top: 4px; left: 4px;
+                           right: 4px; width: auto; border: 0; background: transparent;
+                           pointer-events: none; }
+      header.hud-in-game .fretwork-border { display: none; }
+      header.hud-in-game > div:nth-child(2) { width: 100%; max-width: none;
+                           padding: 0; pointer-events: none; }
+      header.hud-in-game > div:nth-child(2) > div { pointer-events: auto; }
+      header.hud-in-game > div:nth-child(2) > div:first-child {
+                           background: rgba(10,22,35,.85); padding: 3px 6px;
+                           border-radius: 7px; }
+      header.hud-in-game .health-pip { width: 10px; height: 7px; }
+      header.hud-in-game #portraitCanvas { width: 25px !important; height: 25px !important; }
+      header.hud-in-game .gap-3 { gap: 5px; }
+      header.hud-in-game #btnSound, header.hud-in-game #btnFullscreen,
+      header.hud-in-game #btnPause, header.hud-in-game #btnHelp {
+        background: rgba(10,22,35,.85); min-width: 36px; min-height: 34px;
+      }
+      #touchControls { width: 100%; max-width: none; flex: 0 0 auto;
+                       padding: 2px 6px 3px; }
+      #touchControls .touch-btn { height: 43px; min-width: 46px; }
+      #startOverlay { padding-top: 50px; }
+      .modal-layer { padding-bottom: 8px; }
+    }
+
+    /* v1.7.5: one HUD for all devices, always layered over the game. */
+    #gameFrame { position: relative; }
+    #gameFrame > header.hud-in-game {
+      position: absolute; inset: 5px 6px auto 6px; width: auto;
+      z-index: 22; background: transparent; border: 0;
+      pointer-events: none; display: flex; align-items: stretch;
+    }
+    #gameFrame > header.hud-in-game .fretwork-border { display: none; }
+    #gameFrame > header.hud-in-game > div:nth-child(2) {
+      width: 100%; max-width: none; padding: 0;
+      gap: 5px; pointer-events: none;
+    }
+    #gameFrame > header.hud-in-game > div:nth-child(2) > div { pointer-events: auto; }
+    #gameFrame > header.hud-in-game > div:nth-child(2) > div:first-child {
+      background: rgba(10,22,35,.83); padding: 3px 5px;
+      border-radius: 7px; gap: 5px;
+    }
+    #gameFrame > header.hud-in-game #portraitCanvas { width: 25px !important; height: 25px !important; }
+    #gameFrame > header.hud-in-game .health-pip { width: 10px; height: 7px; }
+    #gameFrame > header.hud-in-game .gap-3 { gap: 5px; }
+    #gameFrame > header.hud-in-game #btnSound,
+    #gameFrame > header.hud-in-game #btnFullscreen,
+    #gameFrame > header.hud-in-game #btnPause,
+    #gameFrame > header.hud-in-game #btnHelp {
+      background: rgba(10,22,35,.86); min-width: 31px; min-height: 31px;
+    }
+    #gameFrame > header.hud-in-game .hidden.sm\:flex { background: rgba(10,22,35,.83); }
+    /* Leave enough height for gameplay on desktop, without a separate top bar. */
+    @media (min-width: 951px) {
+      main { justify-content: center !important; }
+      #gameFrame { max-height: min(80dvh, 660px); }
+    }
+    @media (max-width: 767px) and (orientation: portrait) {
+      #gameFrame > header.hud-in-game { inset: 4px 4px auto 4px; }
+      #gameFrame > header.hud-in-game .health-pip { width: 8px; height: 7px; }
+      #gameFrame > header.hud-in-game > div:nth-child(2) > div:first-child { padding: 2px 3px; }
+      #gameFrame > header.hud-in-game #portraitCanvas { width: 20px !important; height: 20px !important; }
+      #gameFrame > header.hud-in-game #btnSound,
+      #gameFrame > header.hud-in-game #btnFullscreen,
+      #gameFrame > header.hud-in-game #btnPause,
+      #gameFrame > header.hud-in-game #btnHelp { min-width: 27px; min-height: 27px; padding: 2px 4px; }
+      #gameFrame > header.hud-in-game .text-\[9px\] { font-size: 7px; }
+    }
+    /* v1.7.5: landscape touch controls overlay the game, portrait zooms in. */
+    @media (hover: none), (pointer: coarse) {
+      #touchControls { display: flex !important; }
+    }
+    @media (orientation: landscape) and (max-height: 600px) {
+      main { position: relative; }
+      #gameFrame { height: 100%; }
+      #touchControls {
+        display: flex !important;
+        position: absolute;
+        z-index: 30;
+        left: 0; right: 0; bottom: max(5px, env(safe-area-inset-bottom));
+        width: 100%; max-width: none;
+        padding: 0 12px 3px;
+        pointer-events: none;
+      }
+      #touchControls > div { pointer-events: auto; }
+      #touchControls .touch-btn {
+        width: clamp(46px, 7.5vw, 65px);
+        height: clamp(46px, 12vh, 58px);
+        min-width: 46px;
+        font-size: 12px;
+        background-color: rgba(12, 24, 41, .72);
+      }
+      #touchControls #tBtnAttack { width: clamp(68px, 10vw, 86px); font-size: 9px; }
+      #touchControls #tBtnSwitch { font-size: 9px; }
+    }
+    @media (orientation: portrait) and (max-width: 767px) {
+      #gameCanvas {
+        /* Approximately 1.85x the previous portrait character size.
+           Keep the player's left-side position and feet in view. */
+        transform: scale(3.0);
+        transform-origin: 18% 77%;
+      }
+    }
+    /* v1.7.8: portrait framing and early camera tracking.
+       v1.7.7: taller portrait viewport, with the existing 3x pixel zoom.
+       Centre the original 16:9 canvas in a taller clipping window so the
+       ground remains visible instead of being cut off at the bottom. */
+    @media (orientation: portrait) and (max-width: 767px) {
+      main { padding-top: 6px !important; gap: 5px; }
+      #gameFrame {
+        /* Dirt-coloured continuation prevents a black void beneath terrain. */
+        background: #493224 !important;
+        aspect-ratio: auto !important;
+        height: min(54dvh, 540px) !important;
+        min-height: 330px;
+        max-height: calc(100dvh - 125px) !important;
+        flex: 0 0 auto;
+        align-self: center;
+      }
+      #gameCanvas {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        flex: 0 0 auto;
+        transform: scale(3.0);
+        transform-origin: var(--portrait-origin-x, 10%) 79%;
+      }
+      #touchControls { flex-shrink: 0; padding-top: 5px; }
+    }
+    /* v1.7.11: Firefox's dynamic browser chrome must never hide touch controls. */
+    @media (orientation: landscape) and (max-height: 600px) {
+      html, body { height: var(--visible-height, 100dvh) !important; min-height: 0 !important; }
+      main { height: var(--visible-height, 100dvh) !important; max-height: var(--visible-height, 100dvh) !important;
+             flex: 1 1 auto; overflow: hidden; padding: 2px 3px !important; }
+      #gameFrame { height: 100% !important; max-height: 100% !important; min-height: 0 !important; }
+      #touchControls { bottom: max(9px, env(safe-area-inset-bottom)) !important;
+                       padding-bottom: 3px !important; }
+      #touchControls .touch-btn { height: clamp(39px, 11vh, 52px); }
+    }
+    /* Start/pause/other modal content must cover the HUD and stay clickable. */
+    #gameFrame .modal-layer { z-index: 40; }
+
+    /* v1.7.13: compact, accessible HUD controls beneath the help/menu button. */
+    #hudMenuWrap { pointer-events: auto; z-index: 24; }
+    #hudQuickMenu[hidden] { display: none !important; }
+    #hudQuickMenu { position: absolute; top: calc(100% + 5px); right: 0;
+      display: flex; flex-direction: column; gap: 4px; min-width: 112px;
+      padding: 6px; background: rgba(8, 20, 33, .96);
+      border: 1px solid #c58b37; border-radius: 8px;
+      box-shadow: 0 5px 14px rgba(0,0,0,.65); }
+    #hudQuickMenu .hud-menu-button { display: flex; align-items: center; gap: 7px;
+      min-height: 30px; padding: 5px 7px; border: 1px solid #516177;
+      border-radius: 5px; background: #1d2e43; color: #fef3c7;
+      font: 700 9px sans-serif; white-space: nowrap; text-align: left; }
+    #hudQuickMenu .hud-menu-button:active { background: #36506b; }
+    @media (orientation: landscape) and (max-height: 350px) {
+      #hudQuickMenu { gap: 2px; padding: 3px; }
+      #hudQuickMenu .hud-menu-button { min-height: 25px; padding: 3px 6px; }
+    }
+    @media (orientation: portrait) and (max-width: 767px) {
+      #gameFrame > header.hud-in-game > div:nth-child(2) > div:first-child { max-width: calc(100% - 39px); }
+      #gameFrame > header.hud-in-game .gap-3 { gap: 3px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center text-slate-100">
+
+  <!-- TOP HEADER & RETRO HUD WITH MC STATUS CARD -->
+  <header class="w-full bg-[#0d1722] border-b-2 border-amber-600/70 z-10 flex flex-col items-center">
+    <div class="fretwork-border w-full"></div>
+    <div class="w-full max-w-5xl px-3 py-2 flex items-center justify-between gap-3 text-xs">
+      
+      <!-- MAIN CHARACTER PROFILE CARD -->
+      <div class="flex items-center gap-3 bg-[#111e2e] border-2 border-amber-600/60 rounded-md px-2.5 py-1.5 shadow-md">
+        <canvas id="portraitCanvas" width="32" height="32" style="width: 36px; height: 36px; display: block; border: 2px solid #d97706; background-color: #0f172a; border-radius: 4px;"></canvas>
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-[9px] sm:text-[10px] text-amber-300 tracking-wider font-bold">LEFTRARU</span>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1 text-[8px] sm:text-[9px] text-amber-200" title="Ngülliw">
+                <span>🌰</span><span id="uiPinonCount" class="text-amber-300 font-bold">0</span>
+              </div>
+              <div class="flex items-center gap-1 text-[8px] sm:text-[9px] text-slate-200" title="Piedras disponibles para el Witrüwe">
+                <span>🪨</span><span id="uiStoneCount" class="text-sky-200 font-bold">5</span>
+              </div>
+            </div>
+          </div>
+          <!-- Discrete Life Gauge -->
+          <div class="flex items-center gap-1.5">
+            <span class="text-[7px] sm:text-[8px] text-red-400 font-bold">VIDA</span>
+            <div id="uiHealthPips" class="flex gap-1 p-0.5 bg-slate-950 border border-slate-700 rounded-sm">
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURRENT MISSION OBJECTIVE & WEAPON -->
+      <div class="flex items-center gap-2">
+        <div class="hidden sm:flex flex-col items-center bg-[#09131d] border border-amber-500/40 rounded px-2.5 py-1">
+          <span class="text-[7px] text-slate-400">ARMA:</span>
+          <span id="uiCurrentWeapon" class="text-[8px] text-amber-300 font-bold">WAYKI (LANZA)</span>
+        </div>
+        <div class="hidden sm:flex flex-col items-center bg-[#09131d] border border-amber-500/40 rounded px-3 py-1">
+          <span class="text-[7px] text-slate-400">OBJETIVO:</span>
+          <span id="uiCurrentLawen" class="text-[8px] text-emerald-400 font-bold">natxüg ('natre')</span>
+        </div>
+      </div>
+
+      <!-- CONTROLS & AUDIO -->
+      <div id="hudMenuWrap" class="relative flex items-start justify-end">
+        <button id="btnHelp" type="button" aria-label="Abrir menú de juego" aria-expanded="false" aria-controls="hudQuickMenu" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
+        <div id="hudQuickMenu" hidden class="hud-quick-menu" aria-label="Opciones del juego">
+          <button id="btnSound" type="button" title="Sonido" class="hud-menu-button">🔊 <span>SONIDO</span></button>
+          <button id="btnFullscreen" type="button" title="Pantalla completa" class="hud-menu-button">⛶ <span>PANTALLA</span></button>
+          <button id="btnPause" type="button" title="Pausar (P o Escape)" class="hud-menu-button">⏸ <span>PAUSA</span></button>
+          <button id="btnHelpGuide" type="button" class="hud-menu-button">📖 <span>AYUDA</span></button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- GAME VIEWPORT -->
+  <main class="w-full flex-1 flex flex-col items-center justify-center p-1 sm:p-3 relative max-w-5xl">
+    <div id="gameFrame" class="relative w-full aspect-[16/9] max-h-[70vh] bg-black border-4 border-[#1c2e42] rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
+      
+      <canvas id="gameCanvas" width="480" height="270" class="w-full h-full object-contain"></canvas>
+      <div id="missionNotice" role="status" aria-live="polite" style="display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);width:max-content;max-width:92%;padding:9px 12px;background:rgba(9,19,29,.93);border:2px solid #34d399;border-radius:7px;color:#d1fae5;font:700 11px sans-serif;text-align:center;pointer-events:none;z-index:15"></div>
+
+      <!-- OVERLAY: START SCREEN -->
+      <div id="startOverlay" class="modal-layer">
+        <span class="text-3xl mb-2">🌿🏹</span>
+        <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.8.9 · WALLMAPU VIVO</p>
+        <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
+          Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
+        </p>
+        <div id="savePanel" class="mb-2 text-[9px] text-emerald-300 font-sans">Progress saved automatically on this browser.</div>
+        <div class="flex flex-wrap justify-center gap-2 mb-2">
+          <button id="btnContinue" type="button" class="hidden px-4 py-2 bg-emerald-700 border border-emerald-300 rounded text-[9px]">CONTINUAR PARTIDA</button>
+          <button id="btnLevels" type="button" class="px-4 py-2 bg-slate-700 border border-sky-400 rounded text-[9px]">EXPEDICIONES</button>
+        </div>
+        <div id="levelPanel" class="hidden mb-3 max-w-md w-full bg-slate-900 border border-amber-600 rounded p-2 text-[9px]">
+          <p class="mb-2 text-amber-300">Selecciona una expedición desbloqueada</p>
+          <div id="levelChoices" class="grid grid-cols-2 gap-2"></div>
+          <p id="achievementSummary" class="mt-2 text-emerald-300 font-sans"></p>
+        </div>
+        <button id="btnStartGame" type="button" class="px-6 py-3.5 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 border-2 border-amber-300 text-slate-950 text-xs sm:text-sm font-bold rounded shadow-lg transition" style="cursor: pointer;">
+          ¡INICIAR EXPEDICIÓN!
+        </button>
+        <button id="btnNewSave" type="button" class="mt-2 text-[8px] text-rose-300 underline">BORRAR PROGRESO Y EMPEZAR DE NUEVO</button>
+        <div class="mt-3 text-[8px] sm:text-[9px] text-slate-400 space-y-1">
+          <p>⌨️ <span class="text-amber-300">A/D o Flechas</span>: Correr | <span class="text-amber-300">W / Espacio</span>: Saltar</p>
+          <p>⚔️ <span class="text-amber-300">X / J / Enter</span>: Ataque (Lanza o Honda)</p>
+        </div>
+      </div>
+
+      <!-- OVERLAY: PAUSE -->
+      <div id="pauseOverlay" class="modal-layer" style="display:none;z-index:30">
+        <h2 class="text-lg text-amber-300 mb-3">⏸ PAUSA</h2>
+        <p class="text-[9px] text-slate-300 mb-3">Tu progreso completado y tus mejoras se guardan automáticamente.</p>
+        <div class="flex flex-col gap-2 w-56">
+          <button id="btnResume" type="button" class="p-2 bg-emerald-700 border border-emerald-300 rounded">▶ CONTINUAR</button>
+          <button id="btnPauseControls" type="button" class="p-2 bg-slate-700 border border-slate-400 rounded">🎮 CONTROLES</button>
+          <button id="btnPauseSound" type="button" class="p-2 bg-slate-700 border border-slate-400 rounded">🔊 SONIDO</button>
+          <button id="btnPauseHome" type="button" class="p-2 bg-amber-700 border border-amber-400 rounded">⌂ MENÚ PRINCIPAL</button>
+        </div>
+        <p id="pauseControlsText" class="hidden mt-3 text-[9px] text-slate-200 leading-relaxed">A/D o ←/→: moverse · W/Espacio: saltar · X/J/Enter: atacar · Q: cambiar arma · P/Esc: pausa</p>
+      </div>
+
+      <!-- OVERLAY: GAME OVER -->
+      <div id="gameOverOverlay" class="modal-layer" style="display: none;">
+        <span class="text-3xl mb-2">💀⚡</span>
+        <h2 class="text-sm sm:text-lg text-red-500 mb-2">¡HAS CAÍDO EN COMBATE!</h2>
+        <p class="text-[9px] sm:text-[11px] text-slate-300 mb-3 font-sans max-w-md">
+          No lograste llevar el lawen a la Ruka. El espíritu de la tierra te convoca a intentarlo una vez más.
+        </p>
+        <div class="text-[10px] text-amber-300 mb-4 bg-slate-950/80 px-3 py-1.5 border border-slate-700 rounded">
+          Piñones guardados: <span id="gameOverPinones" class="text-white">0</span> 🌰
+        </div>
+        <button id="btnRestartGame" type="button" class="px-6 py-3 bg-red-600 hover:bg-red-500 border-2 border-red-300 text-white text-xs font-bold rounded shadow-lg active:scale-95 transition">
+          REINTENTAR ESTA EXPEDICIÓN
+        </button>
+      </div>
+
+      <!-- OVERLAY: RUKA EDUCATION SCREEN -->
+      <div id="rukaOverlay" class="modal-layer" style="display: none;">
+        <div class="w-full max-w-md bg-[#0f1d2c] border-2 border-amber-500/80 rounded-lg p-4 shadow-2xl flex flex-col items-center">
+          
+          <div class="flex items-center justify-between w-full border-b border-amber-600/50 pb-2 mb-3">
+            <span class="text-[8px] text-amber-300">EXPEDICIÓN CUMPLIDA • RUKA</span>
+            <div class="text-[9px] text-amber-200">Total Ngülliw: <span id="eduPinonCount" class="text-amber-400 font-bold">0</span> 🌰</div>
+          </div>
+
+          <div class="flex items-center gap-4 w-full mb-3 bg-[#09131d] p-2.5 rounded border border-slate-700">
+            <canvas id="eduHerbCanvas" width="48" height="48" class="w-14 h-14 bg-slate-900 border border-emerald-500/50 rounded"></canvas>
+            <div class="text-left">
+              <h3 id="eduHerbMapu" class="text-sm text-emerald-400 font-bold tracking-wider">natxüg</h3>
+              <div id="eduHerbSpan" class="text-[10px] text-slate-300 italic font-sans mb-1">'natre'</div>
+              <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-700 text-[7px] rounded">KIMELTUWE LAWEN</span>
+            </div>
+          </div>
+
+          <div class="w-full text-left bg-slate-950/80 border border-amber-500/30 p-2.5 rounded text-[8px] sm:text-[9px] leading-relaxed mb-4 text-amber-100">
+            <p id="eduLine1" class="font-bold text-amber-300 mb-1">Natxüg kümey alig kutxan mew.</p>
+            <p id="eduLine2" class="text-slate-300 mb-1">(ka kutxanlogkon mew)</p>
+            <p id="eduLine3" class="text-emerald-400 font-sans italic text-[8px]">El natre es bueno para la fiebre y el dolor de cabeza.</p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2 w-full">
+            <button id="btnGoShop" type="button" class="flex-1 px-3 py-2.5 bg-amber-600 hover:bg-amber-500 border border-amber-300 text-slate-950 text-[8px] sm:text-[9px] font-bold rounded shadow transition active:scale-95">
+              🔨 VISITAR AL RÜTRAFE / WIZÜFE
+            </button>
+            <button id="btnNextLevel" type="button" class="flex-1 px-3 py-2.5 bg-emerald-600 hover:bg-emerald-500 border border-emerald-300 text-white text-[8px] sm:text-[9px] font-bold rounded shadow transition active:scale-95">
+              🏹 SIGUIENTE LAWEN ▶
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- OVERLAY: WIZÜFE / RÜTRAFE WORKSHOP -->
+      <div id="shopOverlay" class="modal-layer" style="display: none;">
+        <div class="w-full max-w-md bg-[#0f1d2c] border-2 border-amber-500/80 rounded-lg p-4 shadow-2xl flex flex-col items-center">
+          
+          <div class="flex items-center justify-between w-full border-b border-amber-600/50 pb-2 mb-3">
+            <span class="text-[9px] text-amber-400 font-bold">FORJA DEL RÜTRAFE / WIZÜFE</span>
+            <div class="text-[9px] text-amber-200">Ngülliw: <span id="shopPinonCount" class="text-amber-400 font-bold">0</span> 🌰</div>
+          </div>
+
+          <p class="text-[8px] sm:text-[9px] text-slate-300 font-sans mb-3 text-left w-full">
+            Gestiona tu arsenal o forja nuevo armamento para las expediciones:
+          </p>
+
+          <div class="space-y-2 w-full mb-4">
+            <!-- Weapon 1: Wayki -->
+            <div class="flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-700">
+              <div class="text-left">
+                <div class="text-[8px] sm:text-[9px] text-amber-300 font-bold">WAYKI (LANZA DE COLIHUE)</div>
+                <div class="text-[7px] text-slate-400 font-sans">Ataque cuerpo a cuerpo de alta precisión</div>
+              </div>
+              <button id="btnEquipWayki" type="button" class="px-2.5 py-1.5 bg-emerald-600 text-white text-[8px] font-bold rounded">
+                EQUIPADA ✓
+              </button>
+            </div>
+
+            <!-- Weapon 2: Witrüwe (Sling) -->
+            <div class="flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-700">
+              <div class="text-left">
+                <div class="text-[8px] sm:text-[9px] text-sky-300 font-bold">WITRÜWE (HONDA DE RÍO)</div>
+                <div class="text-[7px] text-slate-400 font-sans">Lanza piedras a distancia contra grupos</div>
+              </div>
+              <button id="btnEquipWitruwe" type="button" class="px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-slate-950 text-[8px] font-bold rounded">
+                FORJAR (6 🌰)
+              </button>
+            </div>
+
+            <!-- Upgrade: Extra Health -->
+            <div class="flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-700">
+              <div class="text-left">
+                <div class="text-[8px] sm:text-[9px] text-rose-300 font-bold">LLANKATU PROTECTOR (+1 VIDA)</div>
+                <div class="text-[7px] text-slate-400 font-sans">Acolchado de cuero y pectoral de plata</div>
+              </div>
+              <button id="btnBuyHealth" type="button" class="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-[8px] font-bold rounded">
+                12 🌰
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2 w-full">
+            <button id="btnBackToRuka" type="button" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-[8px] font-bold rounded active:scale-95">
+              ◀ VOLVER A LA RUKA
+            </button>
+            <button id="btnStartFromShop" type="button" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 border border-emerald-300 text-white text-[8px] font-bold rounded active:scale-95">
+              INICIAR MISIÓN ▶
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TOUCH CONTROLS -->
+    <div id="touchControls" class="w-full max-w-4xl flex items-center justify-between px-2 pt-2 pb-1 select-none md:hidden">
+      <div class="flex gap-2">
+        <button id="tBtnLeft" class="touch-btn w-12 h-12 text-lg font-bold">◀</button>
+        <button id="tBtnRight" class="touch-btn w-12 h-12 text-lg font-bold">▶</button>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="tBtnSwitch" class="touch-btn w-12 h-12 text-[9px] font-bold bg-amber-950/70 border-amber-500 text-amber-200">⇄ ARMA</button>
+        <button id="tBtnAttack" class="touch-btn w-16 h-12 px-2 text-[9px] font-bold bg-rose-950/70 border-rose-500 text-rose-200">⚔ ATAQUE</button>
+        <button id="tBtnJump" class="touch-btn w-12 h-12 text-sm font-bold bg-sky-950/70 border-sky-400 text-sky-200">▲</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- PROGRESS BAR -->
+  <footer class="w-full bg-[#0d1722] border-t border-slate-800 py-1.5 px-4 text-center text-[9px] text-slate-400 flex items-center justify-center gap-3">
+    <span>Rumbo a la Ruka:</span>
+    <div class="w-48 sm:w-64 h-2 bg-slate-950 rounded-full border border-slate-700 overflow-hidden">
+      <div id="uiProgressBar" class="h-full bg-amber-500 w-0 transition-all duration-100"></div>
+    </div>
+    <span id="uiDistance">0%</span>
+  </footer>
+
+  <script>
+    const LAWEN_DATABASE = [
+      {
+        id: 'natre',
+        nameMapu: 'natxüg',
+        nameSpan: 'natre',
+        line1: 'Natxüg kümey alig kutxan mew.',
+        line2: '(ka kutxanlogkon mew)',
+        line3: 'El natre es bueno para la fiebre y el dolor de cabeza.',
+        flowerColor: '#c084fc',
+        leafColor: '#166534'
+      },
+      {
+        id: 'menta',
+        nameMapu: 'ilhfawen',
+        nameSpan: 'menta',
+        line1: 'Ilhfawen kümey pütxa kutxan mew.',
+        line2: '(wülhgün, poypoyün pütxa)',
+        line3: 'La menta calma el dolor de estómago, cólicos e hinchazón.',
+        flowerColor: '#f43f5e',
+        leafColor: '#15803d'
+      },
+      {
+        id: 'paico',
+        nameMapu: 'pichüg',
+        nameSpan: 'paico',
+        line1: 'Pichug kümey kümaw kutxan',
+        line2: 'ka pechay kutxan mew.',
+        line3: 'El paico alivia los dolores digestivos y la diarrea.',
+        flowerColor: '#86efac',
+        leafColor: '#22c55e'
+      },
+      {
+        id: 'palqui',
+        nameMapu: 'palki',
+        nameSpan: 'palqui',
+        line1: 'Palki kümey rülen kutxan',
+        line2: 'ka alig kutxan mew.',
+        line3: 'El palqui combate los resfriados fuertes y la fiebre.',
+        flowerColor: '#facc15',
+        leafColor: '#1e3a29'
+      }
+    ];
+
+    class RetroAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        try {
+          if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.ctx = new AudioContext();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+        } catch (e) {}
+      }
+      playJump() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(450, now + 0.12);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      }
+      playAttack() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(380, now);
+        osc.frequency.linearRampToValueAtTime(120, now + 0.09);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      }
+      playSling() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(280, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
+      playShot() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(450, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.18);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+      playHit(heavy = false) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = heavy ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(heavy ? 120 : 220, now);
+        osc.frequency.exponentialRampToValueAtTime(heavy ? 20 : 60, now + 0.18);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+      playCoin() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.setValueAtTime(990, now + 0.07);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      }
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const notes = [440, 554, 659, 880];
+        const now = this.ctx.currentTime;
+        notes.forEach((f, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(f, now + i * 0.12);
+          gain.gain.setValueAtTime(0.12, now + i * 0.12);
+          gain.gain.linearRampToValueAtTime(0.001, now + i * 0.12 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.12);
+          osc.stop(now + i * 0.12 + 0.25);
+        });
+      }
+    }
+    const audio = new RetroAudio();
+
+    // Optional fullscreen improves mobile play without requiring orientation lock.
+    document.getElementById('btnFullscreen').addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+      } catch (err) { /* Some mobile browsers do not allow fullscreen. */ }
+    });
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+
+    let V_WIDTH = 480;
+    const hud = document.querySelector('header');
+    const frame = document.getElementById('gameFrame');
+    const main = document.querySelector('main');
+    function fitGameCanvas() {
+      const landscapePhone = window.matchMedia('(orientation: landscape) and (max-height: 600px)').matches;
+      // The same in-game HUD is used on every screen size, including desktop.
+      if (hud.parentElement !== frame) frame.appendChild(hud);
+      hud.classList.add('hud-in-game');
+      const rect = frame.getBoundingClientRect();
+      const usableWidth = Math.max(100, rect.width - 4);
+      const usableHeight = Math.max(100, rect.height - 4);
+      // Mobile landscape: ~1.3x closer than v1.7.8. Reduce the virtual
+      // horizontal field of view instead of scaling sprites or hitboxes.
+      // Allow widths below 480 so short, wide phone screens can actually zoom.
+      const nextWidth = landscapePhone
+        ? Math.max(340, Math.min(1000, Math.round(270 * usableWidth / usableHeight * (0.82 / 1.30))))
+        : 480;
+      if (canvas.width !== nextWidth) canvas.width = nextWidth;
+      V_WIDTH = nextWidth;
+      ctx.imageSmoothingEnabled = false;
+    }
+    // Mobile Firefox can change the *visual* viewport without a normal resize.
+    // Sync the real visible height so the bottom controls stay above browser UI.
+    function syncVisibleViewport() {
+      const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty('--visible-height', Math.max(100, Math.floor(vh)) + 'px');
+      fitGameCanvas();
+    }
+    window.addEventListener('resize', syncVisibleViewport);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', syncVisibleViewport);
+      window.visualViewport.addEventListener('scroll', syncVisibleViewport);
+    }
+    window.addEventListener('orientationchange', () => {
+      requestAnimationFrame(() => requestAnimationFrame(fitGameCanvas));
+    });
+    syncVisibleViewport();
+    const V_HEIGHT = 270;
+    const LEVEL_LENGTH = 3600;
+
+    const GAME = {
+      running: false,
+      currentLevelIndex: 0,
+      bankedPinones: 0,
+      levelPinones: 0,
+      targetLawenCollected: false,
+      cameraX: 0,
+      levelLength: LEVEL_LENGTH,
+      
+      // Arsenal system
+      equippedWeapon: 'wayki', // 'wayki' or 'witruwe'
+      unlockedWitruwe: false,
+      healthUpgrade: false,
+      noticeTimer: 0,
+
+      keys: { left: false, right: false, jump: false, attack: false },
+      particles: [],
+      enemyProjectiles: [],
+      playerProjectiles: [],
+      stones: 5,
+      maxStones: 12
+    };
+
+    class Player {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.w = 18;
+        this.h = 30;
+        this.vx = 0;
+        this.vy = 0;
+        this.speed = 2.4;
+        this.jumpPower = -6.8;
+        this.gravity = 0.28;
+        this.grounded = false;
+        this.facing = 1;
+
+        this.hitsMax = GAME.healthUpgrade ? 6 : 5;
+        this.hits = this.hitsMax;
+        this.jumpBuffer = 0;
+        this.coyoteTimer = 0;
+        this.invulnerable = 0;
+
+        this.attacking = false;
+        this.attackTimer = 0;
+        this.attackDuration = 14;
+        this.attackCooldown = 0;
+
+        this.animTick = 0;
+        this.landFlash = 0;
+        this.landSquash = 0;
+        this.attackHits = new Set();
+        this.slingReleased = false;
+        this.lastSafeX = 40;
+        this.lastSafeY = 160;
+        this.pitRecoveryCooldown = 0;
+      }
+
+      update(platforms, enemies) {
+        this.animTick++;
+        if (this.landFlash > 0) this.landFlash--;
+        if (this.landSquash > 0) this.landSquash--;
+        const wasGrounded = this.grounded;
+        if (this.invulnerable > 0) this.invulnerable--;
+        if (this.pitRecoveryCooldown > 0) this.pitRecoveryCooldown--;
+        if (this.attackCooldown > 0) this.attackCooldown--;
+
+        if (GAME.keys.left) {
+          this.vx = -this.speed;
+          this.facing = -1;
+        } else if (GAME.keys.right) {
+          this.vx = this.speed;
+          this.facing = 1;
+        } else {
+          this.vx *= 0.65;
+          if (Math.abs(this.vx) < 0.1) this.vx = 0;
+        }
+
+        if (GAME.keys.jump) this.jumpBuffer = 7;
+        else if (this.jumpBuffer > 0) this.jumpBuffer--;
+        if (this.grounded) this.coyoteTimer = 7;
+        else if (this.coyoteTimer > 0) this.coyoteTimer--;
+
+        if (this.jumpBuffer > 0 && this.coyoteTimer > 0) {
+          this.jumpBuffer = 0;
+          this.coyoteTimer = 0;
+          this.vy = this.jumpPower;
+          this.grounded = false;
+          audio.playJump();
+          createDustParticles(this.x + this.w / 2, this.y + this.h, 6);
+        }
+
+        // Single attack input: Lance thrust OR Sling projectile
+        if (GAME.keys.attack && !this.attacking && this.attackCooldown <= 0) {
+          this.attacking = true;
+          this.attackTimer = this.attackDuration;
+          this.attackHits.clear();
+
+          if (GAME.equippedWeapon === 'wayki') {
+            this.attackDuration = 14;
+            this.attackTimer = this.attackDuration;
+            this.attackCooldown = 18;
+            audio.playAttack();
+          } else if (GAME.stones > 0) {
+            // One-handed sling: wind-up first, release on animation frame 7.
+            this.attackCooldown = 38;
+            this.attackDuration = 22;
+            this.attackTimer = this.attackDuration;
+            this.slingReleased = false;
+          } else {
+            this.attacking = false;
+            GAME.equippedWeapon = 'wayki';
+            updateHUD();
+          }
+        }
+
+        if (this.attacking) {
+          this.attackTimer--;
+          if (GAME.equippedWeapon === 'witruwe' && !this.slingReleased && this.attackTimer === 7) {
+            this.slingReleased = true;
+            if (GAME.stones > 0) {
+              GAME.stones--;
+              audio.playSling();
+              GAME.playerProjectiles.push({
+                x: this.facing === 1 ? this.x + 20 : this.x - 5,
+                y: this.y + 7,
+                vx: this.facing * 5.2,
+                life: 60
+              });
+              if (GAME.stones === 0) this.autoSwitchAfterAttack = true;
+              updateHUD();
+            }
+          }
+          if (this.attackTimer <= 0) {
+            this.attacking = false;
+            if (this.autoSwitchAfterAttack) {
+              this.autoSwitchAfterAttack = false;
+              GAME.equippedWeapon = 'wayki';
+              updateHUD();
+            }
+          }
+        }
+
+        this.vy += this.gravity;
+        if (this.vy > 8) this.vy = 8;
+
+        this.x += this.vx;
+        if (this.x < 0) this.x = 0;
+        if (this.x > LEVEL_LENGTH - 60) this.x = LEVEL_LENGTH - 60;
+
+        const previousFeet = this.y + this.h;
+        this.y += this.vy;
+        this.grounded = false;
+
+        for (const p of platforms) {
+          if (
+            this.x + this.w > p.x &&
+            this.x < p.x + p.w &&
+            previousFeet <= p.y + 3 &&
+            this.y + this.h >= p.y &&
+            this.vy >= 0
+          ) {
+            this.y = p.y - this.h;
+            this.vy = 0;
+            this.grounded = true;
+          }
+        }
+
+        // Checkpoints only on wide ground, away from either edge; never on
+        // a narrow floating platform or directly above another pit.
+        if (this.grounded) {
+          const safeGround = platforms.find(p => p.h >= 45 &&
+            this.x >= p.x + 24 && this.x + this.w <= p.x + p.w - 24 &&
+            Math.abs(this.y + this.h - p.y) < 2);
+          if (safeGround) {
+            this.lastSafeX = this.x;
+            this.lastSafeY = safeGround.y - this.h;
+          }
+        }
+        if (!wasGrounded && this.grounded && this.vy === 0) {
+          this.landFlash = 9;
+          this.landSquash = 5;
+          createDustParticles(this.x + this.w / 2, this.y + this.h, 5);
+        }
+
+        // Active spear window: each enemy can only be hit once per swing.
+        if (GAME.equippedWeapon === 'wayki' && this.attacking && this.attackTimer >= 5 && this.attackTimer <= 11) {
+          const reach = 26;
+          const hitbox = {
+            x: this.facing === 1 ? this.x + this.w - 2 : this.x - reach,
+            y: this.y + 6,
+            w: reach,
+            h: 18
+          };
+
+          for (const en of enemies) {
+            if (en.alive && !this.attackHits.has(en) && checkAABB(hitbox, en)) {
+              this.attackHits.add(en);
+              en.hit(1, this.facing);
+              createSparkParticles(en.x + en.w / 2, en.y + en.h / 2, 5, '#fde68a');
+            }
+          }
+        }
+
+        // Pit damage: one heart, then respawn at the last verified safe spot.
+        // Invulnerability does not prevent a fresh pit fall from recovering.
+        if (this.y + this.h >= V_HEIGHT + 4 && !this.grounded && this.pitRecoveryCooldown <= 0) {
+          this.pitRecoveryCooldown = 35;
+          this.invulnerable = 0;
+          this.takeDamage(1);
+          if (GAME.running) {
+            this.x = this.lastSafeX;
+            this.y = this.lastSafeY;
+            this.vx = 0; this.vy = 0;
+            this.grounded = false;
+            this.coyoteTimer = 0;
+            this.jumpBuffer = 0;
+            this.invulnerable = Math.max(this.invulnerable, 100);
+            GAME.cameraX = Math.max(0, this.x - V_WIDTH * 0.31);
+            createDustParticles(this.x + this.w / 2, this.y + this.h, 8);
+          }
+        }
+      }
+
+      takeDamage(hitsTaken = 1) {
+        if (this.invulnerable > 0) return;
+        this.hits -= hitsTaken;
+        this.invulnerable = 45;
+        this.vy = Math.min(this.vy, -2.4);
+        this.vx = -this.facing * 2.1;
+        audio.playHit(true);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
+        updateHUD();
+        
+        if (this.hits <= 0) {
+          this.hits = 0;
+          updateHUD();
+          gameOver();
+        }
+      }
+
+      draw(c, camX) {
+        if (this.invulnerable > 0 && Math.floor(this.animTick / 4) % 2 === 0) {
+          return;
+        }
+
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        // v1.8.7: a tiny contact shadow helps anchor the sprite to the terrain.
+        // Only drawn when grounded; no physics or collision changes.
+        if (this.grounded) {
+          c.fillStyle = 'rgba(22, 30, 25, 0.28)';
+          c.fillRect(2, 29, 15, 2);
+        }
+        // Two-pixel knee bend on landing, without affecting hitboxes.
+        if (this.landSquash > 0) {
+          c.translate(0, 2);
+          c.scale(1, 0.94);
+        }
+        this.drawLeftraruPixels(c);
+        c.restore();
+      }
+
+      drawLeftraruPixels(c) {
+        const isRunning = Math.abs(this.vx) > 0.2 && this.grounded;
+        const stride = Math.sin(this.animTick * 0.3);
+        const legOffset = isRunning ? Math.round(stride * 3) : 0;
+        const airborne = !this.grounded;
+        const ascending = airborne && this.vy < -0.3;
+        const descending = airborne && this.vy > 0.3;
+        // Readable airborne silhouette, without replacing the original sprite.
+        if (!this.grounded) {
+          c.fillStyle = '#fbbf24';
+          c.fillRect(1, this.vy < 0 ? 25 : 28, 3, 2);
+          c.fillRect(14, this.vy < 0 ? 28 : 25, 3, 2);
+        }
+        if (this.landFlash > 0) {
+          c.fillStyle = '#d6b38a';
+          c.fillRect(-3, 29, 5, 1);
+          c.fillRect(16, 29, 5, 1);
+        }
+
+        c.fillStyle = '#2c1810';
+        c.fillRect(3, 20, 5, 5);
+        c.fillRect(10, 20, 5, 5);
+
+        c.fillStyle = '#9b5338';
+        c.fillRect(4, 23, 3, 3);
+        c.fillRect(11, 23, 3, 3);
+
+        c.fillStyle = '#5c3a21';
+        // Legs tuck on ascent and reach for the ground on descent.
+        const rearLegY = ascending ? 23 : descending ? 27 : 26 + legOffset;
+        const frontLegY = ascending ? 25 : descending ? 25 : 26 - legOffset;
+        c.fillRect(3, rearLegY, 5, 4);
+        c.fillRect(10, frontLegY, 5, 4);
+
+        c.fillStyle = '#9c663b';
+        c.beginPath();
+        c.moveTo(1, 11);
+        c.lineTo(16, 11);
+        c.lineTo(13, 22);
+        c.lineTo(4, 22);
+        c.closePath();
+        c.fill();
+
+        c.fillStyle = '#6a2415';
+        c.fillRect(4, 15, 9, 2);
+        c.fillRect(6, 13, 5, 2);
+        c.fillRect(7, 17, 3, 2);
+
+        // Two-pixel tunic hem moves with the stride and flutters in the air.
+        const clothSwing = isRunning ? Math.round(stride * 2) : 0;
+        const clothLift = ascending ? -2 : descending ? 1 : 0;
+        c.fillStyle = '#82512e';
+        c.fillRect(3 - clothSwing, 20 + clothLift, 4, 3);
+        c.fillRect(11 + clothSwing, 20 + clothLift, 3, 3);
+        c.fillStyle = '#b57c4b';
+        c.fillRect(4 - clothSwing, 20 + clothLift, 2, 1);
+        c.fillStyle = '#4a2511';
+        c.fillRect(4, 21, 9, 1);
+
+        // Free arm counter-swings while running; weapons remain untouched.
+        const armY = ascending ? 12 : descending ? 17 : 15 + (isRunning ? Math.round(stride * 2) : 0);
+        c.fillStyle = '#5c3a21';
+        c.fillRect(11, armY, 3, 3);
+        c.fillStyle = '#9b5338';
+        c.fillRect(12, armY + 2, 2, 2);
+
+        // The hair starts at the crown, so the whole silhouette trails back
+        // while running, rather than looking like a strand growing from the neck.
+        const hairFlutter = isRunning ? Math.round(Math.sin(this.animTick * 0.24)) : 0;
+        const falling = !this.grounded && this.vy > 0.4;
+        const hairAirLift = !this.grounded ? (this.vy < -0.4 ? 2 : falling ? -3 : 0) : 0;
+        const hairLanding = this.landFlash > 0 ? -Math.round(this.landFlash / 5) : 0;
+        const tipY = 15 + hairAirLift + hairLanding;
+        c.fillStyle = '#111827';
+        if (isRunning) {
+          // Crown/root remains at x=4; successive segments sweep backward
+          // from the TOP of the head. A one-pixel flutter animates the tips.
+          c.fillRect(3, 3, 5, 3);
+          c.fillRect(1, 5, 4, 3);
+          c.fillRect(-1, 7, 4, 3);
+          c.fillRect(-2 + hairFlutter, 10, 3, 4);
+          c.fillRect(-2 + hairFlutter, 13, 2, 3);
+        } else {
+          // Preserve the stronger falling / jumping motion from v1.6.3.
+          c.fillRect(2, 5, 3, 10);
+          c.fillRect(2, 14, 2, 3);
+          c.fillRect(1 + hairFlutter, tipY, falling ? 3 : 2, falling ? 6 : 4);
+          if (!this.grounded) c.fillRect(1 + hairFlutter, tipY + (falling ? 5 : 3), falling ? 2 : 1, 2);
+        }
+        c.fillRect(4, 2, 9, 4);
+
+        c.fillStyle = '#9b5338';
+        c.fillRect(6, 4, 7, 7);
+
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(5, 4, 8, 2);
+        c.fillStyle = '#64748b';
+        c.fillRect(9, 4, 1, 2);
+        c.fillRect(11, 4, 1, 2);
+
+        c.fillStyle = '#0f172a';
+        c.fillRect(10, 6, 2, 1);
+        c.fillStyle = '#7a3e28';
+        c.fillRect(7, 10, 5, 1);
+
+        // Weapon Rendering
+        if (GAME.equippedWeapon === 'wayki') {
+          const spearY = 14;
+          if (this.attacking) {
+            const thrustX = 12 + Math.sin((this.attackTimer / this.attackDuration) * Math.PI) * 16;
+            c.fillStyle = '#9b5338';
+            c.fillRect(9, 13, 7, 3);
+
+            c.fillStyle = '#633c1f';
+            c.fillRect(thrustX - 16, spearY, 26, 2);
+
+            c.fillStyle = '#854d0e';
+            c.fillRect(thrustX + 8, spearY - 1, 2, 4);
+
+            c.fillStyle = '#18181b';
+            c.beginPath();
+            c.moveTo(thrustX + 10, spearY - 2);
+            c.lineTo(thrustX + 17, spearY + 1);
+            c.lineTo(thrustX + 10, spearY + 4);
+            c.closePath();
+            c.fill();
+          } else {
+            c.fillStyle = '#633c1f';
+            c.fillRect(7, 0, 2, 28);
+
+            c.fillStyle = '#18181b';
+            c.beginPath();
+            c.moveTo(5, 0);
+            c.lineTo(8, -6);
+            c.lineTo(11, 0);
+            c.closePath();
+            c.fill();
+
+            c.fillStyle = '#9b5338';
+            c.fillRect(7, 14, 4, 4);
+          }
+        } else {
+          // One-handed traditional cord sling: hand pivots, pouch circles,
+          // then the release cord swings forward. No two-handed slingshot.
+          c.fillStyle = '#9b5338';
+          c.fillRect(12, 12, 5, 3); // extended throwing arm
+          const handX = 17, handY = 13;
+          if (this.attacking) {
+            const progress = 1 - this.attackTimer / this.attackDuration;
+            const theta = progress < 0.69 ? (-Math.PI / 2 + progress * Math.PI * 5.4)
+                                         : (-Math.PI / 2 + 0.69 * Math.PI * 5.4 + (progress - 0.69) * 2);
+            const pouchX = Math.round(handX + Math.cos(theta) * 11);
+            const pouchY = Math.round(handY + Math.sin(theta) * 9);
+            c.strokeStyle = '#a16207';
+            c.lineWidth = 1;
+            c.beginPath();
+            c.moveTo(handX, handY);
+            c.lineTo(pouchX, pouchY);
+            c.stroke();
+            c.fillStyle = '#78350f';
+            c.fillRect(pouchX - 3, pouchY - 2, 6, 4);
+            if (!this.slingReleased) {
+              c.fillStyle = '#cbd5e1';
+              c.fillRect(pouchX - 1, pouchY - 1, 3, 3);
+            }
+          } else {
+            c.strokeStyle = '#a16207';
+            c.lineWidth = 1;
+            c.beginPath();
+            c.moveTo(handX, handY);
+            c.lineTo(15, 23);
+            c.stroke();
+            c.fillStyle = '#78350f';
+            c.fillRect(13, 22, 5, 3);
+          }
+        }
+      }
+    }
+
+    function drawEnemyHealth(c, width, hp, maxHp) {
+      c.fillStyle = '#0f172a';
+      c.fillRect(0, -9, width, 4);
+      c.fillStyle = '#fb7185';
+      c.fillRect(1, -8, Math.max(0, (width - 2) * hp / maxHp), 2);
+    }
+
+    class Soldier {
+      constructor(x, y, maxHp = 1, patrolRange = 70, speedMultiplier = 1.0) {
+        this.x = x;
+        this.y = y;
+        this.startX = x;
+        this.w = 18;
+        this.h = 28;
+        this.patrolRange = patrolRange;
+        this.vx = 0.7 * speedMultiplier;
+        this.patrolSpeed = this.vx;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = 1;
+        this.hitFlash = 0;
+        this.animTick = Math.floor(Math.random() * 20);
+        this.alertTimer = 0;
+        this.recovery = 0;
+        this.patrolDirection = 1;
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        this.animTick++;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        if (this.recovery > 0) this.recovery--;
+        const dx = player.x - this.x;
+        const close = Math.abs(dx) < 120 && Math.abs(player.y - this.y) < 46;
+        if (close) this.alertTimer = 75;
+        else if (this.alertTimer > 0) this.alertTimer--;
+        const minX = this.startX - this.patrolRange;
+        const maxX = this.startX + this.patrolRange;
+        if (this.recovery > 0) {
+          this.vx = 0;
+        } else if (this.alertTimer > 0 && Math.abs(dx) > 24) {
+          this.vx = Math.sign(dx) * this.patrolSpeed * 1.18;
+        } else if (this.alertTimer > 0) {
+          this.vx = 0;
+        } else {
+          this.vx = this.patrolDirection * this.patrolSpeed;
+        }
+        this.x = Math.max(minX, Math.min(maxX, this.x + this.vx));
+        if (this.x >= maxX) this.patrolDirection = -1;
+        if (this.x <= minX) this.patrolDirection = 1;
+        if (this.vx !== 0) this.facing = Math.sign(this.vx);
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.8;
+          } else {
+            player.takeDamage(1);
+          }
+        }
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        this.recovery = 16;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
+        this.x += (facingDir === 1 ? 7 : -7);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          maybeDropLoot(this);
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        if (this.alertTimer > 0) {
+          c.fillStyle = '#fbbf24';
+          c.fillRect(7, -13, 4, 7);
+          c.fillRect(7, -4, 4, 2);
+        }
+        if (this.maxHp > 1) drawEnemyHealth(c, this.w, this.hp, this.maxHp);
+        const legWalk = Math.sin(this.animTick * 0.2) * 2;
+        c.fillStyle = '#451a03';
+        c.fillRect(3, 20, 4, 8 + legWalk);
+        c.fillRect(11, 20, 4, 8 - legWalk);
+
+        c.fillStyle = (this.maxHp >= 2) ? '#475569' : '#94a3b8';
+        c.fillRect(3, 9, 12, 12);
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(5, 10, 3, 10);
+
+        c.fillStyle = '#fbcfe8';
+        c.fillRect(6, 4, 6, 6);
+        c.fillStyle = '#1e293b';
+        c.fillRect(7, 8, 4, 3);
+
+        c.fillStyle = '#64748b';
+        c.fillRect(4, 1, 10, 4);
+        c.fillRect(2, 4, 14, 2);
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(7, -2, 3, 4);
+
+        c.fillStyle = '#e2e8f0';
+        c.fillRect(15, 6, 2, 16);
+        c.fillStyle = '#eab308';
+        c.fillRect(13, 17, 6, 2);
+        c.restore();
+      }
+    }
+
+    class Arquebusier {
+      constructor(x, y, maxHp = 1, speedMultiplier = 1.0) {
+        this.x = x;
+        this.y = y;
+        this.w = 18;
+        this.h = 28;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = -1;
+        this.hitFlash = 0;
+        this.baseReload = Math.round(110 / speedMultiplier);
+        this.shootTimer = Math.round(35 / speedMultiplier);
+        this.hasSpotted = false;
+        this.state = 'idle';
+        this.stateTimer = 0;
+        this.recovery = 0;
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        if (this.recovery > 0) this.recovery--;
+        const dx = player.x - this.x;
+        const visible = Math.abs(dx) < 245 && Math.abs(player.y - this.y) < 85;
+        if (this.state === 'idle') {
+          if (visible) {
+            this.state = 'aim';
+            this.stateTimer = 48;
+            this.facing = dx >= 0 ? 1 : -1;
+          }
+        } else if (this.state === 'aim') {
+          if (!visible || this.recovery > 0) {
+            this.state = 'idle';
+          } else if (--this.stateTimer <= 0) {
+            this.shoot();
+            this.state = 'reload';
+            this.stateTimer = this.baseReload;
+          }
+        } else if (this.state === 'reload') {
+          if (--this.stateTimer <= 0) this.state = 'idle';
+        }
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.8;
+          } else {
+            player.takeDamage(1);
+          }
+        }
+      }
+
+      shoot() {
+        audio.playShot();
+        const bulletSpeed = this.facing * 3.8;
+        GAME.enemyProjectiles.push({
+          x: this.facing === 1 ? this.x + 20 : this.x - 6,
+          y: this.y + 12,
+          vx: bulletSpeed,
+          life: 90
+        });
+        createDustParticles(this.facing === 1 ? this.x + 22 : this.x - 8, this.y + 12, 8);
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        this.recovery = 14;
+        if (this.state === 'aim') this.state = 'idle';
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
+        this.x += (facingDir === 1 ? 7 : -7);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          maybeDropLoot(this);
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        if (this.maxHp > 1) drawEnemyHealth(c, this.w, this.hp, this.maxHp);
+        c.fillStyle = (this.maxHp >= 2) ? '#581c87' : '#78350f';
+        c.fillRect(3, 9, 12, 12);
+
+        c.fillStyle = '#1e293b';
+        c.fillRect(3, 21, 4, 7);
+        c.fillRect(11, 21, 4, 7);
+
+        c.fillStyle = '#fbcfe8';
+        c.fillRect(6, 4, 6, 6);
+
+        c.fillStyle = '#0f172a';
+        c.fillRect(2, 2, 14, 2);
+        c.fillRect(5, -1, 8, 3);
+
+        c.fillStyle = '#451a03';
+        c.fillRect(10, 12, 8, 3);
+        c.fillStyle = '#334155';
+        c.fillRect(16, 11, 14, 2);
+
+        if (this.state === 'aim') {
+          c.fillStyle = '#f97316';
+          c.fillRect(13, 9, 2, 2);
+          c.fillStyle = '#fbbf24';
+          c.fillRect(3, -12, Math.max(1, Math.round(12 * (1 - this.stateTimer / 48))), 3);
+        }
+
+        c.restore();
+      }
+    }
+
+    class HorseKnight {
+      constructor(x, y, maxHp = 3, patrolRange = 140, speedMultiplier = 1.0) {
+        this.x = x;
+        this.y = y - 8;
+        this.startX = x;
+        this.w = 36;
+        this.h = 36;
+        this.patrolRange = patrolRange;
+        this.vx = 1.6 * speedMultiplier;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = 1;
+        this.hitFlash = 0;
+        this.animTick = 0;
+        this.chargeWarning = 0;
+        this.chargeCooldown = 100;
+        this.chargeFrames = 0;
+        this.baseSpeed = Math.abs(this.vx);
+        this.recovery = 0;
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        this.animTick++;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        if (this.chargeCooldown > 0) this.chargeCooldown--;
+        if (this.recovery > 0) this.recovery--;
+        const distance = player.x - this.x;
+        if (this.recovery > 0) {
+          this.vx = 0;
+        } else if (this.chargeFrames > 0) {
+          this.chargeFrames--;
+          this.vx = this.facing * this.baseSpeed * 2.1;
+        } else if (this.chargeWarning > 0) {
+          this.chargeWarning--;
+          this.vx = 0;
+          if (this.chargeWarning === 0) {
+            this.chargeFrames = 32;
+            this.chargeCooldown = 135;
+          }
+        } else if (this.chargeCooldown === 0 && Math.abs(distance) < 175 && Math.abs(player.y - this.y) < 55) {
+          this.facing = distance >= 0 ? 1 : -1;
+          this.chargeWarning = 30;
+          this.vx = 0;
+        } else if (this.vx === 0) {
+          this.vx = this.facing * this.baseSpeed;
+        }
+        this.x += this.vx;
+        if (this.x > this.startX + this.patrolRange) {
+          this.vx = -Math.abs(this.vx);
+          this.facing = -1;
+        } else if (this.x < this.startX - this.patrolRange) {
+          this.vx = Math.abs(this.vx);
+          this.facing = 1;
+        }
+
+        if (this.x >= this.startX + this.patrolRange || this.x <= this.startX - this.patrolRange) {
+          if (this.chargeFrames > 0) this.recovery = 32;
+          this.chargeFrames = 0;
+          this.chargeWarning = 0;
+        }
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 16) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.9;
+          } else {
+            player.takeDamage(1);
+          }
+        }
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        this.recovery = 22;
+        this.chargeFrames = 0;
+        this.chargeWarning = 0;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 9, '#f59e0b');
+        this.x += (facingDir === 1 ? 4 : -4);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          maybeDropLoot(this);
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 22);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -40 || screenX > V_WIDTH + 40) return;
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        if (this.maxHp > 1) drawEnemyHealth(c, this.w, this.hp, this.maxHp);
+        const trot = Math.sin(this.animTick * 0.3) * 3;
+        if (this.chargeWarning > 0 && Math.floor(this.animTick / 5) % 2 === 0) {
+          c.fillStyle = '#f97316';
+          c.fillRect(12, -13, 10, 3);
+          c.fillRect(16, -18, 3, 4);
+        }
+
+        c.fillStyle = '#5c2d16';
+        c.fillRect(4, 18 + trot, 26, 12);
+        c.fillRect(24, 10 + trot, 8, 12);
+        c.fillRect(28, 8 + trot, 6, 8);
+
+        c.fillStyle = '#1c1917';
+        c.fillRect(2, 19 + trot, 3, 10);
+        c.fillRect(24, 8 + trot, 3, 8);
+
+        c.fillStyle = '#3d1a0c';
+        c.fillRect(6, 30, 4, 8 + trot);
+        c.fillRect(24, 30, 4, 8 - trot);
+
+        c.fillStyle = '#64748b';
+        c.fillRect(12, 8 + trot, 10, 11);
+
+        c.fillStyle = '#94a3b8';
+        c.fillRect(14, 2 + trot, 8, 7);
+
+        c.fillStyle = '#ef4444';
+        c.fillRect(12, 0 + trot, 4, 3);
+
+        c.fillStyle = '#a16207';
+        c.fillRect(16, 12 + trot, 26, 2);
+        c.fillStyle = '#e2e8f0';
+        c.fillRect(42, 11 + trot, 6, 4);
+
+        c.restore();
+      }
+    }
+
+    class StonePickup {
+      constructor(x, y) { this.x=x; this.y=y; this.collected=false; }
+      update(hero) {
+        if (this.collected || GAME.stones >= GAME.maxStones) return;
+        if (hero.x < this.x+15 && hero.x+hero.w > this.x-3 &&
+            hero.y < this.y+12 && hero.y+hero.h > this.y-3) {
+          this.collected=true;
+          GAME.stones=Math.min(GAME.maxStones,GAME.stones+3);
+          createSparkParticles(this.x+6,this.y+4,5,'#cbd5e1');
+          updateHUD();
+        }
+      }
+      draw(c, camX) {
+        if (this.collected) return;
+        const x=Math.round(this.x-camX), y=Math.round(this.y);
+        c.fillStyle='#475569'; c.fillRect(x,y+4,13,5);
+        c.fillStyle='#94a3b8'; c.fillRect(x+2,y+1,6,5); c.fillRect(x+8,y+3,5,4);
+        c.fillStyle='#e2e8f0'; c.fillRect(x+4,y+2,2,1);
+      }
+    }
+
+    // v1.8.9: stylised Araucaria araucana seed (ngülliw), not a generic pine nut.
+    // Broad dark chestnut cap, amber seed body, narrow pointed end; pixel crisp.
+    function drawNgulliwSeed(c, x, y, scale = 1) {
+      c.save();
+      c.translate(Math.round(x), Math.round(y));
+      c.scale(scale, scale);
+      const pix = (color, px, py, w, h) => {
+        c.fillStyle = color; c.fillRect(px, py, w, h);
+      };
+      // Outer silhouette: angular and elongated rather than oval.
+      pix('#472719', 3, 0, 6, 2);
+      pix('#61331e', 2, 2, 8, 3);
+      pix('#794020', 2, 5, 8, 3);
+      pix('#8b4924', 3, 8, 6, 3);
+      pix('#8c4d26', 4, 11, 4, 2);
+      pix('#6c391e', 5, 13, 2, 2);
+      pix('#3c251b', 5, 15, 2, 1);
+      // Dark, irregular cap at the broad end.
+      pix('#35231d', 4, 0, 4, 2);
+      pix('#3b251c', 2, 2, 7, 2);
+      pix('#4c2b1c', 3, 4, 6, 2);
+      pix('#5c321d', 8, 5, 2, 2);
+      // Warm ochre face, slightly asymmetric like the real seed.
+      pix('#c17a37', 4, 6, 4, 5);
+      pix('#dda052', 4, 7, 2, 4);
+      pix('#d08a42', 5, 11, 2, 2);
+      pix('#f0bd72', 4, 8, 1, 3);
+      pix('#a9612e', 7, 8, 1, 4);
+      c.restore();
+    }
+
+    class NgulliwPinon {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.w = 12;
+        this.h = 12;
+        this.collected = false;
+        this.tick = Math.random() * 10;
+      }
+
+      update(player) {
+        if (this.collected) return;
+        this.tick += 0.08;
+
+        if (checkAABB(this, player)) {
+          this.collected = true;
+          GAME.levelPinones++;
+          audio.playCoin();
+          createSparkParticles(this.x + 6, this.y + 6, 6, '#f59e0b');
+          updateHUD();
+        }
+      }
+
+      draw(c, camX) {
+        if (this.collected) return;
+        const screenX = Math.round(this.x - camX);
+        const floatY = Math.round(this.y + Math.sin(this.tick) * 2.5);
+
+        if (screenX < -20 || screenX > V_WIDTH + 20) return;
+
+        // A tiny warm glint marks the pickup without changing the seed shape.
+        c.fillStyle = '#e9bb66';
+        c.fillRect(screenX + 1, floatY + 5, 1, 2);
+        drawNgulliwSeed(c, screenX, floatY - 2);
+      }
+    }
+
+    // v1.8.7: four recognisable pixel silhouettes, shared by world and learning card.
+    // Stylised field cues rather than botanical identification illustrations.
+    function drawLawenSprite(c, lawen, x, y) {
+      const id = lawen.id;
+      const px = (dx, dy, w, h, color) => { c.fillStyle = color; c.fillRect(x + dx, y + dy, w, h); };
+      const stem = '#567c40', shadow = '#244b2d';
+      if (id === 'natre') {
+        // Natre: woody branching shrub, narrow leaves and purple flowers.
+        px(9, 7, 2, 17, '#695032');
+        px(6, 10, 3, 2, '#695032'); px(11, 13, 4, 2, '#695032');
+        for (const [a,b,w] of [[3,9,5],[12,8,5],[2,15,6],[12,16,6],[5,19,4]]) {
+          px(a,b,w,2,shadow); px(a+1,b-1,w-2,2,lawen.leafColor);
+        }
+        for (const [a,b] of [[6,5],[12,4],[15,11]]) {
+          px(a,b,3,3,'#8750ae'); px(a+1,b-1,2,2,lawen.flowerColor);
+        }
+      } else if (id === 'menta') {
+        // Menta: paired, broad serrated leaves and a small flower spike.
+        px(9,5,2,19,stem);
+        for (const [a,b,dir] of [[3,10,1],[11,12,-1],[2,17,1],[11,19,-1]]) {
+          px(a,b,7,4,shadow); px(a+1,b-1,5,4,lawen.leafColor);
+          px(a+2,b,2,1,'#66b978');
+        }
+        px(9,2,2,6,'#ba8bb8'); px(8,4,4,2,'#e4b6dc'); px(9,0,2,2,'#d8b3e5');
+      } else if (id === 'paico') {
+        // Paico: slender upright inflorescence and small alternating leaves.
+        px(9,3,2,21,stem); px(7,11,2,12,stem); px(12,14,2,9,stem);
+        for (const [a,b,w] of [[4,11,5],[11,9,5],[3,16,5],[12,17,5],[5,20,4]]) {
+          px(a,b,w,2,lawen.leafColor);
+        }
+        for (const [a,b] of [[8,2],[11,5],[7,7],[10,10],[6,13],[13,13]]) {
+          px(a,b,2,2,'#9cba6b'); px(a,b,1,1,'#e1df93');
+        }
+      } else {
+        // Palqui: dark lanceolate foliage and small tubular yellow blooms.
+        px(9,5,2,19,'#5e6b36');
+        for (const [a,b,w] of [[3,11,6],[11,10,6],[2,17,7],[11,18,7]]) {
+          px(a,b,w,3,shadow); px(a+1,b-1,w-2,2,lawen.leafColor);
+        }
+        px(8,3,3,5,'#d3a735'); px(12,6,3,4,'#d3a735');
+        px(7,2,3,3,lawen.flowerColor); px(12,5,3,2,lawen.flowerColor);
+        px(8,2,1,2,'#fff2a1');
+      }
+      px(8,23,4,1,'#304f2d');
+    }
+
+    class TargetLawenPlant {
+      constructor(x, y, lawenData) {
+        this.x = x;
+        this.y = y;
+        this.w = 20;
+        this.h = 24;
+        this.lawen = lawenData;
+        this.collected = false;
+        this.tick = 0;
+      }
+
+      update(player) {
+        if (this.collected) return;
+        this.tick += 0.06;
+
+        if (checkAABB(this, player)) {
+          this.collected = true;
+          GAME.targetLawenCollected = true;
+          audio.playCoin();
+          createSparkParticles(this.x + 10, this.y + 12, 16, '#4ade80');
+          updateHUD();
+        }
+      }
+
+      draw(c, camX) {
+        if (this.collected) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        c.fillStyle = 'rgba(74, 222, 128, 0.25)';
+        c.beginPath();
+        c.arc(screenX + 10, screenY + 12, 16 + Math.sin(this.tick) * 3, 0, Math.PI * 2);
+        c.fill();
+
+        drawLawenSprite(c, this.lawen, screenX, screenY);
+      }
+    }
+
+    function createDustParticles(x, y, count = 5) {
+      for (let i = 0; i < count; i++) {
+        GAME.particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: -Math.random() * 1.2,
+          life: 18 + Math.random() * 10,
+          color: '#d97706',
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    function createSparkParticles(x, y, count = 8, color = '#f59e0b') {
+      for (let i = 0; i < count; i++) {
+        GAME.particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 3,
+          vy: (Math.random() - 0.5) * 3,
+          life: 14 + Math.random() * 8,
+          color: color,
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    let player = new Player(40, 160);
+    let platforms = [];
+    let enemies = [];
+    let pinonesList = [];
+    let stonePickups = [];
+    let targetPlant = null;
+
+    let lootDrops = [];
+    function maybeDropLoot(enemy) {
+      // Occasional small rewards; combat never becomes the primary source of supplies.
+      if (Math.random() >= 0.28) return;
+      const stones = Math.random() < 0.30;
+      lootDrops.push({x:enemy.x + enemy.w/2, y:enemy.y+enemy.h-8,
+        type: stones ? 'stone' : 'pinon', amount: stones ? 2 : (enemy instanceof HorseKnight ? 3 : 1),
+        collected:false});
+    }
+    function updateLoot() {
+      for (const loot of lootDrops) {
+        if (loot.collected || Math.abs(player.x + player.w/2-loot.x)>17 ||
+            Math.abs(player.y + player.h/2-loot.y)>27) continue;
+        if (loot.type === 'stone') {
+          if (GAME.stones >= GAME.maxStones) continue;
+          GAME.stones=Math.min(GAME.maxStones,GAME.stones+loot.amount);
+        } else GAME.levelPinones+=loot.amount;
+        loot.collected=true;
+        createSparkParticles(loot.x,loot.y,5,loot.type==='stone'?'#cbd5e1':'#fbbf24');
+        updateHUD();
+      }
+    }
+    function drawLoot(c,camX) {
+      for (const loot of lootDrops) {
+        if (loot.collected) continue;
+        const x=Math.round(loot.x-camX), y=Math.round(loot.y);
+        if (loot.type === 'pinon') {
+          drawNgulliwSeed(c, x - 5, y - 9, 0.8);
+        } else {
+          c.fillStyle='#94a3b8'; c.fillRect(x-3,y-3,7,6);
+          c.fillStyle='#e2e8f0'; c.fillRect(x-1,y-2,3,2);
+        }
+      }
+    }
+
+    function generateLevel(levelIdx) {
+      platforms = [];
+      enemies = [];
+      pinonesList = [];
+      stonePickups = [];
+      lootDrops = [];
+      GAME.stones = 5;
+      GAME.enemyProjectiles = [];
+      GAME.playerProjectiles = [];
+      GAME.targetLawenCollected = false;
+      GAME.levelPinones = 0;
+      if (player) { player.lastSafeX = 40; player.lastSafeY = 160; }
+
+      const currentLawen = LAWEN_DATABASE[levelIdx % LAWEN_DATABASE.length];
+
+      // Progressive speed scaling across the 4 levels
+      const speedMultiplier = 1.0 + (levelIdx * 0.16);
+
+      let curX = 0;
+      while (curX < LEVEL_LENGTH) {
+        const segWidth = 260 + Math.floor(Math.random() * 220);
+        const segHeight = 220 + Math.floor(Math.random() * 25);
+
+        platforms.push({
+          x: curX,
+          y: segHeight,
+          w: segWidth,
+          h: 60
+        });
+
+        if (curX > 200 && curX < LEVEL_LENGTH - 400) {
+          const platY = segHeight - 45 - Math.floor(Math.random() * 30);
+          platforms.push({
+            x: curX + 70,
+            y: platY,
+            w: 80 + Math.floor(Math.random() * 50),
+            h: 12
+          });
+
+          pinonesList.push(new NgulliwPinon(curX + 90, platY - 18));
+          pinonesList.push(new NgulliwPinon(curX + 120, segHeight - 16));
+          // Stone piles are placed on reachable ground, roughly every other segment.
+          if (Math.random() < 0.72) stonePickups.push(new StonePickup(curX + 40, segHeight - 9));
+
+          // Density scaling: More enemy pairs in levels 2, 3 and 4
+          if (levelIdx === 0) {
+            // Level 1: Solo patrols
+            if (Math.random() < 0.8) {
+              enemies.push(new Soldier(curX + 110, segHeight - 28, 1, 50, speedMultiplier));
+            } else {
+              enemies.push(new Arquebusier(curX + 130, segHeight - 28, 1, speedMultiplier));
+            }
+          } else if (levelIdx === 1) {
+            // Level 2: Foot soldiers in pairs
+            enemies.push(new Soldier(curX + 100, segHeight - 28, 1, 40, speedMultiplier));
+            enemies.push(new Soldier(curX + 130, segHeight - 28, 1, 40, speedMultiplier));
+          } else if (levelIdx === 2) {
+            // Level 3: Arcabucero guarded by two soldiers
+            enemies.push(new Arquebusier(curX + 150, segHeight - 28, 1, speedMultiplier));
+            enemies.push(new Soldier(curX + 95, segHeight - 28, 1, 35, speedMultiplier));
+            enemies.push(new Soldier(curX + 120, segHeight - 28, 1, 35, speedMultiplier));
+          } else {
+            // Level 4: Dense squads + fast horsemen
+            enemies.push(new Soldier(curX + 90, segHeight - 28, 2, 40, speedMultiplier));
+            enemies.push(new Soldier(curX + 120, segHeight - 28, 2, 40, speedMultiplier));
+            if (Math.random() < 0.5) {
+              enemies.push(new HorseKnight(curX + 160, segHeight - 28, 3, 90, speedMultiplier));
+            }
+          }
+        }
+
+        const gap = (curX >= LEVEL_LENGTH - 500) ? 0 : (40 + Math.floor(Math.random() * 35));
+        curX += segWidth + gap;
+      }
+
+      const herbX = LEVEL_LENGTH * 0.65;
+      const herbPlatform = platforms.find(p => p.h === 60 && herbX >= p.x && herbX + 20 <= p.x + p.w);
+      if (!herbPlatform) {
+        platforms.push({ x: herbX - 45, y: 218, w: 130, h: 60 });
+      }
+      targetPlant = new TargetLawenPlant(herbX, (herbPlatform ? herbPlatform.y : 218) - 24, currentLawen);
+      if (levelIdx >= 1) {
+        enemies.push(new HorseKnight(LEVEL_LENGTH - 480, 192, levelIdx >= 3 ? 3 : 2, 90, speedMultiplier));
+      } else {
+        enemies.push(new Soldier(LEVEL_LENGTH - 480, 182, 1, 55, speedMultiplier));
+      }
+
+      platforms.push({
+        x: LEVEL_LENGTH - 300,
+        y: 210,
+        w: 300,
+        h: 60
+      });
+    }
+
+    // v1.4: deterministic scenery, animated atmosphere and four visual biomes.
+    // Animation time advances only while playing, so overlays do not animate the world.
+    let sceneryTime = 0;
+    const BIOMES = [
+      { sky: ['#142d4a','#547e94','#e3aa74'], far:'#647c8b', near:'#344f58', tree:'#193c35', front:'#102d2a', grass:'#4b8a56', earth:'#493224', weather:'clear' },
+      { sky: ['#19394b','#638b80','#c3bd8b'], far:'#627f79', near:'#375b51', tree:'#20483c', front:'#12372d', grass:'#5d9957', earth:'#463826', weather:'leaves' },
+      { sky: ['#1b2943','#596b88','#a6a6b1'], far:'#59657f', near:'#34465c', tree:'#203c43', front:'#142d37', grass:'#477b70', earth:'#3b3540', weather:'rain' },
+      { sky: ['#171e39','#55496c','#c37e71'], far:'#56516d', near:'#34384e', tree:'#2c3942', front:'#1c2938', grass:'#627a63', earth:'#42313b', weather:'mist' }
+    ];
+    function hashScenery(n) {
+      const v = Math.sin(n * 127.1 + 78.233) * 43758.5453;
+      return v - Math.floor(v);
+    }
+    function drawMountainRange(c, camX, speed, baseline, height, color, seed) {
+      // Staggered ridgelines: consistent peaks and gentle shoulders rather than a sawtooth.
+      const step = 84, scroll = camX * speed;
+      const first = Math.floor(scroll / step) - 2;
+      const offset = scroll % step;
+      c.fillStyle = color;
+      c.beginPath(); c.moveTo(0, V_HEIGHT);
+      for (let i = 0; i < Math.ceil(V_WIDTH / step) + 5; i++) {
+        const idx = first + i;
+        const x = i * step - offset - step;
+        const peak = baseline - (0.37 + hashScenery(idx + seed) * 0.63) * height;
+        const saddle = baseline - (0.09 + hashScenery(idx + seed + 310) * 0.18) * height;
+        c.lineTo(Math.round(x), Math.round(saddle));
+        c.lineTo(Math.round(x + step * .38), Math.round(peak));
+        c.lineTo(Math.round(x + step * .62), Math.round(peak + height * .13));
+      }
+      c.lineTo(V_WIDTH, V_HEIGHT); c.closePath(); c.fill();
+      // Small, muted rock facets give depth without overpowering gameplay.
+      c.fillStyle = 'rgba(231,236,220,0.075)';
+      for (let i = 0; i < Math.ceil(V_WIDTH / step) + 5; i++) {
+        const idx = first + i, x = i * step - offset - step;
+        const peak = baseline - (0.37 + hashScenery(idx + seed) * .63) * height;
+        c.beginPath(); c.moveTo(Math.round(x + step * .38), Math.round(peak));
+        c.lineTo(Math.round(x + step * .48), Math.round(peak + height * .18));
+        c.lineTo(Math.round(x + step * .38), Math.round(peak + height * .35));
+        c.closePath(); c.fill();
+      }
+    }
+    // v1.4.1: distant volcanic cones with drifting, looping smoke.
+    // World-anchored positions keep the peaks moving naturally with parallax.
+    function drawVolcanoes(c, camX, biome) {
+      const speed = 0.075;
+      const worldPeaks = [310, 1510, 2750];
+      for (let i = 0; i < worldPeaks.length; i++) {
+        const x = Math.round(worldPeaks[i] - camX * speed);
+        if (x < -145 || x > V_WIDTH + 145) continue;
+        const peakY = 76 + (i % 2) * 13;
+        const baseY = 188;
+        // Broad cone and an irregular snow cap.
+        c.fillStyle = biome.far;
+        c.beginPath();
+        c.moveTo(x - 118, baseY);
+        c.lineTo(x - 17, peakY + 9);
+        c.lineTo(x - 9, peakY);
+        c.lineTo(x + 11, peakY);
+        c.lineTo(x + 21, peakY + 10);
+        c.lineTo(x + 126, baseY);
+        c.closePath(); c.fill();
+        c.fillStyle = 'rgba(235,228,210,0.10)';
+        c.beginPath(); c.moveTo(x - 17, peakY + 9); c.lineTo(x - 118, baseY);
+        c.lineTo(x - 54, baseY); c.lineTo(x - 5, peakY + 20);
+        c.closePath(); c.fill();
+        c.fillStyle = 'rgba(24,35,48,0.16)';
+        c.beginPath(); c.moveTo(x + 11, peakY); c.lineTo(x + 126, baseY);
+        c.lineTo(x + 64, baseY); c.lineTo(x + 3, peakY + 17);
+        c.closePath(); c.fill();
+        c.fillStyle = 'rgba(224,231,235,0.72)';
+        c.beginPath();
+        c.moveTo(x - 17, peakY + 9);
+        c.lineTo(x - 9, peakY);
+        c.lineTo(x + 11, peakY);
+        c.lineTo(x + 21, peakY + 10);
+        c.lineTo(x + 11, peakY + 8);
+        c.lineTo(x + 3, peakY + 14);
+        c.lineTo(x - 6, peakY + 9);
+        c.lineTo(x - 13, peakY + 16);
+        c.closePath(); c.fill();
+        // Smoke drifts to the right as it rises; puffs loop continuously.
+        for (let j = 0; j < 8; j++) {
+          const age = ((sceneryTime * 0.30 + j * 13 + i * 7) % 104);
+          const drift = age * 0.34 + Math.sin(age * 0.09 + i) * 4;
+          const radius = 3 + age * 0.10;
+          const opacity = (1 - age / 104) * (biome.weather === 'rain' ? 0.22 : 0.35);
+          c.fillStyle = `rgba(222,229,233,${opacity.toFixed(3)})`;
+          c.beginPath();
+          c.arc(Math.round(x + drift), Math.round(peakY - 3 - age * 0.55), radius, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+    }
+    function drawCloud(c, x, y, scale, alpha) {
+      c.fillStyle = `rgba(234,241,237,${alpha})`;
+      c.fillRect(Math.round(x), Math.round(y + 5 * scale), Math.round(42 * scale), Math.round(8 * scale));
+      c.fillRect(Math.round(x + 8 * scale), Math.round(y), Math.round(23 * scale), Math.round(12 * scale));
+      c.fillRect(Math.round(x + 27 * scale), Math.round(y + 3 * scale), Math.round(19 * scale), Math.round(9 * scale));
+    }
+    // v1.8.9: lightweight, deterministic environmental life. Everything is
+    // painted behind the platforms and actors; nothing changes hitboxes.
+    function drawDistantBirds(c, camX) {
+      // Rare, small silhouettes, moving across the upper sky in long cycles.
+      c.save();
+      c.strokeStyle = 'rgba(37,53,62,0.52)';
+      c.lineWidth = 1.2;
+      for (let i = 0; i < 3; i++) {
+        const period = 920 + i * 250;
+        const phase = ((sceneryTime * (0.42 + i * .09) + i * 310) % period + period) % period;
+        const x = Math.round(V_WIDTH + 36 - phase * (V_WIDTH + 100) / period - camX * .006);
+        const y = Math.round(38 + i * 20 + Math.sin(sceneryTime * .009 + i * 2) * 4);
+        if (x < 8 || x > V_WIDTH - 8) continue;
+        const wing = Math.sin(sceneryTime * .065 + i * 2.7) * 1.5;
+        c.beginPath();
+        c.moveTo(x - 7, y - 1 + wing);
+        c.lineTo(x - 3, y - 3);
+        c.lineTo(x, y);
+        c.lineTo(x + 3, y - 3);
+        c.lineTo(x + 7, y - 1 + wing);
+        c.stroke();
+      }
+      c.restore();
+    }
+    function drawForestMist(c, camX, biome) {
+      // Very faint low-contrast banks live only within the distant treeline.
+      // The foreground (including pit edges) remains completely clear.
+      c.save();
+      for (let i = 0; i < 5; i++) {
+        const x = ((i * 173 + sceneryTime * (.045 + i * .009) - camX * .065) % (V_WIDTH + 260) + V_WIDTH + 260) % (V_WIDTH + 260) - 180;
+        const y = 160 + (i % 3) * 13;
+        const grad = c.createLinearGradient(x, y, x, y + 23);
+        grad.addColorStop(0, 'rgba(189,212,208,0)');
+        grad.addColorStop(.48, `rgba(189,212,208,${biome.weather === 'mist' ? .11 : .065})`);
+        grad.addColorStop(1, 'rgba(189,212,208,0)');
+        c.fillStyle = grad;
+        c.fillRect(Math.round(x), y, 165, 23);
+      }
+      c.restore();
+    }
+    function drawGentleBreeze(c, camX, biome) {
+      // Sparse leaves remain in the scenery layer, behind every playable item.
+      if (biome.weather === 'rain') return;
+      const palette = biome.weather === 'mist'
+        ? ['rgba(157,165,129,.35)', 'rgba(187,162,121,.32)']
+        : ['rgba(170,175,99,.48)', 'rgba(185,139,76,.40)', 'rgba(103,160,109,.43)'];
+      for (let i = 0; i < 11; i++) {
+        const speed = .17 + hashScenery(i + 740) * .24;
+        const x = ((hashScenery(i + 712) * (V_WIDTH + 120) + sceneryTime * speed - camX * .08) % (V_WIDTH + 120) + V_WIDTH + 120) % (V_WIDTH + 120) - 60;
+        const y = 96 + hashScenery(i + 731) * 100 + Math.sin(sceneryTime * .018 + i * 2) * 9;
+        c.fillStyle = palette[i % palette.length];
+        c.fillRect(Math.round(x), Math.round(y), i % 3 === 0 ? 3 : 2, 2);
+      }
+    }
+    function drawParallaxBackground(c, camX) {
+      const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
+      const sky = c.createLinearGradient(0, 0, 0, V_HEIGHT);
+      sky.addColorStop(0, biome.sky[0]); sky.addColorStop(0.62, biome.sky[1]); sky.addColorStop(1, biome.sky[2]);
+      c.fillStyle = sky; c.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+      const sunX = Math.round(380 - camX * 0.018);
+      c.fillStyle = GAME.currentLevelIndex % 4 === 2 ? '#d8e1e8' : '#ffe6a1';
+      c.beginPath(); c.arc(sunX, 42, 13, 0, Math.PI * 2); c.fill();
+      for (let i = 0; i < 7; i++) {
+        const travel = (sceneryTime * (0.08 + i * 0.014) + camX * 0.035);
+        const x = ((i * 119 - travel) % 640 + 640) % 640 - 90;
+        drawCloud(c, x, 20 + hashScenery(i + 9) * 60, 0.6 + hashScenery(i + 4) * 0.6, 0.13 + hashScenery(i + 2) * 0.2);
+      }
+      drawMountainRange(c, camX, 0.055, 169, 83, biome.far, 30);
+      drawVolcanoes(c, camX, biome);
+      drawDistantBirds(c, camX);
+      drawMountainRange(c, camX, 0.12, 194, 57, biome.near, 90);
+      // Atmospheric perspective: trees are muted toward their backdrop and
+      // dissolve gently at the foot instead of sitting on it as cut-outs.
+      drawAraucariaLayer(c, camX * 0.23, 185, biome.tree, 10, biome.near, 0.62);
+      drawAraucariaLayer(c, camX * 0.46, 213, biome.front, 13, biome.near, 0.82);
+      drawForestMist(c, camX, biome);
+      drawGentleBreeze(c, camX, biome);
+      drawAtmosphere(c, camX, biome.weather);
+    }
+    function drawAraucariaLayer(c, scrollOffset, baseY, color, treeCount, hazeColor, strength) {
+      // Render to a reusable transparent layer so the tree bases can genuinely
+      // fade into whatever mountain/sky pixels are behind them.
+      const layer = drawAraucariaLayer.cache || (drawAraucariaLayer.cache = document.createElement('canvas'));
+      if (layer.width !== V_WIDTH || layer.height !== V_HEIGHT) {
+        layer.width = V_WIDTH; layer.height = V_HEIGHT;
+      }
+      const t = layer.getContext('2d');
+      t.clearRect(0, 0, V_WIDTH, V_HEIGHT);
+      const mix = (a, b, amount) => {
+        const aa = a.match(/[a-f\d]{2}/gi).map(v => parseInt(v,16));
+        const bb = b.match(/[a-f\d]{2}/gi).map(v => parseInt(v,16));
+        return `rgb(${aa.map((v,i) => Math.round(v*(1-amount)+bb[i]*amount)).join(',')})`;
+      };
+      const treeColor = mix(color, hazeColor, baseY > 195 ? .20 : .47);
+      const spacing = 55, first = Math.floor(scrollOffset / spacing) - 1;
+      const closeLayer = baseY > 195;
+      for (let i = 0; i < treeCount + 2; i++) {
+        const idx = first + i;
+        const x = Math.round(idx * spacing - scrollOffset);
+        if (x < -35 || x > V_WIDTH + 35) continue;
+        const h = 39 + Math.floor(hashScenery(idx + 20) * 39);
+        const top = Math.round(baseY - h);
+        const width = 14 + Math.floor(hashScenery(idx + 40) * 7);
+        // Pewen: tall straight trunk, radiating branches and umbrella-like crown.
+        t.fillStyle = treeColor;
+        t.fillRect(x + 4, top + 8, 5, h - 8);
+        t.fillRect(x + 2, baseY - 7, 9, 7);
+        // Branches rise toward the broad, flattened crown.
+        t.fillRect(x - width + 4, top + 14, width - 1, 3);
+        t.fillRect(x + 9, top + 14, width - 1, 3);
+        t.fillRect(x - width + 1, top + 9, width * 2 + 10, 5);
+        t.fillRect(x - width + 5, top + 5, width * 2 + 2, 5);
+        t.fillRect(x - 3, top + 2, 19, 6);
+        t.fillRect(x + 1, top - 2, 11, 5);
+        // Uneven tufts create a characteristic tiered canopy.
+        for (let k = -2; k <= 2; k++) {
+          const tx = x + 5 + k * 7;
+          const y = top + 5 + Math.abs(k) * 3;
+          t.fillRect(tx, y, 7, 4);
+        }
+        if (closeLayer) {
+          t.fillStyle = 'rgba(128,168,116,0.18)';
+          t.fillRect(x - width + 6, top + 5, width + 1, 2);
+          t.fillRect(x + 7, top + 10, width - 1, 2);
+          t.fillStyle = 'rgba(9,19,17,0.19)';
+          t.fillRect(x + 7, top + 20, 2, Math.max(0,h - 23));
+        }
+      }
+      // Keep upper crowns legible, but dissolve the lower trunk into the
+      // actual landscape. This avoids a hard silhouette at the tree line.
+      t.globalCompositeOperation = 'destination-in';
+      const fade = t.createLinearGradient(0, baseY - 82, 0, baseY + 3);
+      fade.addColorStop(0, 'rgba(255,255,255,1)');
+      fade.addColorStop(.38, 'rgba(255,255,255,.95)');
+      fade.addColorStop(.75, 'rgba(255,255,255,.55)');
+      fade.addColorStop(1, 'rgba(255,255,255,0)');
+      t.fillStyle = fade;
+      t.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+      t.globalCompositeOperation = 'source-over';
+      c.save();
+      c.globalAlpha = strength;
+      c.drawImage(layer, 0, 0);
+      c.restore();
+    }
+    function drawAtmosphere(c, camX, weather) {
+      if (weather === 'rain') {
+        c.strokeStyle = 'rgba(190,219,235,0.32)'; c.lineWidth = 1;
+        c.beginPath();
+        for (let i = 0; i < 75; i++) {
+          const x = ((hashScenery(i + 200) * 520 - sceneryTime * 2.4 - camX * 0.08) % 520 + 520) % 520;
+          const y = (hashScenery(i + 400) * 320 + sceneryTime * (2.5 + hashScenery(i) * 2)) % 320;
+          c.moveTo(Math.round(x), Math.round(y)); c.lineTo(Math.round(x - 3), Math.round(y + 9));
+        }
+        c.stroke();
+      } else if (weather === 'leaves') {
+        for (let i = 0; i < 24; i++) {
+          const x = ((hashScenery(i + 250) * 550 - sceneryTime * (0.3 + hashScenery(i) * 0.4)) % 550 + 550) % 550;
+          const y = (hashScenery(i + 350) * 280 + sceneryTime * (0.25 + hashScenery(i + 1) * 0.3)) % 280;
+          c.fillStyle = i % 3 ? 'rgba(176,155,76,0.55)' : 'rgba(112,171,94,0.5)';
+          c.fillRect(Math.round(x + Math.sin(sceneryTime * 0.03 + i) * 5), Math.round(y), 3, 2);
+        }
+      } else if (weather === 'mist') {
+        for (let i = 0; i < 6; i++) {
+          const x = ((i * 120 + sceneryTime * 0.09 - camX * 0.035) % 650 + 650) % 650 - 80;
+          c.fillStyle = 'rgba(202,212,224,0.075)';
+          c.fillRect(Math.round(x), 135 + (i % 3) * 22, 160, 20);
+        }
+      }
+    }
+    function drawNatureDetails(c, p, sx) {
+      if (p.h < 25) return;
+      const biomeIndex = GAME.currentLevelIndex % 4;
+      const start = Math.max(0, Math.floor((GAME.cameraX - p.x) / 32) - 1);
+      const end = Math.min(Math.ceil(p.w / 32), start + Math.ceil(V_WIDTH / 32) + 3);
+      for (let i = start; i < end; i++) {
+        const x = Math.round(sx + i * 32 + 13), y = Math.round(p.y);
+        const seed = hashScenery(Math.floor(p.x / 20) + i * 31);
+        if (seed < .30) {
+          // Low, feathered forest fern.
+          c.fillStyle = biomeIndex === 2 ? '#4d8074' : '#376f48';
+          c.fillRect(x, y - 9, 2, 9);
+          c.fillRect(x - 5, y - 6, 5, 2); c.fillRect(x + 2, y - 7, 6, 2);
+          c.fillRect(x - 3, y - 10, 3, 2); c.fillRect(x + 2, y - 11, 4, 2);
+          c.fillStyle = '#6a9a65'; c.fillRect(x - 2, y - 8, 2, 2);
+        } else if (seed < .51) {
+          c.fillStyle = '#55685f'; c.fillRect(x - 4, y - 5, 10, 5);
+          c.fillStyle = '#8b9984'; c.fillRect(x - 3, y - 5, 5, 2);
+          c.fillStyle = '#73915b'; c.fillRect(x - 4, y - 6, 5, 2);
+        } else if (seed > .93) {
+          c.fillStyle = '#e2c7a0'; c.fillRect(x, y - 5, 2, 5);
+          c.fillStyle = '#a84d3d'; c.fillRect(x - 3, y - 7, 8, 3);
+          c.fillStyle = '#d98a5b'; c.fillRect(x - 1, y - 7, 3, 1);
+        }
+      }
+    }
+
+    function drawGroundDetails(c, p, sx) {
+      const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
+      c.fillStyle = biome.earth; c.fillRect(sx, p.y, p.w, p.h + 5);
+      // Layered sod, moss, and small stone seams. Decorations do not change collision.
+      c.fillStyle = '#263f30'; c.fillRect(sx, p.y + 4, p.w, 4);
+      c.fillStyle = biome.grass; c.fillRect(sx, p.y, p.w, 5);
+      c.fillStyle = 'rgba(179,199,126,.46)'; c.fillRect(sx, p.y, p.w, 1);
+      const begin = Math.max(0, Math.floor((GAME.cameraX - p.x) / 12) - 2);
+      const finish = Math.min(Math.ceil(p.w / 12) + 1, begin + Math.ceil(V_WIDTH / 12) + 6);
+      for (let i = begin; i < finish; i++) {
+        const local = i * 12 + 3, world = Math.floor((p.x + local) / 12);
+        const x = Math.round(sx + local);
+        const sway = Math.round(Math.sin(sceneryTime * .045 + world) * 1);
+        c.fillStyle = i % 3 ? biome.grass : '#8fa86c';
+        c.fillRect(x + sway, p.y - 3 - Math.floor(hashScenery(world) * 3), 2, 5);
+        if (hashScenery(world + 79) > .64) {
+          c.fillStyle = 'rgba(143,109,77,.45)';
+          c.fillRect(x + 2, p.y + 13 + Math.floor(hashScenery(world + 3) * 12), 6, 2);
+        }
+        if (hashScenery(world + 199) > .82) {
+          c.fillStyle = '#67736b'; c.fillRect(x, p.y + 23, 7, 4);
+          c.fillStyle = '#879286'; c.fillRect(x + 1, p.y + 23, 3, 1);
+        }
+      }
+    }
+    function drawPitWarnings(c, camX) {
+      const ground = platforms.filter(p => p.h >= 45).sort((a,b) => a.x-b.x);
+      for (let i=0; i<ground.length-1; i++) {
+        const left=ground[i], right=ground[i+1];
+        const start=left.x+left.w, end=right.x, gap=end-start;
+        if (gap < 12 || end < camX-30 || start > camX+V_WIDTH+30) continue;
+        const a=Math.round(start-camX), b=Math.round(end-camX);
+        // A few loose pebbles and broken twigs signal the edge in advance.
+        c.fillStyle='#c5a06d';
+        c.fillRect(a-15,left.y-3,4,2); c.fillRect(a-9,left.y-5,2,4);
+        c.fillRect(b+8,right.y-4,4,2); c.fillRect(b+16,right.y-5,2,3);
+        c.fillStyle='#3a2620';
+        c.fillRect(a,248,Math.max(0,gap),22);
+        // Each stake is ONE continuous tapered silhouette. The pointed tip
+        // narrows smoothly into a shaft of the same width (no separate triangle).
+        for (let x = start + 5; x < end - 3; x += 11) {
+          const sx = Math.round(x - camX);
+          const h = 15 + Math.floor(hashScenery(x) * 5);
+          const tipY = 270 - h;
+          const shoulderY = tipY + 7;
+          c.fillStyle = '#422819';
+          c.beginPath();
+          c.moveTo(sx, tipY);
+          c.lineTo(sx + 4, shoulderY);
+          c.lineTo(sx + 4, 270);
+          c.lineTo(sx - 4, 270);
+          c.lineTo(sx - 4, shoulderY);
+          c.closePath();
+          c.fill();
+          // Thin wood grain highlight follows the same taper.
+          c.fillStyle = '#a86b3c';
+          c.beginPath();
+          c.moveTo(sx, tipY + 3);
+          c.lineTo(sx + 2, shoulderY + 1);
+          c.lineTo(sx + 2, 270);
+          c.lineTo(sx, 270);
+          c.closePath();
+          c.fill();
+          c.fillStyle = '#e6bd84';
+          c.fillRect(sx, tipY + 2, 1, 2);
+        }
+      }
+    }
+
+    function drawRuka(c, x, y) {
+      // v1.8.5: dark upper vent, enclosed pointed thatched roof. The doorway
+      // remains open, but the triangular upper wall has woven reed infill.
+      const px = Math.round(x), py = Math.round(y);
+      c.save(); c.translate(px, py);
+      c.fillStyle = 'rgba(26,20,17,.28)';
+      c.fillRect(2, 50, 84, 4); c.fillRect(12, 54, 65, 2);
+
+      // Continuous back wall, extending all the way to the roof ridge.
+      // Without this infill the sky used to show through the upper gable.
+      c.fillStyle = '#372c22';
+      c.beginPath(); c.moveTo(9, 30); c.lineTo(41, 5);
+      c.lineTo(74, 30); c.lineTo(74, 52); c.lineTo(9, 52);
+      c.closePath(); c.fill();
+      c.fillStyle = '#695039';
+      for (let i = 0; i < 9; i++) c.fillRect(12 + i * 7, 27, 2, 24);
+      c.fillStyle = '#4d3b2b';
+      for (let j = 0; j < 5; j++) c.fillRect(10, 29 + j * 5, 64, 1);
+
+      // Woven reed wall in the exposed inner gable, behind the roof edge.
+      c.save();
+      c.beginPath(); c.moveTo(11, 29); c.lineTo(41, 7);
+      c.lineTo(72, 29); c.closePath(); c.clip();
+      c.fillStyle = '#73573c'; c.fillRect(10, 7, 64, 25);
+      for (let row = 0; row < 8; row++) {
+        const yy = 9 + row * 3;
+        c.fillStyle = row % 2 ? '#9a7650' : '#4e3d2d';
+        c.fillRect(9, yy, 66, 1);
+      }
+      for (let col = 0; col < 17; col++) {
+        const xx = 11 + col * 4;
+        c.fillStyle = col % 2 ? '#b08a5c' : '#5b452f';
+        c.fillRect(xx, 7, 1, 24);
+      }
+      c.restore();
+
+      // More pointed ridge, with a complete cap of thatch above the wall.
+      c.fillStyle = '#403020';
+      c.beginPath(); c.moveTo(0, 28); c.quadraticCurveTo(25, 2, 41, -4);
+      c.quadraticCurveTo(59, 2, 82, 28); c.lineTo(77, 35);
+      c.quadraticCurveTo(59, 13, 41, 10);
+      c.quadraticCurveTo(23, 13, 5, 35); c.closePath(); c.fill();
+      c.fillStyle = '#956e42';
+      c.beginPath(); c.moveTo(2, 26); c.quadraticCurveTo(27, 3, 41, 0);
+      c.quadraticCurveTo(56, 3, 80, 26); c.lineTo(74, 31);
+      c.quadraticCurveTo(55, 13, 41, 10);
+      c.quadraticCurveTo(25, 13, 9, 31); c.closePath(); c.fill();
+      // Reed strands follow the slope and stay within the thatched cap.
+      for (let i = 0; i < 14; i++) {
+        const xx = 5 + i * 5.4;
+        const t = Math.abs(xx - 41) / 41;
+        const yy = 1 + 25 * Math.pow(t, 1.18);
+        c.fillStyle = i % 3 === 0 ? '#d2a46a' : (i % 3 === 1 ? '#b38a55' : '#765333');
+        c.fillRect(Math.round(xx), Math.round(yy), 2, 4 + Math.round(t * 4));
+        c.fillRect(Math.round(xx - 1), Math.round(yy + 6), 3, 1);
+      }
+      for (let i = 0; i < 18; i++) {
+        const xx = 4 + i * 4;
+        const t = Math.abs(xx - 41) / 41;
+        const edge = 10 + 21 * Math.pow(t, 1.15);
+        c.fillStyle = i % 2 ? '#6d4b2d' : '#ae814a';
+        c.fillRect(xx, Math.round(edge), 2, 2 + (i % 3));
+      }
+
+      // v1.8.5: dark upper smoke/vent opening, inspired by the reference ruka.
+      // It is an opening into a shadowed interior, never a hole to the sky.
+      // The small triangular aperture sits just below the pointed ridge.
+      c.fillStyle = '#382719';
+      c.beginPath(); c.moveTo(30, 16); c.lineTo(41, 5);
+      c.lineTo(52, 16); c.lineTo(50, 21); c.lineTo(32, 21);
+      c.closePath(); c.fill();
+      c.fillStyle = '#110f0d';
+      c.beginPath(); c.moveTo(34, 16); c.lineTo(41, 9);
+      c.lineTo(48, 16); c.lineTo(47, 19); c.lineTo(35, 19);
+      c.closePath(); c.fill();
+      // A few barely visible interior reeds preserve depth without
+      // brightening the opening or exposing the background scenery.
+      c.fillStyle = '#2c241d';
+      c.fillRect(40, 13, 1, 6); c.fillRect(44, 16, 1, 3);
+      // Short overhanging thatch frames the aperture's upper edge.
+      c.fillStyle = '#a57b49';
+      c.fillRect(34, 13, 2, 2); c.fillRect(36, 11, 2, 2);
+      c.fillRect(38, 9, 2, 2); c.fillRect(40, 8, 3, 2);
+      c.fillRect(44, 10, 2, 2); c.fillRect(46, 12, 2, 2);
+
+      // Original recessed doorway and its small warm light remain intact.
+      c.fillStyle = '#211a16'; c.fillRect(30, 29, 23, 23);
+      c.fillStyle = '#100f0e'; c.fillRect(34, 32, 15, 20);
+      c.fillStyle = '#a57746'; c.fillRect(29, 28, 3, 24); c.fillRect(52, 28, 3, 24);
+      c.fillRect(29, 28, 26, 3);
+      c.fillStyle = '#d1a06a'; c.fillRect(30, 30, 1, 19); c.fillRect(53, 30, 1, 19);
+      c.fillStyle = '#6c3d20'; c.fillRect(38, 45, 9, 7);
+      c.fillStyle = '#e7a34d'; c.fillRect(40, 46, 5, 5);
+      c.fillStyle = '#f8d68b'; c.fillRect(42, 47, 2, 3);
+      c.fillStyle = '#776957'; c.fillRect(22, 50, 6, 2); c.fillRect(58, 51, 7, 2);
+      c.fillStyle = '#426044'; c.fillRect(5, 49, 2, 4); c.fillRect(8, 47, 2, 5);
+      c.fillRect(77, 48, 2, 5); c.fillRect(80, 50, 3, 3);
+
+      // v1.8.4: a fuller but still airy plume from the roof ridge.
+      // Staggered puffs drift gently and fade out high above the ruka.
+      for (let i = 0; i < 11; i++) {
+        const rise = (sceneryTime * .26 + i * 8.5) % 94;
+        const sway = Math.sin(sceneryTime * .012 + i * .82) * (2.2 + rise * .10);
+        const fadeIn = Math.min(1, rise / 11);
+        const fadeOut = Math.pow(1 - rise / 94, 1.12);
+        const alpha = fadeIn * fadeOut * .37;
+        const px = Math.round(42 + sway + rise * .095);
+        const py = Math.round(-7 - rise);
+        const size = 3 + Math.floor(rise / 23);
+        c.fillStyle = `rgba(216,225,220,${alpha.toFixed(3)})`;
+        c.fillRect(px, py, size + 1, 3 + Math.floor(rise / 33));
+        // A lighter offset pixel gives each puff a softer, broken-up edge.
+        c.fillStyle = `rgba(227,233,228,${(alpha * .48).toFixed(3)})`;
+        c.fillRect(px - 2, py + 1, 3, 2);
+      }
+      c.restore();
+    }
+
+    function checkAABB(a, b) {
+      return (
+        a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y
+      );
+    }
+
+    function update() {
+      if (!GAME.running) return;
+      sceneryTime++;
+
+      player.update(platforms, enemies);
+      if (window.matchMedia('(orientation: portrait) and (max-width: 767px)').matches) {
+        const blend = Math.max(0, Math.min(1, (player.x - 40) / 170));
+        canvas.style.setProperty('--portrait-origin-x', (10 + 24 * blend).toFixed(1) + '%');
+      } else canvas.style.removeProperty('--portrait-origin-x');
+
+      // Direction-aware look-ahead for portrait: show more terrain in the
+      // direction of travel, and ease across when Leftraru turns around.
+      // Keep the last framing while idle to avoid camera jitter.
+      const portraitPhone = window.matchMedia('(orientation: portrait) and (max-width: 767px)').matches;
+      if (portraitPhone) {
+        if (typeof GAME.portraitLookAnchor !== 'number') GAME.portraitLookAnchor = 0.31;
+        if (player.vx > 0.45) GAME.portraitLookTarget = 0.31;
+        else if (player.vx < -0.45) GAME.portraitLookTarget = 0.43;
+        if (typeof GAME.portraitLookTarget !== 'number') GAME.portraitLookTarget = 0.31;
+        // With 3x CSS zoom around a 34% origin, these virtual anchors
+        // keep the sprite roughly between 25% and 61% of the visible frame.
+        // Clamp any older camera state from previous sessions as well.
+        GAME.portraitLookAnchor = Math.max(0.31, Math.min(0.43, GAME.portraitLookAnchor));
+        GAME.portraitLookAnchor += (GAME.portraitLookTarget - GAME.portraitLookAnchor) * 0.035;
+      }
+      const targetCamX = player.x - V_WIDTH * (portraitPhone ? GAME.portraitLookAnchor : 0.35);
+      GAME.cameraX += (targetCamX - GAME.cameraX) * (portraitPhone ? 0.12 : 0.12);
+      // In 3x portrait zoom, the visible horizontal slice is much narrower
+      // than V_WIDTH. Let the camera track farther right so the final ruka
+      // appears on screen before the player triggers expedition completion.
+      const cameraRightLimit = portraitPhone ? LEVEL_LENGTH - 180 : LEVEL_LENGTH - V_WIDTH;
+      GAME.cameraX = Math.max(0, Math.min(Math.max(0, cameraRightLimit), GAME.cameraX));
+
+      if (!GAME.running) return;
+      enemies.forEach(en => { if (GAME.running) en.update(player); });
+      if (!GAME.running) return;
+      pinonesList.forEach(p => p.update(player));
+      stonePickups.forEach(p => p.update(player));
+      updateLoot();
+      if (targetPlant) targetPlant.update(player);
+
+      // Arcabucero enemy bullets
+      for (let i = GAME.enemyProjectiles.length - 1; i >= 0; i--) {
+        const proj = GAME.enemyProjectiles[i];
+        proj.x += proj.vx;
+        proj.life--;
+
+        if (
+          player.x < proj.x + 4 &&
+          player.x + player.w > proj.x &&
+          player.y < proj.y + 4 &&
+          player.y + player.h > proj.y
+        ) {
+          player.takeDamage(1);
+          GAME.enemyProjectiles.splice(i, 1);
+          continue;
+        }
+
+        if (proj.life <= 0) {
+          GAME.enemyProjectiles.splice(i, 1);
+        }
+      }
+
+      // Witrüwe sling river stones
+      for (let i = GAME.playerProjectiles.length - 1; i >= 0; i--) {
+        const stone = GAME.playerProjectiles[i];
+        stone.x += stone.vx;
+        stone.life--;
+
+        for (const en of enemies) {
+          if (
+            en.alive &&
+            en.x < stone.x + 6 &&
+            en.x + en.w > stone.x &&
+            en.y < stone.y + 6 &&
+            en.y + en.h > stone.y
+          ) {
+            en.hit(1, stone.vx > 0 ? 1 : -1);
+            createSparkParticles(stone.x, stone.y, 5, '#cbd5e1');
+            stone.life = 0;
+            break;
+          }
+        }
+
+        if (stone.life <= 0) {
+          GAME.playerProjectiles.splice(i, 1);
+        }
+      }
+
+      for (let i = GAME.particles.length - 1; i >= 0; i--) {
+        const p = GAME.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) {
+          GAME.particles.splice(i, 1);
+        }
+      }
+
+      if (GAME.noticeTimer > 0) {
+        GAME.noticeTimer--;
+        if (GAME.noticeTimer === 0) document.getElementById("missionNotice").style.display = "none";
+      }
+      if (GAME.running && player.x >= LEVEL_LENGTH - 180) {
+        if (GAME.targetLawenCollected) reachRuka();
+        else if (GAME.noticeTimer === 0) {
+          const notice = document.getElementById("missionNotice");
+          notice.textContent = "🌿 ¡Falta el lawen! Regresa a recoger la planta brillante.";
+          notice.style.display = "block";
+          GAME.noticeTimer = 150;
+        }
+      }
+
+      const progressPercent = Math.min(100, Math.round((player.x / (LEVEL_LENGTH - 180)) * 100));
+      document.getElementById('uiProgressBar').style.width = progressPercent + '%';
+      document.getElementById('uiDistance').textContent = progressPercent + '%';
+    }
+
+    function render() {
+      // Mobile landscape: raise terrain farther above the thumb controls.
+      // Visual-only camera offset: platform physics and hitboxes are unchanged.
+      const raisedFloor = window.matchMedia('(orientation: landscape) and (max-height: 600px)').matches;
+      const floorLift = raisedFloor ? 34 : 0;
+      ctx.save();
+      if (floorLift) ctx.translate(0, -floorLift);
+      drawParallaxBackground(ctx, GAME.cameraX);
+
+      platforms.forEach(p => {
+        const sx = Math.round(p.x - GAME.cameraX);
+        if (sx + p.w < -20 || sx > V_WIDTH + 20) return;
+        drawGroundDetails(ctx, p, sx);
+        drawNatureDetails(ctx, p, sx);
+      });
+
+      drawPitWarnings(ctx, GAME.cameraX);
+      const rukaScreenX = Math.round(LEVEL_LENGTH - 190 - GAME.cameraX);
+      if (rukaScreenX > -90 && rukaScreenX < V_WIDTH + 90) {
+        drawRuka(ctx, rukaScreenX, 160);
+      }
+
+      pinonesList.forEach(p => p.draw(ctx, GAME.cameraX));
+      stonePickups.forEach(p => p.draw(ctx, GAME.cameraX));
+      drawLoot(ctx, GAME.cameraX);
+      if (targetPlant) targetPlant.draw(ctx, GAME.cameraX);
+      enemies.forEach(en => en.draw(ctx, GAME.cameraX));
+
+      // Draw bullets
+      GAME.enemyProjectiles.forEach(proj => {
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(Math.round(proj.x - GAME.cameraX), Math.round(proj.y), 4, 3);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(Math.round(proj.x - GAME.cameraX - 2), Math.round(proj.y + 1), 2, 1);
+      });
+
+      // Draw sling stones
+      GAME.playerProjectiles.forEach(stone => {
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(Math.round(stone.x - GAME.cameraX), Math.round(stone.y), 5, 5);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(Math.round(stone.x - GAME.cameraX + 1), Math.round(stone.y + 1), 2, 2);
+      });
+
+      player.draw(ctx, GAME.cameraX);
+
+      GAME.particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(Math.round(p.x - GAME.cameraX), Math.round(p.y), p.size, p.size);
+      });
+      ctx.restore();
+      if (floorLift) {
+        // Continue the ground tiles to the lower edge after the camera lift;
+        // gaps remain gaps, so the player can still read the platforms.
+        const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
+        platforms.forEach(p => {
+          if (p.y + 5 + p.h < V_HEIGHT) return;
+          const sx = Math.round(p.x - GAME.cameraX);
+          if (sx + p.w <= 0 || sx >= V_WIDTH) return;
+          ctx.fillStyle = biome.earth;
+          ctx.fillRect(sx, V_HEIGHT - floorLift, p.w, floorLift);
+        });
+      }
+    }
+
+    // Fixed 60 Hz simulation: stable physics on high/low refresh-rate screens.
+    const FIXED_STEP = 1000 / 60;
+    let previousFrame = 0;
+    let accumulated = 0;
+    function gameLoop(timestamp) {
+      if (!previousFrame) previousFrame = timestamp;
+      accumulated += Math.min(timestamp - previousFrame, 100);
+      previousFrame = timestamp;
+      let steps = 0;
+      while (accumulated >= FIXED_STEP && steps < 6) {
+        update();
+        accumulated -= FIXED_STEP;
+        steps++;
+      }
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function updateHUD() {
+      const pipContainer = document.getElementById('uiHealthPips');
+      while (pipContainer.children.length < player.hitsMax) {
+        const pip = document.createElement('div');
+        pip.className = 'health-pip';
+        pipContainer.appendChild(pip);
+      }
+      while (pipContainer.children.length > player.hitsMax) pipContainer.lastChild.remove();
+      const pips = pipContainer.querySelectorAll('.health-pip');
+      pips.forEach((pip, index) => {
+        if (index < player.hits) {
+          pip.classList.remove('empty');
+        } else {
+          pip.classList.add('empty');
+        }
+      });
+
+      const totalPiñones = GAME.bankedPinones + GAME.levelPinones;
+      document.getElementById('uiPinonCount').textContent = totalPiñones;
+      document.getElementById('uiStoneCount').textContent = `${GAME.stones}/${GAME.maxStones}`;
+
+      const currentLawen = LAWEN_DATABASE[GAME.currentLevelIndex % LAWEN_DATABASE.length];
+      document.getElementById('uiCurrentLawen').textContent = `${currentLawen.nameMapu} ('${currentLawen.nameSpan}')`;
+      document.getElementById('uiCurrentWeapon').textContent = GAME.equippedWeapon === 'wayki'
+        ? `WAYKI (LANZA) · 🪨 ${GAME.stones}/${GAME.maxStones}`
+        : `WITRÜWE (HONDA) · 🪨 ${GAME.stones}/${GAME.maxStones}`;
+    }
+
+    function renderEduHerbIllustration(lawen) {
+      const ec = document.getElementById('eduHerbCanvas');
+      if (!ec) return;
+      const c = ec.getContext('2d');
+      c.imageSmoothingEnabled = false;
+      c.clearRect(0, 0, 48, 48);
+
+      c.fillStyle = '#0f172a';
+      c.fillRect(0, 0, 48, 48);
+
+      // The learning card uses the same silhouette as the collectible.
+      c.save();
+      c.translate(4, 0);
+      c.scale(2, 2);
+      drawLawenSprite(c, lawen, 0, 0);
+      c.restore();
+    }
+
+    function reachRuka() {
+      GAME.running = false;
+      audio.playFanfare();
+
+      const earned = GAME.levelPinones;
+      GAME.bankedPinones += earned;
+      GAME.totalPinonesCollected += earned;
+      GAME.levelPinones = 0;
+      GAME.completedLevels = [...new Set([...GAME.completedLevels, GAME.currentLevelIndex % 4])];
+      GAME.maxUnlockedLevel = Math.max(GAME.maxUnlockedLevel, Math.min(3, GAME.currentLevelIndex + 1));
+      saveProgress();
+
+      const currentLawen = LAWEN_DATABASE[GAME.currentLevelIndex % LAWEN_DATABASE.length];
+
+      document.getElementById('eduPinonCount').textContent = GAME.bankedPinones;
+      document.getElementById('eduHerbMapu').textContent = currentLawen.nameMapu;
+      document.getElementById('eduHerbSpan').textContent = `'${currentLawen.nameSpan}'`;
+      document.getElementById('eduLine1').textContent = currentLawen.line1;
+      document.getElementById('eduLine2').textContent = currentLawen.line2;
+      document.getElementById('eduLine3').textContent = currentLawen.line3;
+
+      renderEduHerbIllustration(currentLawen);
+      document.getElementById('rukaOverlay').style.display = 'flex';
+    }
+
+    function updateShopUI() {
+      document.getElementById('shopPinonCount').textContent = GAME.bankedPinones;
+      const healthButton = document.getElementById('btnBuyHealth');
+      healthButton.disabled = GAME.healthUpgrade;
+      healthButton.textContent = GAME.healthUpgrade ? 'COMPRADO ✓' : '12 🌰';
+
+      const btnWayki = document.getElementById('btnEquipWayki');
+      const btnWitruwe = document.getElementById('btnEquipWitruwe');
+
+      if (GAME.equippedWeapon === 'wayki') {
+        btnWayki.textContent = 'EQUIPADA ✓';
+        btnWayki.className = 'px-2.5 py-1.5 bg-emerald-600 text-white text-[8px] font-bold rounded';
+      } else {
+        btnWayki.textContent = 'EQUIPAR';
+        btnWayki.className = 'px-2.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-[8px] font-bold rounded';
+      }
+
+      if (!GAME.unlockedWitruwe) {
+        btnWitruwe.textContent = 'FORJAR (6 🌰)';
+        btnWitruwe.className = 'px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-slate-950 text-[8px] font-bold rounded';
+      } else if (GAME.equippedWeapon === 'witruwe') {
+        btnWitruwe.textContent = 'EQUIPADA ✓';
+        btnWitruwe.className = 'px-2.5 py-1.5 bg-emerald-600 text-white text-[8px] font-bold rounded';
+      } else {
+        btnWitruwe.textContent = 'EQUIPAR';
+        btnWitruwe.className = 'px-2.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-[8px] font-bold rounded';
+      }
+    }
+
+    function openShop() {
+      document.getElementById('rukaOverlay').style.display = 'none';
+      updateShopUI();
+      document.getElementById('shopOverlay').style.display = 'flex';
+    }
+
+    function backToRuka() {
+      document.getElementById('shopOverlay').style.display = 'none';
+      document.getElementById('rukaOverlay').style.display = 'flex';
+    }
+
+    function resetControls() {
+      Object.keys(GAME.keys).forEach(key => GAME.keys[key] = false);
+      GAME.cameraX = 0;
+      canvas.style.setProperty('--portrait-origin-x', '10%');
+      GAME.portraitLookAnchor = 0.31;
+      GAME.portraitLookTarget = 0.31;
+      GAME.particles = [];
+      GAME.noticeTimer = 0;
+      document.getElementById("missionNotice").style.display = "none";
+    }
+
+    function startNextExpedition() {
+      if (GAME.running) return;
+      document.getElementById('rukaOverlay').style.display = 'none';
+      document.getElementById('shopOverlay').style.display = 'none';
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      document.getElementById('startOverlay').style.display = 'none';
+
+      GAME.currentLevelIndex = Math.min(3, GAME.currentLevelIndex + 1);
+      saveProgress();
+      resetControls();
+      player = new Player(40, 160);
+      generateLevel(GAME.currentLevelIndex);
+      updateHUD();
+      renderPortrait();
+      GAME.running = true;
+    }
+
+    function restartCurrentExpedition() {
+      resetControls();
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      document.getElementById('rukaOverlay').style.display = 'none';
+      document.getElementById('shopOverlay').style.display = 'none';
+      document.getElementById('startOverlay').style.display = 'none';
+
+      player = new Player(40, 160);
+      generateLevel(GAME.currentLevelIndex);
+      updateHUD();
+      renderPortrait();
+      GAME.running = true;
+    }
+
+    const SAVE_KEY = 'leftraru_save_v1_5';
+    const SAVE_FIELDS = ['bankedPinones','healthUpgrade','unlockedWitruwe','equippedWeapon',
+      'currentLevelIndex','maxUnlockedLevel','completedLevels','totalPinonesCollected'];
+    Object.assign(GAME, {healthUpgrade:false,maxUnlockedLevel:0,completedLevels:[],totalPinonesCollected:0});
+
+    function saveProgress() {
+      try {
+        const data = {version:1};
+        for (const key of SAVE_FIELDS) data[key] = GAME[key];
+        localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+      } catch(e) { /* private browsing / storage blocked: game still playable */ }
+      refreshSaveUI();
+    }
+    function loadProgress() {
+      try {
+        const data = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+        if (!data || data.version !== 1) return false;
+        GAME.bankedPinones = Math.max(0, Math.floor(Number(data.bankedPinones) || 0));
+        GAME.totalPinonesCollected = Math.max(0, Math.floor(Number(data.totalPinonesCollected) || 0));
+        GAME.healthUpgrade = data.healthUpgrade === true;
+        GAME.unlockedWitruwe = data.unlockedWitruwe === true;
+        GAME.equippedWeapon = data.equippedWeapon === 'witruwe' && GAME.unlockedWitruwe ? 'witruwe' : 'wayki';
+        GAME.maxUnlockedLevel = Math.min(3, Math.max(0, Math.floor(Number(data.maxUnlockedLevel) || 0)));
+        GAME.currentLevelIndex = Math.min(GAME.maxUnlockedLevel, Math.max(0, Math.floor(Number(data.currentLevelIndex) || 0)));
+        GAME.completedLevels = Array.isArray(data.completedLevels)
+          ? [...new Set(data.completedLevels.filter(n => Number.isInteger(n) && n >= 0 && n <= 3))] : [];
+        return true;
+      } catch(e) { return false; }
+    }
+    function refreshSaveUI() {
+      const exists = (() => { try { return !!localStorage.getItem(SAVE_KEY); } catch(e) {return false;} })();
+      document.getElementById('btnContinue').classList.toggle('hidden', !exists);
+      document.getElementById('savePanel').textContent = exists
+        ? `Guardado • ${GAME.bankedPinones} ngülliw • ${GAME.completedLevels.length}/4 lawen`
+        : 'Partida nueva • el progreso se guardará automáticamente';
+      const box = document.getElementById('levelChoices');
+      box.replaceChildren();
+      LAWEN_DATABASE.forEach((herb, index) => {
+        const btn = document.createElement('button');
+        const unlocked = index <= GAME.maxUnlockedLevel;
+        btn.textContent = `${GAME.completedLevels.includes(index) ? '✓ ' : ''}${index + 1}. ${herb.nameMapu}${unlocked ? '' : ' 🔒'}`;
+        btn.disabled = !unlocked;
+        btn.className = 'p-2 rounded border ' + (unlocked
+          ? 'border-emerald-500 bg-slate-800 text-white' : 'border-slate-700 text-slate-500');
+        btn.addEventListener('click', () => launchExpedition(index));
+        box.appendChild(btn);
+      });
+      const achievements = [
+        ['Primera expedición', GAME.completedLevels.length > 0],
+        ['Recolector (20 ngülliw)', GAME.totalPinonesCollected >= 20],
+        ['Witrüwe forjada', GAME.unlockedWitruwe],
+        ['Cuatro lawen', GAME.completedLevels.length === 4]
+      ];
+      document.getElementById('achievementSummary').textContent = 'Logros: ' +
+        achievements.map(([label, done]) => (done ? '🏆 ' : '○ ') + label).join(' · ');
+    }
+    function launchExpedition(index) {
+      paused = false;
+      document.getElementById('pauseOverlay').style.display = 'none';
+      if (index > GAME.maxUnlockedLevel || index < 0 || index > 3) return;
+      try { audio.init(); } catch(e) {}
+      for (const id of ['startOverlay','gameOverOverlay','rukaOverlay','shopOverlay'])
+        document.getElementById(id).style.display = 'none';
+      GAME.currentLevelIndex = index;
+      resetControls();
+      player = new Player(40, 160);
+      generateLevel(index);
+      updateHUD();
+      renderPortrait();
+      GAME.running = true;
+      saveProgress();
+    }
+    function startGame() {
+      // The normal start button resumes existing progress instead of wiping it.
+      launchExpedition(GAME.currentLevelIndex);
+    }
+    function newSave() {
+      if (!window.confirm('¿Borrar todo el progreso guardado? Esta acción no se puede deshacer.')) return;
+      try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+      Object.assign(GAME, {bankedPinones:0,levelPinones:0,healthUpgrade:false,
+        unlockedWitruwe:false,equippedWeapon:'wayki',currentLevelIndex:0,
+        maxUnlockedLevel:0,completedLevels:[],totalPinonesCollected:0});
+      launchExpedition(0);
+    }
+    function gameOver() {
+      GAME.running = false;
+      document.getElementById('gameOverPinones').textContent = GAME.bankedPinones;
+      document.getElementById('gameOverOverlay').style.display = 'flex';
+    }
+
+    function renderPortrait() {
+      const pCanvas = document.getElementById('portraitCanvas');
+      if (!pCanvas) return;
+      const pc = pCanvas.getContext('2d');
+      if (!pc) return;
+      pc.imageSmoothingEnabled = false;
+      pc.clearRect(0, 0, 32, 32);
+
+      pc.fillStyle = '#0f172a';
+      pc.fillRect(0, 0, 32, 32);
+
+      pc.fillStyle = '#111827';
+      pc.fillRect(4, 6, 24, 24);
+
+      pc.fillStyle = '#9b5338';
+      pc.fillRect(8, 10, 16, 14);
+
+      pc.fillStyle = '#7a3e28';
+      pc.fillRect(10, 21, 12, 3);
+
+      pc.fillStyle = '#9c663b';
+      pc.fillRect(6, 24, 20, 8);
+      pc.fillStyle = '#6a2415';
+      pc.fillRect(10, 26, 12, 2);
+
+      pc.fillStyle = '#cbd5e1';
+      pc.fillRect(7, 9, 18, 3);
+      pc.fillStyle = '#64748b';
+      pc.fillRect(9, 10, 2, 2);
+      pc.fillRect(13, 10, 2, 2);
+      pc.fillRect(17, 10, 2, 2);
+      pc.fillRect(21, 10, 2, 2);
+
+      pc.fillStyle = '#111827';
+      pc.fillRect(6, 4, 20, 6);
+      pc.fillRect(6, 10, 3, 10);
+      pc.fillRect(23, 10, 3, 10);
+
+      pc.fillStyle = '#111827';
+      pc.fillRect(10, 13, 4, 1);
+      pc.fillRect(18, 13, 4, 1);
+      pc.fillStyle = '#0f172a';
+      pc.fillRect(11, 15, 2, 2);
+      pc.fillRect(19, 15, 2, 2);
+    }
+
+    // Weapon swap & purchase logic
+    document.getElementById('btnEquipWayki').addEventListener('click', () => {
+      GAME.equippedWeapon = 'wayki';
+      updateShopUI();
+      updateHUD();
+      saveProgress();
+      audio.playCoin();
+    });
+
+    document.getElementById('btnEquipWitruwe').addEventListener('click', () => {
+      if (!GAME.unlockedWitruwe) {
+        if (GAME.bankedPinones >= 6) {
+          GAME.bankedPinones -= 6;
+          GAME.unlockedWitruwe = true;
+          GAME.equippedWeapon = 'witruwe';
+          audio.playCoin();
+        }
+      } else {
+        // Free toggle once unlocked
+        GAME.equippedWeapon = 'witruwe';
+        audio.playCoin();
+      }
+      updateShopUI();
+      updateHUD();
+      saveProgress();
+    });
+
+    document.getElementById('btnBuyHealth').addEventListener('click', () => {
+      if (GAME.bankedPinones >= 12 && !GAME.healthUpgrade) {
+        GAME.bankedPinones -= 12;
+        GAME.healthUpgrade = true;
+        player.hitsMax = 6;
+        player.hits = 6;
+        audio.playCoin();
+        document.getElementById('shopPinonCount').textContent = GAME.bankedPinones;
+        document.getElementById('btnBuyHealth').textContent = 'COMPRADO ✓';
+        document.getElementById('btnBuyHealth').disabled = true;
+        updateHUD();
+        saveProgress();
+      }
+    });
+
+    function bindAction(elemId, callback) {
+      const el = document.getElementById(elemId);
+      if (!el) return;
+      const handler = (e) => {
+        if (e.cancelable) e.preventDefault();
+        callback();
+      };
+      el.addEventListener('click', handler);
+    }
+
+    bindAction('btnStartGame', startGame);
+    bindAction('btnContinue', startGame);
+    bindAction('btnNewSave', newSave);
+    bindAction('btnLevels', () => document.getElementById('levelPanel').classList.toggle('hidden'));
+    loadProgress();
+    refreshSaveUI();
+    bindAction('btnRestartGame', restartCurrentExpedition);
+    bindAction('btnGoShop', openShop);
+    bindAction('btnBackToRuka', backToRuka);
+    bindAction('btnStartFromShop', startNextExpedition);
+    bindAction('btnNextLevel', startNextExpedition);
+
+    let paused = false;
+    function setPaused(value) {
+      if (value && !GAME.running) return;
+      paused = value;
+      GAME.running = !value;
+      document.getElementById('pauseOverlay').style.display = value ? 'flex' : 'none';
+      document.getElementById('btnPause').textContent = value ? '▶' : '⏸';
+      Object.keys(GAME.keys).forEach(k => GAME.keys[k] = false);
+    }
+    function pauseToggle() {
+      if (paused) setPaused(false);
+      else if (GAME.running) setPaused(true);
+    }
+    bindAction('btnPause', pauseToggle);
+    bindAction('btnResume', () => setPaused(false));
+    bindAction('btnPauseControls', () => document.getElementById('pauseControlsText').classList.toggle('hidden'));
+    bindAction('btnPauseSound', () => document.getElementById('btnSound').click());
+    bindAction('btnPauseHome', () => {
+      paused=false;
+      GAME.running=false;
+      document.getElementById('pauseOverlay').style.display='none';
+      document.getElementById('btnPause').textContent='⏸';
+      saveProgress();
+      document.getElementById('startOverlay').style.display='flex';
+    });
+
+    function switchWeapon() {
+      if (!GAME.running || !GAME.unlockedWitruwe || player.attacking) return;
+      if (GAME.equippedWeapon === 'witruwe') GAME.equippedWeapon = 'wayki';
+      else if (GAME.stones > 0) GAME.equippedWeapon = 'witruwe';
+      updateHUD();
+      saveProgress();
+    }
+    bindAction('tBtnSwitch', switchWeapon);
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+      switch (e.code) {
+        case 'KeyP':
+        case 'Escape':
+          if (!e.repeat) pauseToggle();
+          break;
+        case 'KeyQ':
+          if (!e.repeat) switchWeapon();
+          break;
+        case 'KeyA':
+        case 'ArrowLeft':
+          GAME.keys.left = true;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          GAME.keys.right = true;
+          break;
+        case 'KeyW':
+        case 'ArrowUp':
+        case 'Space':
+          GAME.keys.jump = true;
+          break;
+        case 'KeyX':
+        case 'KeyJ':
+        case 'KeyK':
+        case 'Enter':
+          GAME.keys.attack = true;
+          break;
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      switch (e.code) {
+        case 'KeyA':
+        case 'ArrowLeft':
+          GAME.keys.left = false;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          GAME.keys.right = false;
+          break;
+        case 'KeyW':
+        case 'ArrowUp':
+        case 'Space':
+          GAME.keys.jump = false;
+          break;
+        case 'KeyX':
+        case 'KeyJ':
+        case 'KeyK':
+        case 'Enter':
+          GAME.keys.attack = false;
+          break;
+      }
+    });
+
+    function bindTouchBtn(btnId, keyName) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+
+      const press = (e) => {
+        if (e.cancelable) e.preventDefault();
+        try { audio.init(); } catch (err) {}
+        GAME.keys[keyName] = true;
+      };
+      const release = (e) => {
+        if (e.cancelable) e.preventDefault();
+        GAME.keys[keyName] = false;
+      };
+
+      btn.addEventListener('pointerdown', e => {
+        btn.setPointerCapture?.(e.pointerId);
+        press(e);
+      }, { passive: false });
+      btn.addEventListener('pointerup', release, { passive: false });
+      btn.addEventListener('pointercancel', release, { passive: false });
+      btn.addEventListener('pointerleave', release, { passive: false });
+    }
+
+    window.addEventListener('blur', () => {
+      if (GAME.running) setPaused(true);
+      Object.keys(GAME.keys).forEach(key => GAME.keys[key] = false);
+    });
+
+    bindTouchBtn('tBtnLeft', 'left');
+    bindTouchBtn('tBtnRight', 'right');
+    bindTouchBtn('tBtnJump', 'jump');
+    bindTouchBtn('tBtnAttack', 'attack');
+
+    const btnSound = document.getElementById('btnSound');
+    btnSound.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      btnSound.textContent = audio.enabled ? '🔊' : '🔇';
+    });
+
+    const hudMenu = document.getElementById('hudQuickMenu');
+    const hudMenuToggle = document.getElementById('btnHelp');
+    function closeHudMenu() {
+      hudMenu.hidden = true;
+      hudMenuToggle.setAttribute('aria-expanded', 'false');
+    }
+    hudMenuToggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      hudMenu.hidden = !hudMenu.hidden;
+      hudMenuToggle.setAttribute('aria-expanded', String(!hudMenu.hidden));
+    });
+    document.getElementById('btnHelpGuide').addEventListener('click', () => {
+      closeHudMenu();
+      alert('Misión de Leftraru:\n- Encuentra la planta medicinal (lawen) con aura brillante.\n- Recolecta piñones (ngülliw) para forjar armas con el Rütrafe.\n- Llega a la Ruka para entregar la medicina a tu pueblo.');
+    });
+    hudMenu.addEventListener('click', (event) => {
+      if (event.target.closest('button') && event.target.id !== 'btnHelpGuide') closeHudMenu();
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (!document.getElementById('hudMenuWrap').contains(event.target)) closeHudMenu();
+    });
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        renderPortrait();
+      }, 50);
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>
