@@ -267,6 +267,28 @@
     }
     /* Start/pause/other modal content must cover the HUD and stay clickable. */
     #gameFrame .modal-layer { z-index: 40; }
+
+    /* v1.7.13: compact, accessible HUD controls beneath the help/menu button. */
+    #hudMenuWrap { pointer-events: auto; z-index: 24; }
+    #hudQuickMenu[hidden] { display: none !important; }
+    #hudQuickMenu { position: absolute; top: calc(100% + 5px); right: 0;
+      display: flex; flex-direction: column; gap: 4px; min-width: 112px;
+      padding: 6px; background: rgba(8, 20, 33, .96);
+      border: 1px solid #c58b37; border-radius: 8px;
+      box-shadow: 0 5px 14px rgba(0,0,0,.65); }
+    #hudQuickMenu .hud-menu-button { display: flex; align-items: center; gap: 7px;
+      min-height: 30px; padding: 5px 7px; border: 1px solid #516177;
+      border-radius: 5px; background: #1d2e43; color: #fef3c7;
+      font: 700 9px sans-serif; white-space: nowrap; text-align: left; }
+    #hudQuickMenu .hud-menu-button:active { background: #36506b; }
+    @media (orientation: landscape) and (max-height: 350px) {
+      #hudQuickMenu { gap: 2px; padding: 3px; }
+      #hudQuickMenu .hud-menu-button { min-height: 25px; padding: 3px 6px; }
+    }
+    @media (orientation: portrait) and (max-width: 767px) {
+      #gameFrame > header.hud-in-game > div:nth-child(2) > div:first-child { max-width: calc(100% - 39px); }
+      #gameFrame > header.hud-in-game .gap-3 { gap: 3px; }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center text-slate-100">
@@ -282,9 +304,13 @@
         <div class="flex flex-col gap-1">
           <div class="flex items-center justify-between gap-3">
             <span class="text-[9px] sm:text-[10px] text-amber-300 tracking-wider font-bold">LEFTRARU</span>
-            <div class="flex items-center gap-1 text-[8px] sm:text-[9px] text-amber-200" title="Ngülliw">
-              <span>🌰</span>
-              <span id="uiPinonCount" class="text-amber-300 font-bold">0</span>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1 text-[8px] sm:text-[9px] text-amber-200" title="Ngülliw">
+                <span>🌰</span><span id="uiPinonCount" class="text-amber-300 font-bold">0</span>
+              </div>
+              <div class="flex items-center gap-1 text-[8px] sm:text-[9px] text-slate-200" title="Piedras disponibles para el Witrüwe">
+                <span>🪨</span><span id="uiStoneCount" class="text-sky-200 font-bold">5</span>
+              </div>
             </div>
           </div>
           <!-- Discrete Life Gauge -->
@@ -314,11 +340,14 @@
       </div>
 
       <!-- CONTROLS & AUDIO -->
-      <div class="flex items-center gap-2">
-        <button id="btnSound" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-amber-300">🔊</button>
-        <button id="btnFullscreen" title="Pantalla completa" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-[9px] text-sky-300">⛶</button>
-        <button id="btnPause" title="Pausar (P o Escape)" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-[9px] text-emerald-300">⏸</button>
-        <button id="btnHelp" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
+      <div id="hudMenuWrap" class="relative flex items-start justify-end">
+        <button id="btnHelp" type="button" aria-label="Abrir menú de juego" aria-expanded="false" aria-controls="hudQuickMenu" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
+        <div id="hudQuickMenu" hidden class="hud-quick-menu" aria-label="Opciones del juego">
+          <button id="btnSound" type="button" title="Sonido" class="hud-menu-button">🔊 <span>SONIDO</span></button>
+          <button id="btnFullscreen" type="button" title="Pantalla completa" class="hud-menu-button">⛶ <span>PANTALLA</span></button>
+          <button id="btnPause" type="button" title="Pausar (P o Escape)" class="hud-menu-button">⏸ <span>PAUSA</span></button>
+          <button id="btnHelpGuide" type="button" class="hud-menu-button">📖 <span>AYUDA</span></button>
+        </div>
       </div>
 
     </div>
@@ -335,7 +364,7 @@
       <div id="startOverlay" class="modal-layer">
         <span class="text-3xl mb-2">🌿🏹</span>
         <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
-        <p class="text-[8px] text-emerald-300 mb-2">v1.7.12 · ESTACAS REFINADAS</p>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.7.13 · RUKA VISIBLE + HUD COMPACTO</p>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
           Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
         </p>
@@ -2147,7 +2176,11 @@
       }
       const targetCamX = player.x - V_WIDTH * (portraitPhone ? GAME.portraitLookAnchor : 0.35);
       GAME.cameraX += (targetCamX - GAME.cameraX) * (portraitPhone ? 0.12 : 0.12);
-      GAME.cameraX = Math.max(0, Math.min(Math.max(0, LEVEL_LENGTH - V_WIDTH), GAME.cameraX));
+      // In 3x portrait zoom, the visible horizontal slice is much narrower
+      // than V_WIDTH. Let the camera track farther right so the final ruka
+      // appears on screen before the player triggers expedition completion.
+      const cameraRightLimit = portraitPhone ? LEVEL_LENGTH - 180 : LEVEL_LENGTH - V_WIDTH;
+      GAME.cameraX = Math.max(0, Math.min(Math.max(0, cameraRightLimit), GAME.cameraX));
 
       if (!GAME.running) return;
       enemies.forEach(en => { if (GAME.running) en.update(player); });
@@ -2336,6 +2369,7 @@
 
       const totalPiñones = GAME.bankedPinones + GAME.levelPinones;
       document.getElementById('uiPinonCount').textContent = totalPiñones;
+      document.getElementById('uiStoneCount').textContent = `${GAME.stones}/${GAME.maxStones}`;
 
       const currentLawen = LAWEN_DATABASE[GAME.currentLevelIndex % LAWEN_DATABASE.length];
       document.getElementById('uiCurrentLawen').textContent = `${currentLawen.nameMapu} ('${currentLawen.nameSpan}')`;
@@ -2807,8 +2841,26 @@
       btnSound.textContent = audio.enabled ? '🔊' : '🔇';
     });
 
-    document.getElementById('btnHelp').addEventListener('click', () => {
+    const hudMenu = document.getElementById('hudQuickMenu');
+    const hudMenuToggle = document.getElementById('btnHelp');
+    function closeHudMenu() {
+      hudMenu.hidden = true;
+      hudMenuToggle.setAttribute('aria-expanded', 'false');
+    }
+    hudMenuToggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      hudMenu.hidden = !hudMenu.hidden;
+      hudMenuToggle.setAttribute('aria-expanded', String(!hudMenu.hidden));
+    });
+    document.getElementById('btnHelpGuide').addEventListener('click', () => {
+      closeHudMenu();
       alert('Misión de Leftraru:\n- Encuentra la planta medicinal (lawen) con aura brillante.\n- Recolecta piñones (ngülliw) para forjar armas con el Rütrafe.\n- Llega a la Ruka para entregar la medicina a tu pueblo.');
+    });
+    hudMenu.addEventListener('click', (event) => {
+      if (event.target.closest('button') && event.target.id !== 'btnHelpGuide') closeHudMenu();
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (!document.getElementById('hudMenuWrap').contains(event.target)) closeHudMenu();
     });
 
     window.addEventListener('load', () => {
