@@ -99,7 +99,7 @@
       header .gap-3 { gap: 5px; }
       header .gap-1\.5 { gap: 3px; }
       main { padding: 3px 5px !important; gap: 3px; }
-      #gameFrame { width: auto; max-width: 100%; height: auto; max-height: calc(100dvh - 132px); aspect-ratio: 16 / 9; align-self: center; }
+      #gameFrame { width: 100%; max-width: 100%; height: calc(100dvh - 132px); max-height: none; aspect-ratio: auto; align-self: stretch; flex: 1 1 auto; min-height: 110px; }
       #touchControls { width: min(100%, 780px); padding: 2px 4px 0; flex: 0 0 auto; }
       #touchControls .touch-btn { height: 42px; min-width: 44px; }
       footer { display: none !important; }
@@ -114,7 +114,7 @@
     @media (max-width: 950px) and (orientation: landscape) and (max-height: 440px) {
       header #portraitCanvas { width: 22px !important; height: 22px !important; }
       header > div:nth-child(2) { padding: 2px 6px; }
-      #gameFrame { max-height: calc(100dvh - 108px); }
+      #gameFrame { height: calc(100dvh - 108px); max-height: none; }
       #touchControls .touch-btn { height: 36px; }
     }
   </style>
@@ -185,7 +185,7 @@
       <div id="startOverlay" class="modal-layer">
         <span class="text-3xl mb-2">🌿🏹</span>
         <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
-        <p class="text-[8px] text-emerald-300 mb-2">v1.7.1 · AJUSTE MÓVIL</p>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.7.2 · PANTALLA PANORÁMICA</p>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
           Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
         </p>
@@ -553,7 +553,24 @@
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
-    const V_WIDTH = 480;
+    let V_WIDTH = 480;
+    // Widen the actual game camera in landscape instead of shrinking a 16:9
+    // canvas to a small box. Keeps pixel proportions and reveals more terrain.
+    function fitGameCanvas() {
+      const frame = document.getElementById('gameFrame');
+      const landscapePhone = window.matchMedia('(orientation: landscape) and (max-height: 600px)').matches;
+      const usableWidth = Math.max(100, frame.clientWidth - 8);
+      const usableHeight = Math.max(100, frame.clientHeight - 8);
+      const nextWidth = landscapePhone
+        ? Math.max(480, Math.min(1350, Math.round(270 * usableWidth / usableHeight)))
+        : 480;
+      if (canvas.width !== nextWidth) canvas.width = nextWidth;
+      V_WIDTH = nextWidth;
+      ctx.imageSmoothingEnabled = false;
+    }
+    window.addEventListener('resize', fitGameCanvas);
+    window.addEventListener('orientationchange', () => requestAnimationFrame(fitGameCanvas));
+    fitGameCanvas();
     const V_HEIGHT = 270;
     const LEVEL_LENGTH = 3600;
 
