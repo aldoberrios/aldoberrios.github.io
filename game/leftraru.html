@@ -150,7 +150,7 @@
       .modal-layer { padding-bottom: 8px; }
     }
 
-    /* v1.7.4: one HUD for all devices, always layered over the game. */
+    /* v1.7.5: one HUD for all devices, always layered over the game. */
     #gameFrame { position: relative; }
     #gameFrame > header.hud-in-game {
       position: absolute; inset: 5px 6px auto 6px; width: auto;
@@ -192,6 +192,68 @@
       #gameFrame > header.hud-in-game #btnPause,
       #gameFrame > header.hud-in-game #btnHelp { min-width: 27px; min-height: 27px; padding: 2px 4px; }
       #gameFrame > header.hud-in-game .text-\[9px\] { font-size: 7px; }
+    }
+    /* v1.7.5: landscape touch controls overlay the game, portrait zooms in. */
+    @media (hover: none), (pointer: coarse) {
+      #touchControls { display: flex !important; }
+    }
+    @media (orientation: landscape) and (max-height: 600px) {
+      main { position: relative; }
+      #gameFrame { height: 100%; }
+      #touchControls {
+        display: flex !important;
+        position: absolute;
+        z-index: 30;
+        left: 0; right: 0; bottom: max(5px, env(safe-area-inset-bottom));
+        width: 100%; max-width: none;
+        padding: 0 12px 3px;
+        pointer-events: none;
+      }
+      #touchControls > div { pointer-events: auto; }
+      #touchControls .touch-btn {
+        width: clamp(46px, 7.5vw, 65px);
+        height: clamp(46px, 12vh, 58px);
+        min-width: 46px;
+        font-size: 12px;
+        background-color: rgba(12, 24, 41, .72);
+      }
+      #touchControls #tBtnAttack { width: clamp(68px, 10vw, 86px); font-size: 9px; }
+      #touchControls #tBtnSwitch { font-size: 9px; }
+    }
+    @media (orientation: portrait) and (max-width: 767px) {
+      #gameCanvas {
+        /* Approximately 1.85x the previous portrait character size.
+           Keep the player's left-side position and feet in view. */
+        transform: scale(3.0);
+        transform-origin: 18% 77%;
+      }
+    }
+    /* v1.7.8: portrait framing and early camera tracking.
+       v1.7.7: taller portrait viewport, with the existing 3x pixel zoom.
+       Centre the original 16:9 canvas in a taller clipping window so the
+       ground remains visible instead of being cut off at the bottom. */
+    @media (orientation: portrait) and (max-width: 767px) {
+      main { padding-top: 6px !important; gap: 5px; }
+      #gameFrame {
+        /* Dirt-coloured continuation prevents a black void beneath terrain. */
+        background: #493224 !important;
+        aspect-ratio: auto !important;
+        height: min(54dvh, 540px) !important;
+        min-height: 330px;
+        max-height: calc(100dvh - 125px) !important;
+        flex: 0 0 auto;
+        align-self: center;
+      }
+      #gameCanvas {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        flex: 0 0 auto;
+        transform: scale(3.0);
+        transform-origin: 34% 79%;
+      }
+      #touchControls { flex-shrink: 0; padding-top: 5px; }
     }
     /* Start/pause/other modal content must cover the HUD and stay clickable. */
     #gameFrame .modal-layer { z-index: 40; }
@@ -263,7 +325,7 @@
       <div id="startOverlay" class="modal-layer">
         <span class="text-3xl mb-2">🌿🏹</span>
         <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
-        <p class="text-[8px] text-emerald-300 mb-2">v1.7.4 · HUD UNIFICADO</p>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.7.10 · CÁMARA EQUILIBRADA</p>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
           Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
         </p>
@@ -643,10 +705,11 @@
       const rect = frame.getBoundingClientRect();
       const usableWidth = Math.max(100, rect.width - 4);
       const usableHeight = Math.max(100, rect.height - 4);
-      // A little zoom (18%) improves Leftraru's perceived size, while the
-      // canvas is centre-cropped vertically rather than stretching pixels.
+      // Mobile landscape: ~1.3x closer than v1.7.8. Reduce the virtual
+      // horizontal field of view instead of scaling sprites or hitboxes.
+      // Allow widths below 480 so short, wide phone screens can actually zoom.
       const nextWidth = landscapePhone
-        ? Math.max(480, Math.min(1000, Math.round(270 * usableWidth / usableHeight * 0.82)))
+        ? Math.max(340, Math.min(1000, Math.round(270 * usableWidth / usableHeight * (0.82 / 1.30))))
         : 480;
       if (canvas.width !== nextWidth) canvas.width = nextWidth;
       V_WIDTH = nextWidth;
@@ -1968,10 +2031,24 @@
 
       player.update(platforms, enemies);
 
-      const targetCamX = player.x - V_WIDTH * 0.35;
-      GAME.cameraX += (targetCamX - GAME.cameraX) * 0.12;
-      if (GAME.cameraX < 0) GAME.cameraX = 0;
-      if (GAME.cameraX > LEVEL_LENGTH - V_WIDTH) GAME.cameraX = LEVEL_LENGTH - V_WIDTH;
+      // Direction-aware look-ahead for portrait: show more terrain in the
+      // direction of travel, and ease across when Leftraru turns around.
+      // Keep the last framing while idle to avoid camera jitter.
+      const portraitPhone = window.matchMedia('(orientation: portrait) and (max-width: 767px)').matches;
+      if (portraitPhone) {
+        if (typeof GAME.portraitLookAnchor !== 'number') GAME.portraitLookAnchor = 0.31;
+        if (player.vx > 0.45) GAME.portraitLookTarget = 0.31;
+        else if (player.vx < -0.45) GAME.portraitLookTarget = 0.43;
+        if (typeof GAME.portraitLookTarget !== 'number') GAME.portraitLookTarget = 0.31;
+        // With 3x CSS zoom around a 34% origin, these virtual anchors
+        // keep the sprite roughly between 25% and 61% of the visible frame.
+        // Clamp any older camera state from previous sessions as well.
+        GAME.portraitLookAnchor = Math.max(0.31, Math.min(0.43, GAME.portraitLookAnchor));
+        GAME.portraitLookAnchor += (GAME.portraitLookTarget - GAME.portraitLookAnchor) * 0.035;
+      }
+      const targetCamX = player.x - V_WIDTH * (portraitPhone ? GAME.portraitLookAnchor : 0.35);
+      GAME.cameraX += (targetCamX - GAME.cameraX) * (portraitPhone ? 0.12 : 0.12);
+      GAME.cameraX = Math.max(0, Math.min(Math.max(0, LEVEL_LENGTH - V_WIDTH), GAME.cameraX));
 
       if (!GAME.running) return;
       enemies.forEach(en => { if (GAME.running) en.update(player); });
@@ -2059,6 +2136,12 @@
     }
 
     function render() {
+      // Mobile landscape: raise terrain farther above the thumb controls.
+      // Visual-only camera offset: platform physics and hitboxes are unchanged.
+      const raisedFloor = window.matchMedia('(orientation: landscape) and (max-height: 600px)').matches;
+      const floorLift = raisedFloor ? 34 : 0;
+      ctx.save();
+      if (floorLift) ctx.translate(0, -floorLift);
       drawParallaxBackground(ctx, GAME.cameraX);
 
       platforms.forEach(p => {
@@ -2101,6 +2184,19 @@
         ctx.fillStyle = p.color;
         ctx.fillRect(Math.round(p.x - GAME.cameraX), Math.round(p.y), p.size, p.size);
       });
+      ctx.restore();
+      if (floorLift) {
+        // Continue the ground tiles to the lower edge after the camera lift;
+        // gaps remain gaps, so the player can still read the platforms.
+        const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
+        platforms.forEach(p => {
+          if (p.y + 5 + p.h < V_HEIGHT) return;
+          const sx = Math.round(p.x - GAME.cameraX);
+          if (sx + p.w <= 0 || sx >= V_WIDTH) return;
+          ctx.fillStyle = biome.earth;
+          ctx.fillRect(sx, V_HEIGHT - floorLift, p.w, floorLift);
+        });
+      }
     }
 
     // Fixed 60 Hz simulation: stable physics on high/low refresh-rate screens.
