@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Leftraru: Kintun Lawen (En Busca del Lawen)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,6 +72,51 @@
       text-align: center;
       background: rgba(7, 17, 27, 0.94);
     }
+    /* v1.7.1: use the actual mobile viewport instead of distributing empty space. */
+    html, body { width: 100%; min-height: 100%; }
+    body { min-height: 100dvh; height: 100dvh; overflow: hidden; justify-content: flex-start !important; }
+    header, footer { flex-shrink: 0; }
+    main { flex: 1 1 auto; min-height: 0; justify-content: flex-start !important; gap: 6px; overflow: hidden; }
+    #gameFrame { flex: 0 1 auto; max-height: min(70dvh, calc(100dvh - 180px)); }
+    .modal-layer { overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; justify-content: flex-start; gap: 3px; }
+    .modal-layer > * { flex-shrink: 0; }
+    #btnFullscreen { min-width: 32px; }
+    @media (max-width: 767px) and (orientation: portrait) {
+      main { padding-top: 10px !important; }
+      #gameFrame { max-height: none; }
+      #touchControls { padding-top: 6px; }
+      .modal-layer { padding: 10px 12px; }
+      #startOverlay > span:first-child { font-size: 16px; margin-bottom: 0; }
+      #startOverlay h2 { font-size: 9px; }
+      #startOverlay p { margin-bottom: 5px; }
+      #btnStartGame { padding: 9px 12px; font-size: 10px; }
+    }
+    @media (max-width: 950px) and (orientation: landscape) {
+      header .fretwork-border { height: 4px; }
+      header > div:nth-child(2) { padding: 3px 8px; }
+      header #portraitCanvas { width: 26px !important; height: 26px !important; }
+      header .health-pip { width: 11px; height: 8px; }
+      header .gap-3 { gap: 5px; }
+      header .gap-1\.5 { gap: 3px; }
+      main { padding: 3px 5px !important; gap: 3px; }
+      #gameFrame { width: auto; max-width: 100%; height: auto; max-height: calc(100dvh - 132px); aspect-ratio: 16 / 9; align-self: center; }
+      #touchControls { width: min(100%, 780px); padding: 2px 4px 0; flex: 0 0 auto; }
+      #touchControls .touch-btn { height: 42px; min-width: 44px; }
+      footer { display: none !important; }
+      .modal-layer { padding: 7px 12px; gap: 2px; }
+      #startOverlay > span:first-child { display: none; }
+      #startOverlay h2 { font-size: 10px; margin: 0; }
+      #startOverlay p { font-size: 9px; margin: 2px 0; line-height: 1.3; }
+      #startOverlay #savePanel { margin: 2px 0; }
+      #startOverlay #btnStartGame { padding: 8px 12px; font-size: 10px; }
+      #startOverlay .mt-3 { margin-top: 4px; }
+    }
+    @media (max-width: 950px) and (orientation: landscape) and (max-height: 440px) {
+      header #portraitCanvas { width: 22px !important; height: 22px !important; }
+      header > div:nth-child(2) { padding: 2px 6px; }
+      #gameFrame { max-height: calc(100dvh - 108px); }
+      #touchControls .touch-btn { height: 36px; }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center text-slate-100">
@@ -121,6 +166,7 @@
       <!-- CONTROLS & AUDIO -->
       <div class="flex items-center gap-2">
         <button id="btnSound" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-amber-300">🔊</button>
+        <button id="btnFullscreen" title="Pantalla completa" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-[9px] text-sky-300">⛶</button>
         <button id="btnPause" title="Pausar (P o Escape)" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-[9px] text-emerald-300">⏸</button>
         <button id="btnHelp" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
       </div>
@@ -130,7 +176,7 @@
 
   <!-- GAME VIEWPORT -->
   <main class="w-full flex-1 flex flex-col items-center justify-center p-1 sm:p-3 relative max-w-5xl">
-    <div class="relative w-full aspect-[16/9] max-h-[70vh] bg-black border-4 border-[#1c2e42] rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
+    <div id="gameFrame" class="relative w-full aspect-[16/9] max-h-[70vh] bg-black border-4 border-[#1c2e42] rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
       
       <canvas id="gameCanvas" width="480" height="270" class="w-full h-full object-contain"></canvas>
       <div id="missionNotice" role="status" aria-live="polite" style="display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);width:max-content;max-width:92%;padding:9px 12px;background:rgba(9,19,29,.93);border:2px solid #34d399;border-radius:7px;color:#d1fae5;font:700 11px sans-serif;text-align:center;pointer-events:none;z-index:15"></div>
@@ -139,7 +185,7 @@
       <div id="startOverlay" class="modal-layer">
         <span class="text-3xl mb-2">🌿🏹</span>
         <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
-        <p class="text-[8px] text-emerald-300 mb-2">v1.7 · PULIDO DE AVENTURA</p>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.7.1 · AJUSTE MÓVIL</p>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
           Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
         </p>
@@ -496,6 +542,13 @@
     }
     const audio = new RetroAudio();
 
+    // Optional fullscreen improves mobile play without requiring orientation lock.
+    document.getElementById('btnFullscreen').addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+      } catch (err) { /* Some mobile browsers do not allow fullscreen. */ }
+    });
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
