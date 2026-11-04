@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Leftraru: Kintun Lawen (En Busca del Lawen)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: #0b1118;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    canvas {
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .fretwork-border {
+      background: repeating-linear-gradient(90deg, #1b3b5f 0px, #1b3b5f 16px, #c5832b 16px, #c5832b 20px, #0f1d2d 20px, #0f1d2d 36px);
+      height: 8px;
+    }
+    .touch-btn {
+      background: rgba(18, 30, 49, 0.75);
+      border: 3px solid rgba(245, 158, 11, 0.8);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.6);
+      border-radius: 14px;
+      color: #fef08a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+    }
+    .touch-btn:active {
+      transform: translateY(2px);
+      background: rgba(245, 158, 11, 0.4);
+    }
+    .health-pip {
+      width: 14px;
+      height: 10px;
+      background: #ef4444;
+      border: 1px solid #7f1d1d;
+      box-shadow: inset 1px 1px 0 #fca5a5;
+      transition: background-color 0.15s;
+    }
+    .health-pip.empty {
+      background: #1e293b;
+      border-color: #0f172a;
+      box-shadow: none;
+    }
+    .modal-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      text-align: center;
+      background: rgba(7, 17, 27, 0.94);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center text-slate-100">
+
+  <!-- TOP HEADER & RETRO HUD WITH MC STATUS CARD -->
+  <header class="w-full bg-[#0d1722] border-b-2 border-amber-600/70 z-10 flex flex-col items-center">
+    <div class="fretwork-border w-full"></div>
+    <div class="w-full max-w-5xl px-3 py-2 flex items-center justify-between gap-3 text-xs">
+      
+      <!-- MAIN CHARACTER PROFILE CARD -->
+      <div class="flex items-center gap-3 bg-[#111e2e] border-2 border-amber-600/60 rounded-md px-2.5 py-1.5 shadow-md">
+        <canvas id="portraitCanvas" width="32" height="32" style="width: 36px; height: 36px; display: block; border: 2px solid #d97706; background-color: #0f172a; border-radius: 4px;"></canvas>
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-[9px] sm:text-[10px] text-amber-300 tracking-wider font-bold">LEFTRARU</span>
+            <div class="flex items-center gap-1 text-[8px] sm:text-[9px] text-amber-200" title="Ngülliw">
+              <span>🌰</span>
+              <span id="uiPinonCount" class="text-amber-300 font-bold">0</span>
+            </div>
+          </div>
+          <!-- Discrete Life Gauge -->
+          <div class="flex items-center gap-1.5">
+            <span class="text-[7px] sm:text-[8px] text-red-400 font-bold">VIDA</span>
+            <div id="uiHealthPips" class="flex gap-1 p-0.5 bg-slate-950 border border-slate-700 rounded-sm">
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+              <div class="health-pip"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURRENT MISSION OBJECTIVE & WEAPON -->
+      <div class="flex items-center gap-2">
+        <div class="hidden sm:flex flex-col items-center bg-[#09131d] border border-amber-500/40 rounded px-2.5 py-1">
+          <span class="text-[7px] text-slate-400">ARMA:</span>
+          <span id="uiCurrentWeapon" class="text-[8px] text-amber-300 font-bold">WAYKI (LANZA)</span>
+        </div>
+        <div class="hidden sm:flex flex-col items-center bg-[#09131d] border border-amber-500/40 rounded px-3 py-1">
+          <span class="text-[7px] text-slate-400">OBJETIVO:</span>
+          <span id="uiCurrentLawen" class="text-[8px] text-emerald-400 font-bold">natxüg ('natre')</span>
+        </div>
+      </div>
+
+      <!-- CONTROLS & AUDIO -->
+      <div class="flex items-center gap-2">
+        <button id="btnSound" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-amber-300">🔊</button>
+        <button id="btnHelp" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded text-[9px] text-sky-300">?</button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- GAME VIEWPORT -->
+  <main class="w-full flex-1 flex flex-col items-center justify-center p-1 sm:p-3 relative max-w-5xl">
+    <div class="relative w-full aspect-[16/9] max-h-[70vh] bg-black border-4 border-[#1c2e42] rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
+      
+      <canvas id="gameCanvas" width="480" height="270" class="w-full h-full object-contain"></canvas>
+
+      <!-- OVERLAY: START SCREEN -->
+      <div id="startOverlay" class="modal-layer">
+        <span class="text-3xl mb-2">🌿🏹</span>
+        <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
+        <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
+          Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
+        </p>
+        <button id="btnStartGame" type="button" class="px-6 py-3.5 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 border-2 border-amber-300 text-slate-950 text-xs sm:text-sm font-bold rounded shadow-lg transition" style="cursor: pointer;">
+          ¡INICIAR EXPEDICIÓN!
+        </button>
+        <div class="mt-3 text-[8px] sm:text-[9px] text-slate-400 space-y-1">
+          <p>⌨️ <span class="text-amber-300">A/D o Flechas</span>: Correr | <span class="text-amber-300">W / Espacio</span>: Saltar</p>
+          <p>⚔️ <span class="text-amber-300">X / J / Enter</span>: Ataque (Lanza o Honda)</p>
+        </div>
+      </div>
+
+      <!-- OVERLAY: GAME OVER -->
+      <div id="gameOverOverlay" class="modal-layer" style="display: none;">
+        <span class="text-3xl mb-2">💀⚡</span>
+        <h2 class="text-sm sm:text-lg text-red-500 mb-2">¡HAS CAÍDO EN COMBATE!</h2>
+        <p class="text-[9px] sm:text-[11px] text-slate-300 mb-3 font-sans max-w-md">
+          No lograste llevar el lawen a la Ruka. El espíritu de la tierra te convoca a intentarlo una vez más.
+        </p>
+        <div class="text-[10px] text-amber-300 mb-4 bg-slate-950/80 px-3 py-1.5 border border-slate-700 rounded">
+          Piñones guardados: <span id="gameOverPinones" class="text-white">0</span> 🌰
+        </div>
+        <button id="btnRestartGame" type="button" class="px-6 py-3 bg-red-600 hover:bg-red-500 border-2 border-red-300 text-white text-xs font-bold rounded shadow-lg active:scale-95 transition">
+          REINTENTAR ESTA EXPEDICIÓN
+        </button>
+      </div>
+
+      <!-- OVERLAY: RUKA EDUCATION SCREEN -->
+      <div id="rukaOverlay" class="modal-layer" style="display: none;">
+        <div class="w-full max-w-md bg-[#0f1d2c] border-2 border-amber-500/80 rounded-lg p-4 shadow-2xl flex flex-col items-center">
+          
+          <div class="flex items-center justify-between w-full border-b border-amber-600/50 pb-2 mb-3">
+            <span class="text-[8px] text-amber-300">EXPEDICIÓN CUMPLIDA • RUKA</span>
+            <div class="text-[9px] text-amber-200">Total Ngülliw: <span id="eduPinonCount" class="text-amber-400 font-bold">0</span> 🌰</div>
+          </div>
+
+          <div class="flex items-center gap-4 w-full mb-3 bg-[#09131d] p-2.5 rounded border border-slate-700">
+            <canvas id="eduHerbCanvas" width="48" height="48" class="w-14 h-14 bg-slate-900 border border-emerald-500/50 rounded"></canvas>
+            <div class="text-left">
+              <h3 id="eduHerbMapu" class="text-sm text-emerald-400 font-bold tracking-wider">natxüg</h3>
+              <div id="eduHerbSpan" class="text-[10px] text-slate-300 italic font-sans mb-1">'natre'</div>
+              <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-700 text-[7px] rounded">KIMELTUWE LAWEN</span>
+            </div>
+          </div>
+
+          <div class="w-full text-left bg-slate-950/80 border border-amber-500/30 p-2.5 rounded text-[8px] sm:text-[9px] leading-relaxed mb-4 text-amber-100">
+            <p id="eduLine1" class="font-bold text-amber-300 mb-1">Natxüg kümey alig kutxan mew.</p>
+            <p id="eduLine2" class="text-slate-300 mb-1">(ka kutxanlogkon mew)</p>
+            <p id="eduLine3" class="text-emerald-400 font-sans italic text-[8px]">El natre es bueno para la fiebre y el dolor de cabeza.</p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2 w-full">
+            <button id="btnGoShop" type="button" class="flex-1 px-3 py-2.5 bg-amber-600 hover:bg-amber-500 border border-amber-300 text-slate-950 text-[8px] sm:text-[9px] font-bold rounded shadow transition active:scale-95">
+              🔨 VISITAR AL RÜTRAFE / WIZÜFE
+            </button>
+            <button id="btnNextLevel" type="button" class="flex-1 px-3 py-2.5 bg-emerald-600 hover:bg-emerald-500 border border-emerald-300 text-white text-[8px] sm:text-[9px] font-bold rounded shadow transition active:scale-95">
+              🏹 SIGUIENTE LAWEN ▶
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- OVERLAY: WIZÜFE / RÜTRAFE WORKSHOP -->
+      <div id="shopOverlay" class="modal-layer" style="display: none;">
+        <div class="w-full max-w-md bg-[#0f1d2c] border-2 border-amber-500/80 rounded-lg p-4 shadow-2xl flex flex-col items-center">
+          
+          <div class="flex items-center justify-between w-full border-b border-amber-600/50 pb-2 mb-3">
+            <span class="text-[9px] text-amber-400 font-bold">FORJA DEL RÜTRAFE / WIZÜFE</span>
+            <div class="text-[9px] text-amber-200">Ngülliw: <span id="shopPinonCount" class="text-amber-400 font-bold">0</span> 🌰</div>
+          </div>
+
+          <p class="text-[8px] sm:text-[9px] text-slate-300 font-sans mb-3 text-left w-full">
+            Gestiona tu arsenal o forja nuevo armamento para las expediciones:
+          </p>
+
+          <div class="space-y-2 w-full mb-4">
+            <!-- Weapon 1: Wayki -->
+            <div class="flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-700">
+              <div class="text-left">
+                <div class="text-[8px] sm:text-[9px] text-amber-300 font-bold">WAYKI (LANZA DE COLIHUE)</div>
+                <div class="text-[7px] text-slate-400 font-sans">Ataque cuerpo a cuerpo de alta precisión</div>
+              </div>
+              <button id="btnEquipWayki" type="button" class="px-2.5 py-1.5 bg-emerald-600 text-white text-[8px] font-bold rounded">
+                EQUIPADA ✓
+              </button>
+            </div>
+
+            <!-- Weapon 2: Witrüwe (Sling) -->
+            <div class="flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-700">
+              <div class="text-left">
+                <div class="text-[8px] sm:text-[9px] text-sky-300 font-bold">WITRÜWE (HONDA DE RÍO)</div>
+                <div class="text-[7px] text-slate-400 font-sans">Lanza piedras a distancia contra grupos</div>
+              </div>
+              <button id="btnEquipWitruwe" type="button" class="px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-slate-950 text-[8px] font-bold rounded">
+                FORJAR (6 🌰)
+              </button>
+            </div>
+
+            <!-- Upgrade: Extra Health -->
+            <div class="flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-700">
+              <div class="text-left">
+                <div class="text-[8px] sm:text-[9px] text-rose-300 font-bold">LLANKATU PROTECTOR (+1 VIDA)</div>
+                <div class="text-[7px] text-slate-400 font-sans">Acolchado de cuero y pectoral de plata</div>
+              </div>
+              <button id="btnBuyHealth" type="button" class="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-[8px] font-bold rounded">
+                12 🌰
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2 w-full">
+            <button id="btnBackToRuka" type="button" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-[8px] font-bold rounded active:scale-95">
+              ◀ VOLVER A LA RUKA
+            </button>
+            <button id="btnStartFromShop" type="button" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 border border-emerald-300 text-white text-[8px] font-bold rounded active:scale-95">
+              INICIAR MISIÓN ▶
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TOUCH CONTROLS -->
+    <div id="touchControls" class="w-full max-w-4xl flex items-center justify-between px-2 pt-2 pb-1 select-none md:hidden">
+      <div class="flex gap-2">
+        <button id="tBtnLeft" class="touch-btn w-12 h-12 text-lg font-bold">◀</button>
+        <button id="tBtnRight" class="touch-btn w-12 h-12 text-lg font-bold">▶</button>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="tBtnAttack" class="touch-btn w-16 h-12 px-2 text-[9px] font-bold bg-rose-950/70 border-rose-500 text-rose-200">⚔ ATAQUE</button>
+        <button id="tBtnJump" class="touch-btn w-12 h-12 text-sm font-bold bg-sky-950/70 border-sky-400 text-sky-200">▲</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- PROGRESS BAR -->
+  <footer class="w-full bg-[#0d1722] border-t border-slate-800 py-1.5 px-4 text-center text-[9px] text-slate-400 flex items-center justify-center gap-3">
+    <span>Rumbo a la Ruka:</span>
+    <div class="w-48 sm:w-64 h-2 bg-slate-950 rounded-full border border-slate-700 overflow-hidden">
+      <div id="uiProgressBar" class="h-full bg-amber-500 w-0 transition-all duration-100"></div>
+    </div>
+    <span id="uiDistance">0%</span>
+  </footer>
+
+  <script>
+    const LAWEN_DATABASE = [
+      {
+        id: 'natre',
+        nameMapu: 'natxüg',
+        nameSpan: 'natre',
+        line1: 'Natxüg kümey alig kutxan mew.',
+        line2: '(ka kutxanlogkon mew)',
+        line3: 'El natre es bueno para la fiebre y el dolor de cabeza.',
+        flowerColor: '#c084fc',
+        leafColor: '#166534'
+      },
+      {
+        id: 'menta',
+        nameMapu: 'ilhfawen',
+        nameSpan: 'menta',
+        line1: 'Ilhfawen kümey pütxa kutxan mew.',
+        line2: '(wülhgün, poypoyün pütxa)',
+        line3: 'La menta calma el dolor de estómago, cólicos e hinchazón.',
+        flowerColor: '#f43f5e',
+        leafColor: '#15803d'
+      },
+      {
+        id: 'paico',
+        nameMapu: 'pichüg',
+        nameSpan: 'paico',
+        line1: 'Pichug kümey kümaw kutxan',
+        line2: 'ka pechay kutxan mew.',
+        line3: 'El paico alivia los dolores digestivos y la diarrea.',
+        flowerColor: '#86efac',
+        leafColor: '#22c55e'
+      },
+      {
+        id: 'palqui',
+        nameMapu: 'palki',
+        nameSpan: 'palqui',
+        line1: 'Palki kümey rülen kutxan',
+        line2: 'ka alig kutxan mew.',
+        line3: 'El palqui combate los resfriados fuertes y la fiebre.',
+        flowerColor: '#facc15',
+        leafColor: '#1e3a29'
+      }
+    ];
+
+    class RetroAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        try {
+          if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.ctx = new AudioContext();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+        } catch (e) {}
+      }
+      playJump() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(450, now + 0.12);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      }
+      playAttack() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(380, now);
+        osc.frequency.linearRampToValueAtTime(120, now + 0.09);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      }
+      playSling() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(280, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
+      playShot() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(450, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.18);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+      playHit(heavy = false) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = heavy ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(heavy ? 120 : 220, now);
+        osc.frequency.exponentialRampToValueAtTime(heavy ? 20 : 60, now + 0.18);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+      playCoin() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.setValueAtTime(990, now + 0.07);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      }
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const notes = [440, 554, 659, 880];
+        const now = this.ctx.currentTime;
+        notes.forEach((f, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(f, now + i * 0.12);
+          gain.gain.setValueAtTime(0.12, now + i * 0.12);
+          gain.gain.linearRampToValueAtTime(0.001, now + i * 0.12 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.12);
+          osc.stop(now + i * 0.12 + 0.25);
+        });
+      }
+    }
+    const audio = new RetroAudio();
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+
+    const V_WIDTH = 480;
+    const V_HEIGHT = 270;
+    const LEVEL_LENGTH = 3600;
+
+    const GAME = {
+      running: false,
+      currentLevelIndex: 0,
+      bankedPinones: 0,
+      levelPinones: 0,
+      targetLawenCollected: false,
+      cameraX: 0,
+      levelLength: LEVEL_LENGTH,
+      
+      // Arsenal system
+      equippedWeapon: 'wayki', // 'wayki' or 'witruwe'
+      unlockedWitruwe: false,
+
+      keys: { left: false, right: false, jump: false, attack: false },
+      particles: [],
+      enemyProjectiles: [],
+      playerProjectiles: []
+    };
+
+    class Player {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.w = 18;
+        this.h = 30;
+        this.vx = 0;
+        this.vy = 0;
+        this.speed = 2.4;
+        this.jumpPower = -6.8;
+        this.gravity = 0.28;
+        this.grounded = false;
+        this.facing = 1;
+
+        this.hitsMax = 5;
+        this.hits = 5;
+        this.invulnerable = 0;
+
+        this.attacking = false;
+        this.attackTimer = 0;
+        this.attackDuration = 14;
+        this.attackCooldown = 0;
+
+        this.animTick = 0;
+      }
+
+      update(platforms, enemies) {
+        this.animTick++;
+        if (this.invulnerable > 0) this.invulnerable--;
+        if (this.attackCooldown > 0) this.attackCooldown--;
+
+        if (GAME.keys.left) {
+          this.vx = -this.speed;
+          this.facing = -1;
+        } else if (GAME.keys.right) {
+          this.vx = this.speed;
+          this.facing = 1;
+        } else {
+          this.vx *= 0.65;
+          if (Math.abs(this.vx) < 0.1) this.vx = 0;
+        }
+
+        if (GAME.keys.jump && this.grounded) {
+          this.vy = this.jumpPower;
+          this.grounded = false;
+          audio.playJump();
+          createDustParticles(this.x + this.w / 2, this.y + this.h, 6);
+        }
+
+        // Single attack input: Lance thrust OR Sling projectile
+        if (GAME.keys.attack && !this.attacking && this.attackCooldown <= 0) {
+          this.attacking = true;
+          this.attackTimer = this.attackDuration;
+
+          if (GAME.equippedWeapon === 'wayki') {
+            this.attackCooldown = 18;
+            audio.playAttack();
+          } else {
+            // Witrüwe sling shot
+            this.attackCooldown = 24;
+            audio.playSling();
+            GAME.playerProjectiles.push({
+              x: this.facing === 1 ? this.x + 18 : this.x - 4,
+              y: this.y + 12,
+              vx: this.facing * 5.2,
+              life: 60
+            });
+          }
+        }
+
+        if (this.attacking) {
+          this.attackTimer--;
+          if (this.attackTimer <= 0) {
+            this.attacking = false;
+          }
+        }
+
+        this.vy += this.gravity;
+        if (this.vy > 8) this.vy = 8;
+
+        this.x += this.vx;
+        if (this.x < 0) this.x = 0;
+        if (this.x > LEVEL_LENGTH - 60) this.x = LEVEL_LENGTH - 60;
+
+        this.y += this.vy;
+        this.grounded = false;
+
+        for (const p of platforms) {
+          if (
+            this.x + this.w > p.x &&
+            this.x < p.x + p.w &&
+            this.y + this.h >= p.y &&
+            this.y + this.h <= p.y + p.h + 8 &&
+            this.vy >= 0
+          ) {
+            this.y = p.y - this.h;
+            this.vy = 0;
+            this.grounded = true;
+          }
+        }
+
+        // Wayki melee collision check
+        if (GAME.equippedWeapon === 'wayki' && this.attacking && this.attackTimer === Math.floor(this.attackDuration * 0.7)) {
+          const reach = 26;
+          const hitbox = {
+            x: this.facing === 1 ? this.x + this.w - 2 : this.x - reach,
+            y: this.y + 6,
+            w: reach,
+            h: 18
+          };
+
+          for (const en of enemies) {
+            if (en.alive && checkAABB(hitbox, en)) {
+              en.hit(1, this.facing);
+            }
+          }
+        }
+
+        if (this.y > V_HEIGHT + 30) {
+          this.takeDamage(this.hitsMax);
+        }
+      }
+
+      takeDamage(hitsTaken = 1) {
+        if (this.invulnerable > 0) return;
+        this.hits -= hitsTaken;
+        this.invulnerable = 45;
+        audio.playHit(true);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 10, '#ef4444');
+        updateHUD();
+        
+        if (this.hits <= 0) {
+          this.hits = 0;
+          updateHUD();
+          gameOver();
+        }
+      }
+
+      draw(c, camX) {
+        if (this.invulnerable > 0 && Math.floor(this.animTick / 4) % 2 === 0) {
+          return;
+        }
+
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        this.drawLeftraruPixels(c);
+        c.restore();
+      }
+
+      drawLeftraruPixels(c) {
+        const isRunning = Math.abs(this.vx) > 0.2 && this.grounded;
+        const legOffset = isRunning ? Math.sin(this.animTick * 0.3) * 3 : 0;
+
+        c.fillStyle = '#2c1810';
+        c.fillRect(3, 20, 5, 5);
+        c.fillRect(10, 20, 5, 5);
+
+        c.fillStyle = '#9b5338';
+        c.fillRect(4, 23, 3, 3);
+        c.fillRect(11, 23, 3, 3);
+
+        c.fillStyle = '#5c3a21';
+        c.fillRect(3, 26 + legOffset, 5, 4);
+        c.fillRect(10, 26 - legOffset, 5, 4);
+
+        c.fillStyle = '#9c663b';
+        c.beginPath();
+        c.moveTo(1, 11);
+        c.lineTo(16, 11);
+        c.lineTo(13, 22);
+        c.lineTo(4, 22);
+        c.closePath();
+        c.fill();
+
+        c.fillStyle = '#6a2415';
+        c.fillRect(4, 15, 9, 2);
+        c.fillRect(6, 13, 5, 2);
+        c.fillRect(7, 17, 3, 2);
+
+        c.fillStyle = '#4a2511';
+        c.fillRect(4, 21, 9, 1);
+
+        c.fillStyle = '#5c3a21';
+        c.fillRect(11, 15, 3, 2);
+
+        c.fillStyle = '#111827';
+        c.fillRect(2, 3, 4, 12);
+        c.fillRect(4, 2, 9, 4);
+
+        c.fillStyle = '#9b5338';
+        c.fillRect(6, 4, 7, 7);
+
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(5, 4, 8, 2);
+        c.fillStyle = '#64748b';
+        c.fillRect(9, 4, 1, 2);
+        c.fillRect(11, 4, 1, 2);
+
+        c.fillStyle = '#0f172a';
+        c.fillRect(10, 6, 2, 1);
+        c.fillStyle = '#7a3e28';
+        c.fillRect(7, 10, 5, 1);
+
+        // Weapon Rendering
+        if (GAME.equippedWeapon === 'wayki') {
+          const spearY = 14;
+          if (this.attacking) {
+            const thrustX = 12 + Math.sin((this.attackTimer / this.attackDuration) * Math.PI) * 16;
+            c.fillStyle = '#9b5338';
+            c.fillRect(9, 13, 7, 3);
+
+            c.fillStyle = '#633c1f';
+            c.fillRect(thrustX - 16, spearY, 26, 2);
+
+            c.fillStyle = '#854d0e';
+            c.fillRect(thrustX + 8, spearY - 1, 2, 4);
+
+            c.fillStyle = '#18181b';
+            c.beginPath();
+            c.moveTo(thrustX + 10, spearY - 2);
+            c.lineTo(thrustX + 17, spearY + 1);
+            c.lineTo(thrustX + 10, spearY + 4);
+            c.closePath();
+            c.fill();
+          } else {
+            c.fillStyle = '#633c1f';
+            c.fillRect(7, 0, 2, 28);
+
+            c.fillStyle = '#18181b';
+            c.beginPath();
+            c.moveTo(5, 0);
+            c.lineTo(8, -6);
+            c.lineTo(11, 0);
+            c.closePath();
+            c.fill();
+
+            c.fillStyle = '#9b5338';
+            c.fillRect(7, 14, 4, 4);
+          }
+        } else {
+          // Witrüwe (Sling)
+          c.fillStyle = '#78350f'; // Cuero tejido de la honda
+          if (this.attacking) {
+            c.fillRect(10, 11, 8, 2);
+            c.fillStyle = '#451a03';
+            c.fillRect(16, 9, 3, 5);
+          } else {
+            c.fillRect(10, 14, 4, 7);
+            c.fillStyle = '#64748b'; // Piedra de río en la mano
+            c.fillRect(12, 13, 3, 3);
+          }
+        }
+      }
+    }
+
+    class Soldier {
+      constructor(x, y, maxHp = 1, patrolRange = 70, speedMultiplier = 1.0) {
+        this.x = x;
+        this.y = y;
+        this.startX = x;
+        this.w = 18;
+        this.h = 28;
+        this.patrolRange = patrolRange;
+        this.vx = 0.7 * speedMultiplier;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = 1;
+        this.hitFlash = 0;
+        this.animTick = Math.floor(Math.random() * 20);
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        this.animTick++;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        this.x += this.vx;
+        if (this.x > this.startX + this.patrolRange) {
+          this.vx = -Math.abs(this.vx);
+          this.facing = -1;
+        } else if (this.x < this.startX - this.patrolRange) {
+          this.vx = Math.abs(this.vx);
+          this.facing = 1;
+        }
+
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.8;
+          } else {
+            player.takeDamage(1);
+          }
+        }
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
+        this.x += (facingDir === 1 ? 4 : -4);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        const legWalk = Math.sin(this.animTick * 0.2) * 2;
+        c.fillStyle = '#451a03';
+        c.fillRect(3, 20, 4, 8 + legWalk);
+        c.fillRect(11, 20, 4, 8 - legWalk);
+
+        c.fillStyle = (this.maxHp >= 2) ? '#475569' : '#94a3b8';
+        c.fillRect(3, 9, 12, 12);
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(5, 10, 3, 10);
+
+        c.fillStyle = '#fbcfe8';
+        c.fillRect(6, 4, 6, 6);
+        c.fillStyle = '#1e293b';
+        c.fillRect(7, 8, 4, 3);
+
+        c.fillStyle = '#64748b';
+        c.fillRect(4, 1, 10, 4);
+        c.fillRect(2, 4, 14, 2);
+        c.fillStyle = '#cbd5e1';
+        c.fillRect(7, -2, 3, 4);
+
+        c.fillStyle = '#e2e8f0';
+        c.fillRect(15, 6, 2, 16);
+        c.fillStyle = '#eab308';
+        c.fillRect(13, 17, 6, 2);
+        c.restore();
+      }
+    }
+
+    class Arquebusier {
+      constructor(x, y, maxHp = 1, speedMultiplier = 1.0) {
+        this.x = x;
+        this.y = y;
+        this.w = 18;
+        this.h = 28;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = -1;
+        this.hitFlash = 0;
+        this.baseReload = Math.round(110 / speedMultiplier);
+        this.shootTimer = Math.round(35 / speedMultiplier);
+        this.hasSpotted = false;
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        this.facing = (player.x > this.x) ? 1 : -1;
+
+        const dist = Math.abs(player.x - this.x);
+        if (dist < 260) {
+          if (!this.hasSpotted) {
+            this.hasSpotted = true;
+            this.shootTimer = 25;
+          }
+
+          this.shootTimer--;
+          if (this.shootTimer <= 0) {
+            this.shoot();
+            this.shootTimer = this.baseReload + Math.floor(Math.random() * 20);
+          }
+        } else {
+          this.hasSpotted = false;
+        }
+
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 12) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.8;
+          } else {
+            player.takeDamage(1);
+          }
+        }
+      }
+
+      shoot() {
+        audio.playShot();
+        const bulletSpeed = this.facing * 3.8;
+        GAME.enemyProjectiles.push({
+          x: this.facing === 1 ? this.x + 20 : this.x - 6,
+          y: this.y + 12,
+          vx: bulletSpeed,
+          life: 90
+        });
+        createDustParticles(this.facing === 1 ? this.x + 22 : this.x - 8, this.y + 12, 8);
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 7, '#f59e0b');
+        this.x += (facingDir === 1 ? 4 : -4);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 12);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        c.fillStyle = (this.maxHp >= 2) ? '#581c87' : '#78350f';
+        c.fillRect(3, 9, 12, 12);
+
+        c.fillStyle = '#1e293b';
+        c.fillRect(3, 21, 4, 7);
+        c.fillRect(11, 21, 4, 7);
+
+        c.fillStyle = '#fbcfe8';
+        c.fillRect(6, 4, 6, 6);
+
+        c.fillStyle = '#0f172a';
+        c.fillRect(2, 2, 14, 2);
+        c.fillRect(5, -1, 8, 3);
+
+        c.fillStyle = '#451a03';
+        c.fillRect(10, 12, 8, 3);
+        c.fillStyle = '#334155';
+        c.fillRect(16, 11, 14, 2);
+
+        if (this.shootTimer < 25) {
+          c.fillStyle = '#f97316';
+          c.fillRect(13, 9, 2, 2);
+        }
+
+        c.restore();
+      }
+    }
+
+    class HorseKnight {
+      constructor(x, y, maxHp = 3, patrolRange = 140, speedMultiplier = 1.0) {
+        this.x = x;
+        this.y = y - 8;
+        this.startX = x;
+        this.w = 36;
+        this.h = 36;
+        this.patrolRange = patrolRange;
+        this.vx = 1.6 * speedMultiplier;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.alive = true;
+        this.facing = 1;
+        this.hitFlash = 0;
+        this.animTick = 0;
+      }
+
+      update(player) {
+        if (!this.alive) return;
+        this.animTick++;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        this.x += this.vx;
+        if (this.x > this.startX + this.patrolRange) {
+          this.vx = -Math.abs(this.vx);
+          this.facing = -1;
+        } else if (this.x < this.startX - this.patrolRange) {
+          this.vx = Math.abs(this.vx);
+          this.facing = 1;
+        }
+
+        if (checkAABB(this, player)) {
+          if (player.vy > 1.2 && player.y + player.h <= this.y + 16) {
+            this.hit(1);
+            player.vy = player.jumpPower * 0.9;
+          } else {
+            player.takeDamage(1);
+          }
+        }
+      }
+
+      hit(dmg, facingDir = 1) {
+        this.hp -= dmg;
+        this.hitFlash = 8;
+        audio.playHit(this.hp <= 0);
+        createSparkParticles(this.x + this.w / 2, this.y + this.h / 2, 9, '#f59e0b');
+        this.x += (facingDir === 1 ? 3 : -3);
+
+        if (this.hp <= 0) {
+          this.alive = false;
+          createDustParticles(this.x + this.w / 2, this.y + this.h / 2, 22);
+        } else {
+          this.vx = (this.vx > 0 ? 2.2 : -2.2);
+        }
+      }
+
+      draw(c, camX) {
+        if (!this.alive) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -40 || screenX > V_WIDTH + 40) return;
+
+        c.save();
+        if (this.facing === -1) {
+          c.translate(screenX + this.w, screenY);
+          c.scale(-1, 1);
+        } else {
+          c.translate(screenX, screenY);
+        }
+
+        if (this.hitFlash > 0) {
+          c.fillStyle = '#ffffff';
+          c.fillRect(0, 0, this.w, this.h);
+          c.restore();
+          return;
+        }
+
+        const trot = Math.sin(this.animTick * 0.3) * 3;
+
+        c.fillStyle = '#5c2d16';
+        c.fillRect(4, 18 + trot, 26, 12);
+        c.fillRect(24, 10 + trot, 8, 12);
+        c.fillRect(28, 8 + trot, 6, 8);
+
+        c.fillStyle = '#1c1917';
+        c.fillRect(2, 19 + trot, 3, 10);
+        c.fillRect(24, 8 + trot, 3, 8);
+
+        c.fillStyle = '#3d1a0c';
+        c.fillRect(6, 30, 4, 8 + trot);
+        c.fillRect(24, 30, 4, 8 - trot);
+
+        c.fillStyle = '#64748b';
+        c.fillRect(12, 8 + trot, 10, 11);
+
+        c.fillStyle = '#94a3b8';
+        c.fillRect(14, 2 + trot, 8, 7);
+
+        c.fillStyle = '#ef4444';
+        c.fillRect(12, 0 + trot, 4, 3);
+
+        c.fillStyle = '#a16207';
+        c.fillRect(16, 12 + trot, 26, 2);
+        c.fillStyle = '#e2e8f0';
+        c.fillRect(42, 11 + trot, 6, 4);
+
+        c.restore();
+      }
+    }
+
+    class NgulliwPinon {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.w = 12;
+        this.h = 12;
+        this.collected = false;
+        this.tick = Math.random() * 10;
+      }
+
+      update(player) {
+        if (this.collected) return;
+        this.tick += 0.08;
+
+        if (checkAABB(this, player)) {
+          this.collected = true;
+          GAME.levelPinones++;
+          audio.playCoin();
+          createSparkParticles(this.x + 6, this.y + 6, 6, '#f59e0b');
+          updateHUD();
+        }
+      }
+
+      draw(c, camX) {
+        if (this.collected) return;
+        const screenX = Math.round(this.x - camX);
+        const floatY = Math.round(this.y + Math.sin(this.tick) * 2.5);
+
+        if (screenX < -20 || screenX > V_WIDTH + 20) return;
+
+        c.fillStyle = '#b45309';
+        c.beginPath();
+        c.ellipse(screenX + 6, floatY + 6, 5, 7, 0.2, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = '#fef08a';
+        c.fillRect(screenX + 5, floatY + 2, 2, 3);
+      }
+    }
+
+    class TargetLawenPlant {
+      constructor(x, y, lawenData) {
+        this.x = x;
+        this.y = y;
+        this.w = 20;
+        this.h = 24;
+        this.lawen = lawenData;
+        this.collected = false;
+        this.tick = 0;
+      }
+
+      update(player) {
+        if (this.collected) return;
+        this.tick += 0.06;
+
+        if (checkAABB(this, player)) {
+          this.collected = true;
+          GAME.targetLawenCollected = true;
+          audio.playCoin();
+          createSparkParticles(this.x + 10, this.y + 12, 16, '#4ade80');
+          updateHUD();
+        }
+      }
+
+      draw(c, camX) {
+        if (this.collected) return;
+        const screenX = Math.round(this.x - camX);
+        const screenY = Math.round(this.y);
+
+        if (screenX < -30 || screenX > V_WIDTH + 30) return;
+
+        c.fillStyle = 'rgba(74, 222, 128, 0.25)';
+        c.beginPath();
+        c.arc(screenX + 10, screenY + 12, 16 + Math.sin(this.tick) * 3, 0, Math.PI * 2);
+        c.fill();
+
+        c.fillStyle = '#3f220f';
+        c.fillRect(screenX + 9, screenY + 6, 2, 16);
+
+        c.fillStyle = this.lawen.leafColor;
+        c.fillRect(screenX + 4, screenY + 8, 5, 4);
+        c.fillRect(screenX + 11, screenY + 10, 5, 4);
+        c.fillRect(screenX + 5, screenY + 14, 4, 3);
+        c.fillRect(screenX + 11, screenY + 16, 4, 3);
+
+        c.fillStyle = this.lawen.flowerColor;
+        c.fillRect(screenX + 8, screenY + 2, 4, 4);
+        c.fillRect(screenX + 3, screenY + 6, 3, 3);
+        c.fillRect(screenX + 14, screenY + 8, 3, 3);
+      }
+    }
+
+    function createDustParticles(x, y, count = 5) {
+      for (let i = 0; i < count; i++) {
+        GAME.particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: -Math.random() * 1.2,
+          life: 18 + Math.random() * 10,
+          color: '#d97706',
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    function createSparkParticles(x, y, count = 8, color = '#f59e0b') {
+      for (let i = 0; i < count; i++) {
+        GAME.particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 3,
+          vy: (Math.random() - 0.5) * 3,
+          life: 14 + Math.random() * 8,
+          color: color,
+          size: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    let player = new Player(40, 160);
+    let platforms = [];
+    let enemies = [];
+    let pinonesList = [];
+    let targetPlant = null;
+
+    function generateLevel(levelIdx) {
+      platforms = [];
+      enemies = [];
+      pinonesList = [];
+      GAME.enemyProjectiles = [];
+      GAME.playerProjectiles = [];
+      GAME.targetLawenCollected = false;
+      GAME.levelPinones = 0;
+
+      const currentLawen = LAWEN_DATABASE[levelIdx % LAWEN_DATABASE.length];
+
+      // Progressive speed scaling across the 4 levels
+      const speedMultiplier = 1.0 + (levelIdx * 0.16);
+
+      let curX = 0;
+      while (curX < LEVEL_LENGTH) {
+        const segWidth = 260 + Math.floor(Math.random() * 220);
+        const segHeight = 220 + Math.floor(Math.random() * 25);
+
+        platforms.push({
+          x: curX,
+          y: segHeight,
+          w: segWidth,
+          h: 60
+        });
+
+        if (curX > 200 && curX < LEVEL_LENGTH - 400) {
+          const platY = segHeight - 45 - Math.floor(Math.random() * 30);
+          platforms.push({
+            x: curX + 70,
+            y: platY,
+            w: 80 + Math.floor(Math.random() * 50),
+            h: 12
+          });
+
+          pinonesList.push(new NgulliwPinon(curX + 90, platY - 18));
+          pinonesList.push(new NgulliwPinon(curX + 120, segHeight - 16));
+
+          // Density scaling: More enemy pairs in levels 2, 3 and 4
+          if (levelIdx === 0) {
+            // Level 1: Solo patrols
+            if (Math.random() < 0.6) {
+              enemies.push(new Soldier(curX + 110, segHeight - 28, 1, 50, speedMultiplier));
+            } else {
+              enemies.push(new Arquebusier(curX + 130, segHeight - 28, 1, speedMultiplier));
+            }
+          } else if (levelIdx === 1) {
+            // Level 2: Foot soldiers in pairs
+            enemies.push(new Soldier(curX + 100, segHeight - 28, 1, 40, speedMultiplier));
+            enemies.push(new Soldier(curX + 130, segHeight - 28, 1, 40, speedMultiplier));
+          } else if (levelIdx === 2) {
+            // Level 3: Arcabucero guarded by two soldiers
+            enemies.push(new Arquebusier(curX + 150, segHeight - 28, 1, speedMultiplier));
+            enemies.push(new Soldier(curX + 95, segHeight - 28, 1, 35, speedMultiplier));
+            enemies.push(new Soldier(curX + 120, segHeight - 28, 1, 35, speedMultiplier));
+          } else {
+            // Level 4: Dense squads + fast horsemen
+            enemies.push(new Soldier(curX + 90, segHeight - 28, 2, 40, speedMultiplier));
+            enemies.push(new Soldier(curX + 120, segHeight - 28, 2, 40, speedMultiplier));
+            if (Math.random() < 0.5) {
+              enemies.push(new HorseKnight(curX + 160, segHeight - 28, 3, 90, speedMultiplier));
+            }
+          }
+        }
+
+        const gap = (curX >= LEVEL_LENGTH - 500) ? 0 : (40 + Math.floor(Math.random() * 35));
+        curX += segWidth + gap;
+      }
+
+      targetPlant = new TargetLawenPlant(LEVEL_LENGTH * 0.65, 150, currentLawen);
+      enemies.push(new HorseKnight(LEVEL_LENGTH - 480, 192, 3, 90, speedMultiplier));
+
+      platforms.push({
+        x: LEVEL_LENGTH - 300,
+        y: 210,
+        w: 300,
+        h: 60
+      });
+    }
+
+    function drawParallaxBackground(c, camX) {
+      const skyGrad = c.createLinearGradient(0, 0, 0, V_HEIGHT);
+      skyGrad.addColorStop(0, '#122538');
+      skyGrad.addColorStop(0.5, '#2b4764');
+      skyGrad.addColorStop(0.8, '#9a5332');
+      skyGrad.addColorStop(1, '#c27847');
+      c.fillStyle = skyGrad;
+      c.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+      c.fillStyle = '#fef08a';
+      c.beginPath();
+      c.arc(380 - (camX * 0.02) % 480, 50, 16, 0, Math.PI * 2);
+      c.fill();
+
+      const vX = 140 - (camX * 0.05);
+      c.fillStyle = '#374151';
+      c.beginPath();
+      c.moveTo(vX, 185);
+      c.lineTo(vX + 75, 75);
+      c.lineTo(vX + 90, 75);
+      c.lineTo(vX + 165, 185);
+      c.fill();
+
+      c.fillStyle = '#f1f5f9';
+      c.beginPath();
+      c.moveTo(vX + 55, 102);
+      c.lineTo(vX + 75, 75);
+      c.lineTo(vX + 90, 75);
+      c.lineTo(vX + 110, 102);
+      c.lineTo(vX + 95, 96);
+      c.lineTo(vX + 80, 104);
+      c.lineTo(vX + 68, 97);
+      c.fill();
+
+      const smokeTime = Date.now() * 0.002;
+      for (let s = 0; s < 6; s++) {
+        const loop = (smokeTime + s * 0.5) % 3;
+        const smY = 70 - loop * 18;
+        const smX = vX + 82 + Math.sin(smokeTime * 2 + s) * (4 + loop * 4) + (loop * 3);
+        const radius = 3 + loop * 4.5;
+        const alpha = Math.max(0, 0.45 - (loop * 0.14));
+
+        c.fillStyle = `rgba(240, 244, 248, ${alpha})`;
+        c.beginPath();
+        c.arc(smX, smY, radius, 0, Math.PI * 2);
+        c.fill();
+      }
+
+      c.fillStyle = '#1e293b';
+      c.beginPath();
+      c.moveTo(0, V_HEIGHT);
+      for (let x = 0; x <= V_WIDTH; x += 30) {
+        const mx = x + (camX * 0.08);
+        const my = 135 + Math.sin(mx * 0.015) * 25 + Math.cos(mx * 0.03) * 12;
+        c.lineTo(x, my);
+      }
+      c.lineTo(V_WIDTH, V_HEIGHT);
+      c.fill();
+
+      drawAraucariaLayer(c, camX * 0.22, 160, '#0f291e', 14);
+      drawAraucariaLayer(c, camX * 0.45, 185, '#091c14', 18);
+    }
+
+    function drawAraucariaLayer(c, scrollOffset, baseY, color, treeCount) {
+      c.fillStyle = color;
+      const spacing = 75;
+      const startIdx = Math.floor(scrollOffset / spacing);
+
+      for (let i = 0; i < treeCount; i++) {
+        const treeIdx = startIdx + i;
+        const screenX = Math.round(treeIdx * spacing - scrollOffset);
+        const h = 55 + ((treeIdx * 19) % 25);
+        const topY = baseY - h;
+
+        c.fillRect(screenX + 5, topY + 12, 4, h);
+
+        c.beginPath();
+        c.ellipse(screenX + 7, topY + 10, 18, 7, 0, 0, Math.PI * 2);
+        c.fill();
+
+        c.beginPath();
+        c.ellipse(screenX + 7, topY + 4, 13, 5, 0, 0, Math.PI * 2);
+        c.fill();
+
+        c.fillRect(screenX - 8, topY + 18, 7, 3);
+        c.fillRect(screenX + 15, topY + 18, 7, 3);
+      }
+    }
+
+    function drawRuka(c, x, y) {
+      c.fillStyle = '#5c3a21';
+      c.beginPath();
+      c.moveTo(x, y + 50);
+      c.quadraticCurveTo(x + 40, y - 10, x + 80, y + 50);
+      c.closePath();
+      c.fill();
+
+      c.fillStyle = '#78350f';
+      for (let layer = 0; layer < 4; layer++) {
+        c.fillRect(x + 10 + layer * 6, y + 10 + layer * 10, 60 - layer * 12, 3);
+      }
+
+      c.fillStyle = '#1c1917';
+      c.fillRect(x + 28, y + 22, 24, 28);
+
+      c.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      const s = Math.sin(Date.now() * 0.003) * 3;
+      c.fillRect(x + 38 + s, y - 8, 4, 6);
+      c.fillRect(x + 40 - s, y - 16, 6, 6);
+    }
+
+    function checkAABB(a, b) {
+      return (
+        a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y
+      );
+    }
+
+    function update() {
+      if (!GAME.running) return;
+
+      player.update(platforms, enemies);
+
+      const targetCamX = player.x - V_WIDTH * 0.35;
+      GAME.cameraX += (targetCamX - GAME.cameraX) * 0.12;
+      if (GAME.cameraX < 0) GAME.cameraX = 0;
+      if (GAME.cameraX > LEVEL_LENGTH - V_WIDTH) GAME.cameraX = LEVEL_LENGTH - V_WIDTH;
+
+      enemies.forEach(en => en.update(player));
+      pinonesList.forEach(p => p.update(player));
+      if (targetPlant) targetPlant.update(player);
+
+      // Arcabucero enemy bullets
+      for (let i = GAME.enemyProjectiles.length - 1; i >= 0; i--) {
+        const proj = GAME.enemyProjectiles[i];
+        proj.x += proj.vx;
+        proj.life--;
+
+        if (
+          player.x < proj.x + 4 &&
+          player.x + player.w > proj.x &&
+          player.y < proj.y + 4 &&
+          player.y + player.h > proj.y
+        ) {
+          player.takeDamage(1);
+          GAME.enemyProjectiles.splice(i, 1);
+          continue;
+        }
+
+        if (proj.life <= 0) {
+          GAME.enemyProjectiles.splice(i, 1);
+        }
+      }
+
+      // Witrüwe sling river stones
+      for (let i = GAME.playerProjectiles.length - 1; i >= 0; i--) {
+        const stone = GAME.playerProjectiles[i];
+        stone.x += stone.vx;
+        stone.life--;
+
+        for (const en of enemies) {
+          if (
+            en.alive &&
+            en.x < stone.x + 6 &&
+            en.x + en.w > stone.x &&
+            en.y < stone.y + 6 &&
+            en.y + en.h > stone.y
+          ) {
+            en.hit(1, stone.vx > 0 ? 1 : -1);
+            stone.life = 0;
+            break;
+          }
+        }
+
+        if (stone.life <= 0) {
+          GAME.playerProjectiles.splice(i, 1);
+        }
+      }
+
+      for (let i = GAME.particles.length - 1; i >= 0; i--) {
+        const p = GAME.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) {
+          GAME.particles.splice(i, 1);
+        }
+      }
+
+      if (player.x >= LEVEL_LENGTH - 180) {
+        reachRuka();
+      }
+
+      const progressPercent = Math.min(100, Math.round((player.x / (LEVEL_LENGTH - 180)) * 100));
+      document.getElementById('uiProgressBar').style.width = progressPercent + '%';
+      document.getElementById('uiDistance').textContent = progressPercent + '%';
+    }
+
+    function render() {
+      drawParallaxBackground(ctx, GAME.cameraX);
+
+      platforms.forEach(p => {
+        const sx = Math.round(p.x - GAME.cameraX);
+        if (sx + p.w < -20 || sx > V_WIDTH + 20) return;
+
+        ctx.fillStyle = '#22543d';
+        ctx.fillRect(sx, p.y, p.w, 5);
+        ctx.fillStyle = '#2f855a';
+        for (let g = 0; g < p.w; g += 8) {
+          ctx.fillRect(sx + g, p.y - 2, 3, 2);
+        }
+
+        ctx.fillStyle = '#3b2313';
+        ctx.fillRect(sx, p.y + 5, p.w, p.h);
+
+        ctx.fillStyle = '#543824';
+        for (let s = 10; s < p.w - 10; s += 24) {
+          ctx.fillRect(sx + s, p.y + 9, 6, 5);
+        }
+      });
+
+      const rukaScreenX = Math.round(LEVEL_LENGTH - 190 - GAME.cameraX);
+      if (rukaScreenX > -90 && rukaScreenX < V_WIDTH + 90) {
+        drawRuka(ctx, rukaScreenX, 160);
+      }
+
+      pinonesList.forEach(p => p.draw(ctx, GAME.cameraX));
+      if (targetPlant) targetPlant.draw(ctx, GAME.cameraX);
+      enemies.forEach(en => en.draw(ctx, GAME.cameraX));
+
+      // Draw bullets
+      GAME.enemyProjectiles.forEach(proj => {
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(Math.round(proj.x - GAME.cameraX), Math.round(proj.y), 4, 3);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(Math.round(proj.x - GAME.cameraX - 2), Math.round(proj.y + 1), 2, 1);
+      });
+
+      // Draw sling stones
+      GAME.playerProjectiles.forEach(stone => {
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(Math.round(stone.x - GAME.cameraX), Math.round(stone.y), 5, 5);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(Math.round(stone.x - GAME.cameraX + 1), Math.round(stone.y + 1), 2, 2);
+      });
+
+      player.draw(ctx, GAME.cameraX);
+
+      GAME.particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(Math.round(p.x - GAME.cameraX), Math.round(p.y), p.size, p.size);
+      });
+    }
+
+    function gameLoop() {
+      update();
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function updateHUD() {
+      const pips = document.querySelectorAll('#uiHealthPips .health-pip');
+      pips.forEach((pip, index) => {
+        if (index < player.hits) {
+          pip.classList.remove('empty');
+        } else {
+          pip.classList.add('empty');
+        }
+      });
+
+      const totalPiñones = GAME.bankedPinones + GAME.levelPinones;
+      document.getElementById('uiPinonCount').textContent = totalPiñones;
+
+      const currentLawen = LAWEN_DATABASE[GAME.currentLevelIndex % LAWEN_DATABASE.length];
+      document.getElementById('uiCurrentLawen').textContent = `${currentLawen.nameMapu} ('${currentLawen.nameSpan}')`;
+      document.getElementById('uiCurrentWeapon').textContent = GAME.equippedWeapon === 'wayki' ? 'WAYKI (LANZA)' : 'WITRÜWE (HONDA)';
+    }
+
+    function renderEduHerbIllustration(lawen) {
+      const ec = document.getElementById('eduHerbCanvas');
+      if (!ec) return;
+      const c = ec.getContext('2d');
+      c.imageSmoothingEnabled = false;
+      c.clearRect(0, 0, 48, 48);
+
+      c.fillStyle = '#0f172a';
+      c.fillRect(0, 0, 48, 48);
+
+      c.fillStyle = '#3f220f';
+      c.fillRect(22, 14, 4, 28);
+
+      c.fillStyle = lawen.leafColor;
+      c.fillRect(10, 18, 12, 8);
+      c.fillRect(26, 22, 12, 8);
+      c.fillRect(12, 30, 10, 6);
+      c.fillRect(26, 32, 10, 6);
+
+      c.fillStyle = lawen.flowerColor;
+      c.fillRect(20, 8, 8, 8);
+      c.fillRect(8, 16, 6, 6);
+      c.fillRect(34, 20, 6, 6);
+    }
+
+    function reachRuka() {
+      GAME.running = false;
+      audio.playFanfare();
+
+      GAME.bankedPinones += GAME.levelPinones;
+      GAME.levelPinones = 0;
+
+      const currentLawen = LAWEN_DATABASE[GAME.currentLevelIndex % LAWEN_DATABASE.length];
+
+      document.getElementById('eduPinonCount').textContent = GAME.bankedPinones;
+      document.getElementById('eduHerbMapu').textContent = currentLawen.nameMapu;
+      document.getElementById('eduHerbSpan').textContent = `'${currentLawen.nameSpan}'`;
+      document.getElementById('eduLine1').textContent = currentLawen.line1;
+      document.getElementById('eduLine2').textContent = currentLawen.line2;
+      document.getElementById('eduLine3').textContent = currentLawen.line3;
+
+      renderEduHerbIllustration(currentLawen);
+      document.getElementById('rukaOverlay').style.display = 'flex';
+    }
+
+    function updateShopUI() {
+      document.getElementById('shopPinonCount').textContent = GAME.bankedPinones;
+
+      const btnWayki = document.getElementById('btnEquipWayki');
+      const btnWitruwe = document.getElementById('btnEquipWitruwe');
+
+      if (GAME.equippedWeapon === 'wayki') {
+        btnWayki.textContent = 'EQUIPADA ✓';
+        btnWayki.className = 'px-2.5 py-1.5 bg-emerald-600 text-white text-[8px] font-bold rounded';
+      } else {
+        btnWayki.textContent = 'EQUIPAR';
+        btnWayki.className = 'px-2.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-[8px] font-bold rounded';
+      }
+
+      if (!GAME.unlockedWitruwe) {
+        btnWitruwe.textContent = 'FORJAR (6 🌰)';
+        btnWitruwe.className = 'px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-slate-950 text-[8px] font-bold rounded';
+      } else if (GAME.equippedWeapon === 'witruwe') {
+        btnWitruwe.textContent = 'EQUIPADA ✓';
+        btnWitruwe.className = 'px-2.5 py-1.5 bg-emerald-600 text-white text-[8px] font-bold rounded';
+      } else {
+        btnWitruwe.textContent = 'EQUIPAR';
+        btnWitruwe.className = 'px-2.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-[8px] font-bold rounded';
+      }
+    }
+
+    function openShop() {
+      document.getElementById('rukaOverlay').style.display = 'none';
+      updateShopUI();
+      document.getElementById('shopOverlay').style.display = 'flex';
+    }
+
+    function backToRuka() {
+      document.getElementById('shopOverlay').style.display = 'none';
+      document.getElementById('rukaOverlay').style.display = 'flex';
+    }
+
+    function startNextExpedition() {
+      document.getElementById('rukaOverlay').style.display = 'none';
+      document.getElementById('shopOverlay').style.display = 'none';
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      document.getElementById('startOverlay').style.display = 'none';
+
+      GAME.currentLevelIndex++;
+      player = new Player(40, 160);
+      generateLevel(GAME.currentLevelIndex);
+      updateHUD();
+      renderPortrait();
+      GAME.running = true;
+    }
+
+    function restartCurrentExpedition() {
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      document.getElementById('rukaOverlay').style.display = 'none';
+      document.getElementById('shopOverlay').style.display = 'none';
+      document.getElementById('startOverlay').style.display = 'none';
+
+      player = new Player(40, 160);
+      generateLevel(GAME.currentLevelIndex);
+      updateHUD();
+      renderPortrait();
+      GAME.running = true;
+    }
+
+    function startGame() {
+      try { audio.init(); } catch (err) {}
+
+      document.getElementById('startOverlay').style.display = 'none';
+      document.getElementById('gameOverOverlay').style.display = 'none';
+      document.getElementById('rukaOverlay').style.display = 'none';
+      document.getElementById('shopOverlay').style.display = 'none';
+
+      GAME.bankedPinones = 0;
+      GAME.levelPinones = 0;
+      GAME.currentLevelIndex = 0;
+      player = new Player(40, 160);
+      generateLevel(0);
+      updateHUD();
+      renderPortrait();
+      GAME.running = true;
+    }
+
+    function gameOver() {
+      GAME.running = false;
+      document.getElementById('gameOverPinones').textContent = GAME.bankedPinones;
+      document.getElementById('gameOverOverlay').style.display = 'flex';
+    }
+
+    function renderPortrait() {
+      const pCanvas = document.getElementById('portraitCanvas');
+      if (!pCanvas) return;
+      const pc = pCanvas.getContext('2d');
+      if (!pc) return;
+      pc.imageSmoothingEnabled = false;
+      pc.clearRect(0, 0, 32, 32);
+
+      pc.fillStyle = '#0f172a';
+      pc.fillRect(0, 0, 32, 32);
+
+      pc.fillStyle = '#111827';
+      pc.fillRect(4, 6, 24, 24);
+
+      pc.fillStyle = '#9b5338';
+      pc.fillRect(8, 10, 16, 14);
+
+      pc.fillStyle = '#7a3e28';
+      pc.fillRect(10, 21, 12, 3);
+
+      pc.fillStyle = '#9c663b';
+      pc.fillRect(6, 24, 20, 8);
+      pc.fillStyle = '#6a2415';
+      pc.fillRect(10, 26, 12, 2);
+
+      pc.fillStyle = '#cbd5e1';
+      pc.fillRect(7, 9, 18, 3);
+      pc.fillStyle = '#64748b';
+      pc.fillRect(9, 10, 2, 2);
+      pc.fillRect(13, 10, 2, 2);
+      pc.fillRect(17, 10, 2, 2);
+      pc.fillRect(21, 10, 2, 2);
+
+      pc.fillStyle = '#111827';
+      pc.fillRect(6, 4, 20, 6);
+      pc.fillRect(6, 10, 3, 10);
+      pc.fillRect(23, 10, 3, 10);
+
+      pc.fillStyle = '#111827';
+      pc.fillRect(10, 13, 4, 1);
+      pc.fillRect(18, 13, 4, 1);
+      pc.fillStyle = '#0f172a';
+      pc.fillRect(11, 15, 2, 2);
+      pc.fillRect(19, 15, 2, 2);
+    }
+
+    // Weapon swap & purchase logic
+    document.getElementById('btnEquipWayki').addEventListener('click', () => {
+      GAME.equippedWeapon = 'wayki';
+      updateShopUI();
+      updateHUD();
+      audio.playCoin();
+    });
+
+    document.getElementById('btnEquipWitruwe').addEventListener('click', () => {
+      if (!GAME.unlockedWitruwe) {
+        if (GAME.bankedPinones >= 6) {
+          GAME.bankedPinones -= 6;
+          GAME.unlockedWitruwe = true;
+          GAME.equippedWeapon = 'witruwe';
+          audio.playCoin();
+        }
+      } else {
+        // Free toggle once unlocked
+        GAME.equippedWeapon = 'witruwe';
+        audio.playCoin();
+      }
+      updateShopUI();
+      updateHUD();
+    });
+
+    document.getElementById('btnBuyHealth').addEventListener('click', () => {
+      if (GAME.bankedPinones >= 12 && player.hitsMax === 5) {
+        GAME.bankedPinones -= 12;
+        player.hitsMax = 6;
+        player.hits = 6;
+        audio.playCoin();
+        document.getElementById('shopPinonCount').textContent = GAME.bankedPinones;
+        document.getElementById('btnBuyHealth').textContent = 'COMPRADO ✓';
+        document.getElementById('btnBuyHealth').disabled = true;
+        updateHUD();
+      }
+    });
+
+    function bindAction(elemId, callback) {
+      const el = document.getElementById(elemId);
+      if (!el) return;
+      const handler = (e) => {
+        if (e.cancelable) e.preventDefault();
+        callback();
+      };
+      el.addEventListener('pointerdown', handler, { passive: false });
+      el.addEventListener('click', handler);
+    }
+
+    bindAction('btnStartGame', startGame);
+    bindAction('btnRestartGame', restartCurrentExpedition);
+    bindAction('btnGoShop', openShop);
+    bindAction('btnBackToRuka', backToRuka);
+    bindAction('btnStartFromShop', startNextExpedition);
+    bindAction('btnNextLevel', startNextExpedition);
+
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+      switch (e.code) {
+        case 'KeyA':
+        case 'ArrowLeft':
+          GAME.keys.left = true;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          GAME.keys.right = true;
+          break;
+        case 'KeyW':
+        case 'ArrowUp':
+        case 'Space':
+          GAME.keys.jump = true;
+          break;
+        case 'KeyX':
+        case 'KeyJ':
+        case 'KeyK':
+        case 'Enter':
+          GAME.keys.attack = true;
+          break;
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      switch (e.code) {
+        case 'KeyA':
+        case 'ArrowLeft':
+          GAME.keys.left = false;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          GAME.keys.right = false;
+          break;
+        case 'KeyW':
+        case 'ArrowUp':
+        case 'Space':
+          GAME.keys.jump = false;
+          break;
+        case 'KeyX':
+        case 'KeyJ':
+        case 'KeyK':
+        case 'Enter':
+          GAME.keys.attack = false;
+          break;
+      }
+    });
+
+    function bindTouchBtn(btnId, keyName) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+
+      const press = (e) => {
+        if (e.cancelable) e.preventDefault();
+        try { audio.init(); } catch (err) {}
+        GAME.keys[keyName] = true;
+      };
+      const release = (e) => {
+        if (e.cancelable) e.preventDefault();
+        GAME.keys[keyName] = false;
+      };
+
+      btn.addEventListener('pointerdown', press, { passive: false });
+      btn.addEventListener('pointerup', release, { passive: false });
+      btn.addEventListener('pointercancel', release, { passive: false });
+      btn.addEventListener('pointerleave', release, { passive: false });
+    }
+
+    bindTouchBtn('tBtnLeft', 'left');
+    bindTouchBtn('tBtnRight', 'right');
+    bindTouchBtn('tBtnJump', 'jump');
+    bindTouchBtn('tBtnAttack', 'attack');
+
+    const btnSound = document.getElementById('btnSound');
+    btnSound.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      btnSound.textContent = audio.enabled ? '🔊' : '🔇';
+    });
+
+    document.getElementById('btnHelp').addEventListener('click', () => {
+      alert('Misión de Leftraru:\n- Encuentra la planta medicinal (lawen) con aura brillante.\n- Recolecta piñones (ngülliw) para forjar armas con el Rütrafe.\n- Llega a la Ruka para entregar la medicina a tu pueblo.');
+    });
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        renderPortrait();
+      }, 50);
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>
