@@ -364,7 +364,7 @@
       <div id="startOverlay" class="modal-layer">
         <span class="text-3xl mb-2">🌿🏹</span>
         <h2 class="text-xs sm:text-base text-amber-400 mb-1 leading-relaxed">LEFTRARU: KINTUN LAWEN</h2>
-        <p class="text-[8px] text-emerald-300 mb-2">v1.7.13 · RUKA VISIBLE + HUD COMPACTO</p>
+        <p class="text-[8px] text-emerald-300 mb-2">v1.8.9 · WALLMAPU VIVO</p>
         <p class="text-[9px] sm:text-[11px] text-slate-300 max-w-md mb-3 leading-normal font-sans font-semibold">
           Recolecta las plantas medicinales tradicionales (<span class="text-emerald-400">lawen</span>) para tu pueblo y reúne piñones (<span class="text-amber-300">ngülliw</span>) para forjar armas con el <span class="text-amber-300">rütrafe</span>.
         </p>
@@ -1030,6 +1030,12 @@
           c.translate(screenX, screenY);
         }
 
+        // v1.8.7: a tiny contact shadow helps anchor the sprite to the terrain.
+        // Only drawn when grounded; no physics or collision changes.
+        if (this.grounded) {
+          c.fillStyle = 'rgba(22, 30, 25, 0.28)';
+          c.fillRect(2, 29, 15, 2);
+        }
         // Two-pixel knee bend on landing, without affecting hitboxes.
         if (this.landSquash > 0) {
           c.translate(0, 2);
@@ -1041,7 +1047,11 @@
 
       drawLeftraruPixels(c) {
         const isRunning = Math.abs(this.vx) > 0.2 && this.grounded;
-        const legOffset = isRunning ? Math.round(Math.sin(this.animTick * 0.3) * 3) : 0;
+        const stride = Math.sin(this.animTick * 0.3);
+        const legOffset = isRunning ? Math.round(stride * 3) : 0;
+        const airborne = !this.grounded;
+        const ascending = airborne && this.vy < -0.3;
+        const descending = airborne && this.vy > 0.3;
         // Readable airborne silhouette, without replacing the original sprite.
         if (!this.grounded) {
           c.fillStyle = '#fbbf24';
@@ -1063,8 +1073,11 @@
         c.fillRect(11, 23, 3, 3);
 
         c.fillStyle = '#5c3a21';
-        c.fillRect(3, 26 + legOffset, 5, 4);
-        c.fillRect(10, 26 - legOffset, 5, 4);
+        // Legs tuck on ascent and reach for the ground on descent.
+        const rearLegY = ascending ? 23 : descending ? 27 : 26 + legOffset;
+        const frontLegY = ascending ? 25 : descending ? 25 : 26 - legOffset;
+        c.fillRect(3, rearLegY, 5, 4);
+        c.fillRect(10, frontLegY, 5, 4);
 
         c.fillStyle = '#9c663b';
         c.beginPath();
@@ -1080,11 +1093,23 @@
         c.fillRect(6, 13, 5, 2);
         c.fillRect(7, 17, 3, 2);
 
+        // Two-pixel tunic hem moves with the stride and flutters in the air.
+        const clothSwing = isRunning ? Math.round(stride * 2) : 0;
+        const clothLift = ascending ? -2 : descending ? 1 : 0;
+        c.fillStyle = '#82512e';
+        c.fillRect(3 - clothSwing, 20 + clothLift, 4, 3);
+        c.fillRect(11 + clothSwing, 20 + clothLift, 3, 3);
+        c.fillStyle = '#b57c4b';
+        c.fillRect(4 - clothSwing, 20 + clothLift, 2, 1);
         c.fillStyle = '#4a2511';
         c.fillRect(4, 21, 9, 1);
 
+        // Free arm counter-swings while running; weapons remain untouched.
+        const armY = ascending ? 12 : descending ? 17 : 15 + (isRunning ? Math.round(stride * 2) : 0);
         c.fillStyle = '#5c3a21';
-        c.fillRect(11, 15, 3, 2);
+        c.fillRect(11, armY, 3, 3);
+        c.fillStyle = '#9b5338';
+        c.fillRect(12, armY + 2, 2, 2);
 
         // The hair starts at the crown, so the whole silhouette trails back
         // while running, rather than looking like a strand growing from the neck.
@@ -1640,6 +1665,37 @@
       }
     }
 
+    // v1.8.9: stylised Araucaria araucana seed (ngülliw), not a generic pine nut.
+    // Broad dark chestnut cap, amber seed body, narrow pointed end; pixel crisp.
+    function drawNgulliwSeed(c, x, y, scale = 1) {
+      c.save();
+      c.translate(Math.round(x), Math.round(y));
+      c.scale(scale, scale);
+      const pix = (color, px, py, w, h) => {
+        c.fillStyle = color; c.fillRect(px, py, w, h);
+      };
+      // Outer silhouette: angular and elongated rather than oval.
+      pix('#472719', 3, 0, 6, 2);
+      pix('#61331e', 2, 2, 8, 3);
+      pix('#794020', 2, 5, 8, 3);
+      pix('#8b4924', 3, 8, 6, 3);
+      pix('#8c4d26', 4, 11, 4, 2);
+      pix('#6c391e', 5, 13, 2, 2);
+      pix('#3c251b', 5, 15, 2, 1);
+      // Dark, irregular cap at the broad end.
+      pix('#35231d', 4, 0, 4, 2);
+      pix('#3b251c', 2, 2, 7, 2);
+      pix('#4c2b1c', 3, 4, 6, 2);
+      pix('#5c321d', 8, 5, 2, 2);
+      // Warm ochre face, slightly asymmetric like the real seed.
+      pix('#c17a37', 4, 6, 4, 5);
+      pix('#dda052', 4, 7, 2, 4);
+      pix('#d08a42', 5, 11, 2, 2);
+      pix('#f0bd72', 4, 8, 1, 3);
+      pix('#a9612e', 7, 8, 1, 4);
+      c.restore();
+    }
+
     class NgulliwPinon {
       constructor(x, y) {
         this.x = x;
@@ -1670,13 +1726,57 @@
 
         if (screenX < -20 || screenX > V_WIDTH + 20) return;
 
-        c.fillStyle = '#b45309';
-        c.beginPath();
-        c.ellipse(screenX + 6, floatY + 6, 5, 7, 0.2, 0, Math.PI * 2);
-        c.fill();
-        c.fillStyle = '#fef08a';
-        c.fillRect(screenX + 5, floatY + 2, 2, 3);
+        // A tiny warm glint marks the pickup without changing the seed shape.
+        c.fillStyle = '#e9bb66';
+        c.fillRect(screenX + 1, floatY + 5, 1, 2);
+        drawNgulliwSeed(c, screenX, floatY - 2);
       }
+    }
+
+    // v1.8.7: four recognisable pixel silhouettes, shared by world and learning card.
+    // Stylised field cues rather than botanical identification illustrations.
+    function drawLawenSprite(c, lawen, x, y) {
+      const id = lawen.id;
+      const px = (dx, dy, w, h, color) => { c.fillStyle = color; c.fillRect(x + dx, y + dy, w, h); };
+      const stem = '#567c40', shadow = '#244b2d';
+      if (id === 'natre') {
+        // Natre: woody branching shrub, narrow leaves and purple flowers.
+        px(9, 7, 2, 17, '#695032');
+        px(6, 10, 3, 2, '#695032'); px(11, 13, 4, 2, '#695032');
+        for (const [a,b,w] of [[3,9,5],[12,8,5],[2,15,6],[12,16,6],[5,19,4]]) {
+          px(a,b,w,2,shadow); px(a+1,b-1,w-2,2,lawen.leafColor);
+        }
+        for (const [a,b] of [[6,5],[12,4],[15,11]]) {
+          px(a,b,3,3,'#8750ae'); px(a+1,b-1,2,2,lawen.flowerColor);
+        }
+      } else if (id === 'menta') {
+        // Menta: paired, broad serrated leaves and a small flower spike.
+        px(9,5,2,19,stem);
+        for (const [a,b,dir] of [[3,10,1],[11,12,-1],[2,17,1],[11,19,-1]]) {
+          px(a,b,7,4,shadow); px(a+1,b-1,5,4,lawen.leafColor);
+          px(a+2,b,2,1,'#66b978');
+        }
+        px(9,2,2,6,'#ba8bb8'); px(8,4,4,2,'#e4b6dc'); px(9,0,2,2,'#d8b3e5');
+      } else if (id === 'paico') {
+        // Paico: slender upright inflorescence and small alternating leaves.
+        px(9,3,2,21,stem); px(7,11,2,12,stem); px(12,14,2,9,stem);
+        for (const [a,b,w] of [[4,11,5],[11,9,5],[3,16,5],[12,17,5],[5,20,4]]) {
+          px(a,b,w,2,lawen.leafColor);
+        }
+        for (const [a,b] of [[8,2],[11,5],[7,7],[10,10],[6,13],[13,13]]) {
+          px(a,b,2,2,'#9cba6b'); px(a,b,1,1,'#e1df93');
+        }
+      } else {
+        // Palqui: dark lanceolate foliage and small tubular yellow blooms.
+        px(9,5,2,19,'#5e6b36');
+        for (const [a,b,w] of [[3,11,6],[11,10,6],[2,17,7],[11,18,7]]) {
+          px(a,b,w,3,shadow); px(a+1,b-1,w-2,2,lawen.leafColor);
+        }
+        px(8,3,3,5,'#d3a735'); px(12,6,3,4,'#d3a735');
+        px(7,2,3,3,lawen.flowerColor); px(12,5,3,2,lawen.flowerColor);
+        px(8,2,1,2,'#fff2a1');
+      }
+      px(8,23,4,1,'#304f2d');
     }
 
     class TargetLawenPlant {
@@ -1715,19 +1815,7 @@
         c.arc(screenX + 10, screenY + 12, 16 + Math.sin(this.tick) * 3, 0, Math.PI * 2);
         c.fill();
 
-        c.fillStyle = '#3f220f';
-        c.fillRect(screenX + 9, screenY + 6, 2, 16);
-
-        c.fillStyle = this.lawen.leafColor;
-        c.fillRect(screenX + 4, screenY + 8, 5, 4);
-        c.fillRect(screenX + 11, screenY + 10, 5, 4);
-        c.fillRect(screenX + 5, screenY + 14, 4, 3);
-        c.fillRect(screenX + 11, screenY + 16, 4, 3);
-
-        c.fillStyle = this.lawen.flowerColor;
-        c.fillRect(screenX + 8, screenY + 2, 4, 4);
-        c.fillRect(screenX + 3, screenY + 6, 3, 3);
-        c.fillRect(screenX + 14, screenY + 8, 3, 3);
+        drawLawenSprite(c, this.lawen, screenX, screenY);
       }
     }
 
@@ -1792,10 +1880,12 @@
       for (const loot of lootDrops) {
         if (loot.collected) continue;
         const x=Math.round(loot.x-camX), y=Math.round(loot.y);
-        c.fillStyle=loot.type==='stone'?'#94a3b8':'#fbbf24';
-        c.fillRect(x-3,y-3,7,6);
-        c.fillStyle=loot.type==='stone'?'#e2e8f0':'#92400e';
-        c.fillRect(x-1,y-2,3,2);
+        if (loot.type === 'pinon') {
+          drawNgulliwSeed(c, x - 5, y - 9, 0.8);
+        } else {
+          c.fillStyle='#94a3b8'; c.fillRect(x-3,y-3,7,6);
+          c.fillStyle='#e2e8f0'; c.fillRect(x-1,y-2,3,2);
+        }
       }
     }
 
@@ -1908,17 +1998,32 @@
       return v - Math.floor(v);
     }
     function drawMountainRange(c, camX, speed, baseline, height, color, seed) {
-      const step = 65;
-      const offset = (camX * speed) % step;
-      const start = Math.floor(camX * speed / step);
+      // Staggered ridgelines: consistent peaks and gentle shoulders rather than a sawtooth.
+      const step = 84, scroll = camX * speed;
+      const first = Math.floor(scroll / step) - 2;
+      const offset = scroll % step;
       c.fillStyle = color;
       c.beginPath(); c.moveTo(0, V_HEIGHT);
-      for (let i = -1; i < Math.ceil(V_WIDTH / step) + 2; i++) {
-        const x = i * step - offset;
-        const peak = baseline - (0.3 + hashScenery(start + i + seed) * 0.7) * height;
-        c.lineTo(x, peak);
+      for (let i = 0; i < Math.ceil(V_WIDTH / step) + 5; i++) {
+        const idx = first + i;
+        const x = i * step - offset - step;
+        const peak = baseline - (0.37 + hashScenery(idx + seed) * 0.63) * height;
+        const saddle = baseline - (0.09 + hashScenery(idx + seed + 310) * 0.18) * height;
+        c.lineTo(Math.round(x), Math.round(saddle));
+        c.lineTo(Math.round(x + step * .38), Math.round(peak));
+        c.lineTo(Math.round(x + step * .62), Math.round(peak + height * .13));
       }
       c.lineTo(V_WIDTH, V_HEIGHT); c.closePath(); c.fill();
+      // Small, muted rock facets give depth without overpowering gameplay.
+      c.fillStyle = 'rgba(231,236,220,0.075)';
+      for (let i = 0; i < Math.ceil(V_WIDTH / step) + 5; i++) {
+        const idx = first + i, x = i * step - offset - step;
+        const peak = baseline - (0.37 + hashScenery(idx + seed) * .63) * height;
+        c.beginPath(); c.moveTo(Math.round(x + step * .38), Math.round(peak));
+        c.lineTo(Math.round(x + step * .48), Math.round(peak + height * .18));
+        c.lineTo(Math.round(x + step * .38), Math.round(peak + height * .35));
+        c.closePath(); c.fill();
+      }
     }
     // v1.4.1: distant volcanic cones with drifting, looping smoke.
     // World-anchored positions keep the peaks moving naturally with parallax.
@@ -1939,6 +2044,14 @@
         c.lineTo(x + 11, peakY);
         c.lineTo(x + 21, peakY + 10);
         c.lineTo(x + 126, baseY);
+        c.closePath(); c.fill();
+        c.fillStyle = 'rgba(235,228,210,0.10)';
+        c.beginPath(); c.moveTo(x - 17, peakY + 9); c.lineTo(x - 118, baseY);
+        c.lineTo(x - 54, baseY); c.lineTo(x - 5, peakY + 20);
+        c.closePath(); c.fill();
+        c.fillStyle = 'rgba(24,35,48,0.16)';
+        c.beginPath(); c.moveTo(x + 11, peakY); c.lineTo(x + 126, baseY);
+        c.lineTo(x + 64, baseY); c.lineTo(x + 3, peakY + 17);
         c.closePath(); c.fill();
         c.fillStyle = 'rgba(224,231,235,0.72)';
         c.beginPath();
@@ -1970,6 +2083,60 @@
       c.fillRect(Math.round(x + 8 * scale), Math.round(y), Math.round(23 * scale), Math.round(12 * scale));
       c.fillRect(Math.round(x + 27 * scale), Math.round(y + 3 * scale), Math.round(19 * scale), Math.round(9 * scale));
     }
+    // v1.8.9: lightweight, deterministic environmental life. Everything is
+    // painted behind the platforms and actors; nothing changes hitboxes.
+    function drawDistantBirds(c, camX) {
+      // Rare, small silhouettes, moving across the upper sky in long cycles.
+      c.save();
+      c.strokeStyle = 'rgba(37,53,62,0.52)';
+      c.lineWidth = 1.2;
+      for (let i = 0; i < 3; i++) {
+        const period = 920 + i * 250;
+        const phase = ((sceneryTime * (0.42 + i * .09) + i * 310) % period + period) % period;
+        const x = Math.round(V_WIDTH + 36 - phase * (V_WIDTH + 100) / period - camX * .006);
+        const y = Math.round(38 + i * 20 + Math.sin(sceneryTime * .009 + i * 2) * 4);
+        if (x < 8 || x > V_WIDTH - 8) continue;
+        const wing = Math.sin(sceneryTime * .065 + i * 2.7) * 1.5;
+        c.beginPath();
+        c.moveTo(x - 7, y - 1 + wing);
+        c.lineTo(x - 3, y - 3);
+        c.lineTo(x, y);
+        c.lineTo(x + 3, y - 3);
+        c.lineTo(x + 7, y - 1 + wing);
+        c.stroke();
+      }
+      c.restore();
+    }
+    function drawForestMist(c, camX, biome) {
+      // Very faint low-contrast banks live only within the distant treeline.
+      // The foreground (including pit edges) remains completely clear.
+      c.save();
+      for (let i = 0; i < 5; i++) {
+        const x = ((i * 173 + sceneryTime * (.045 + i * .009) - camX * .065) % (V_WIDTH + 260) + V_WIDTH + 260) % (V_WIDTH + 260) - 180;
+        const y = 160 + (i % 3) * 13;
+        const grad = c.createLinearGradient(x, y, x, y + 23);
+        grad.addColorStop(0, 'rgba(189,212,208,0)');
+        grad.addColorStop(.48, `rgba(189,212,208,${biome.weather === 'mist' ? .11 : .065})`);
+        grad.addColorStop(1, 'rgba(189,212,208,0)');
+        c.fillStyle = grad;
+        c.fillRect(Math.round(x), y, 165, 23);
+      }
+      c.restore();
+    }
+    function drawGentleBreeze(c, camX, biome) {
+      // Sparse leaves remain in the scenery layer, behind every playable item.
+      if (biome.weather === 'rain') return;
+      const palette = biome.weather === 'mist'
+        ? ['rgba(157,165,129,.35)', 'rgba(187,162,121,.32)']
+        : ['rgba(170,175,99,.48)', 'rgba(185,139,76,.40)', 'rgba(103,160,109,.43)'];
+      for (let i = 0; i < 11; i++) {
+        const speed = .17 + hashScenery(i + 740) * .24;
+        const x = ((hashScenery(i + 712) * (V_WIDTH + 120) + sceneryTime * speed - camX * .08) % (V_WIDTH + 120) + V_WIDTH + 120) % (V_WIDTH + 120) - 60;
+        const y = 96 + hashScenery(i + 731) * 100 + Math.sin(sceneryTime * .018 + i * 2) * 9;
+        c.fillStyle = palette[i % palette.length];
+        c.fillRect(Math.round(x), Math.round(y), i % 3 === 0 ? 3 : 2, 2);
+      }
+    }
     function drawParallaxBackground(c, camX) {
       const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
       const sky = c.createLinearGradient(0, 0, 0, V_HEIGHT);
@@ -1985,37 +2152,80 @@
       }
       drawMountainRange(c, camX, 0.055, 169, 83, biome.far, 30);
       drawVolcanoes(c, camX, biome);
+      drawDistantBirds(c, camX);
       drawMountainRange(c, camX, 0.12, 194, 57, biome.near, 90);
-      drawAraucariaLayer(c, camX * 0.23, 185, biome.tree, 10);
-      drawAraucariaLayer(c, camX * 0.46, 213, biome.front, 13);
+      // Atmospheric perspective: trees are muted toward their backdrop and
+      // dissolve gently at the foot instead of sitting on it as cut-outs.
+      drawAraucariaLayer(c, camX * 0.23, 185, biome.tree, 10, biome.near, 0.62);
+      drawAraucariaLayer(c, camX * 0.46, 213, biome.front, 13, biome.near, 0.82);
+      drawForestMist(c, camX, biome);
+      drawGentleBreeze(c, camX, biome);
       drawAtmosphere(c, camX, biome.weather);
     }
-    function drawAraucariaLayer(c, scrollOffset, baseY, color, treeCount) {
-      const spacing = 52;
-      const startIdx = Math.floor(scrollOffset / spacing) - 1;
-      c.fillStyle = color;
-      for (let i = 0; i < treeCount; i++) {
-        const idx = startIdx + i;
-        const x = Math.round(idx * spacing - scrollOffset);
-        const height = 38 + Math.floor(hashScenery(idx + 20) * 42);
-        const top = baseY - height;
-        const crown = 10 + Math.floor(hashScenery(idx + 40) * 7);
-        // Fade the lower trunk into the distant hillside instead of ending
-        // in a hard horizontal line (which made the trees appear to float).
-        c.fillRect(x + 5, top + 5, 4, Math.max(0, height - 26));
-        const trunkFade = c.createLinearGradient(0, baseY - 27, 0, baseY + 2);
-        trunkFade.addColorStop(0, color);
-        trunkFade.addColorStop(1, 'rgba(0,0,0,0)');
-        c.fillStyle = trunkFade;
-        c.fillRect(x + 5, baseY - 27, 4, 29);
-        c.fillStyle = color;
-        // Pixel-art pewen crown with horizontal branches.
-        c.fillRect(x - crown + 7, top + 7, crown * 2, 5);
-        c.fillRect(x - crown + 10, top + 2, crown * 2 - 6, 6);
-        c.fillRect(x + 1, top - 2, 12, 7);
-        c.fillRect(x - crown + 3, top + 13, 8, 3);
-        c.fillRect(x + crown + 2, top + 13, 8, 3);
+    function drawAraucariaLayer(c, scrollOffset, baseY, color, treeCount, hazeColor, strength) {
+      // Render to a reusable transparent layer so the tree bases can genuinely
+      // fade into whatever mountain/sky pixels are behind them.
+      const layer = drawAraucariaLayer.cache || (drawAraucariaLayer.cache = document.createElement('canvas'));
+      if (layer.width !== V_WIDTH || layer.height !== V_HEIGHT) {
+        layer.width = V_WIDTH; layer.height = V_HEIGHT;
       }
+      const t = layer.getContext('2d');
+      t.clearRect(0, 0, V_WIDTH, V_HEIGHT);
+      const mix = (a, b, amount) => {
+        const aa = a.match(/[a-f\d]{2}/gi).map(v => parseInt(v,16));
+        const bb = b.match(/[a-f\d]{2}/gi).map(v => parseInt(v,16));
+        return `rgb(${aa.map((v,i) => Math.round(v*(1-amount)+bb[i]*amount)).join(',')})`;
+      };
+      const treeColor = mix(color, hazeColor, baseY > 195 ? .20 : .47);
+      const spacing = 55, first = Math.floor(scrollOffset / spacing) - 1;
+      const closeLayer = baseY > 195;
+      for (let i = 0; i < treeCount + 2; i++) {
+        const idx = first + i;
+        const x = Math.round(idx * spacing - scrollOffset);
+        if (x < -35 || x > V_WIDTH + 35) continue;
+        const h = 39 + Math.floor(hashScenery(idx + 20) * 39);
+        const top = Math.round(baseY - h);
+        const width = 14 + Math.floor(hashScenery(idx + 40) * 7);
+        // Pewen: tall straight trunk, radiating branches and umbrella-like crown.
+        t.fillStyle = treeColor;
+        t.fillRect(x + 4, top + 8, 5, h - 8);
+        t.fillRect(x + 2, baseY - 7, 9, 7);
+        // Branches rise toward the broad, flattened crown.
+        t.fillRect(x - width + 4, top + 14, width - 1, 3);
+        t.fillRect(x + 9, top + 14, width - 1, 3);
+        t.fillRect(x - width + 1, top + 9, width * 2 + 10, 5);
+        t.fillRect(x - width + 5, top + 5, width * 2 + 2, 5);
+        t.fillRect(x - 3, top + 2, 19, 6);
+        t.fillRect(x + 1, top - 2, 11, 5);
+        // Uneven tufts create a characteristic tiered canopy.
+        for (let k = -2; k <= 2; k++) {
+          const tx = x + 5 + k * 7;
+          const y = top + 5 + Math.abs(k) * 3;
+          t.fillRect(tx, y, 7, 4);
+        }
+        if (closeLayer) {
+          t.fillStyle = 'rgba(128,168,116,0.18)';
+          t.fillRect(x - width + 6, top + 5, width + 1, 2);
+          t.fillRect(x + 7, top + 10, width - 1, 2);
+          t.fillStyle = 'rgba(9,19,17,0.19)';
+          t.fillRect(x + 7, top + 20, 2, Math.max(0,h - 23));
+        }
+      }
+      // Keep upper crowns legible, but dissolve the lower trunk into the
+      // actual landscape. This avoids a hard silhouette at the tree line.
+      t.globalCompositeOperation = 'destination-in';
+      const fade = t.createLinearGradient(0, baseY - 82, 0, baseY + 3);
+      fade.addColorStop(0, 'rgba(255,255,255,1)');
+      fade.addColorStop(.38, 'rgba(255,255,255,.95)');
+      fade.addColorStop(.75, 'rgba(255,255,255,.55)');
+      fade.addColorStop(1, 'rgba(255,255,255,0)');
+      t.fillStyle = fade;
+      t.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+      t.globalCompositeOperation = 'source-over';
+      c.save();
+      c.globalAlpha = strength;
+      c.drawImage(layer, 0, 0);
+      c.restore();
     }
     function drawAtmosphere(c, camX, weather) {
       if (weather === 'rain') {
@@ -2045,37 +2255,54 @@
     function drawNatureDetails(c, p, sx) {
       if (p.h < 25) return;
       const biomeIndex = GAME.currentLevelIndex % 4;
-      const start = Math.max(0, Math.floor((GAME.cameraX - p.x) / 38));
-      const end = Math.min(Math.ceil(p.w / 38), start + 17);
+      const start = Math.max(0, Math.floor((GAME.cameraX - p.x) / 32) - 1);
+      const end = Math.min(Math.ceil(p.w / 32), start + Math.ceil(V_WIDTH / 32) + 3);
       for (let i = start; i < end; i++) {
-        const x = Math.round(sx + i * 38 + 13), y = Math.round(p.y);
-        const seed = Math.abs(Math.sin((Math.floor(p.x / 20) + i * 31) * 12.9898));
-        if (seed < 0.23) { // low fern
+        const x = Math.round(sx + i * 32 + 13), y = Math.round(p.y);
+        const seed = hashScenery(Math.floor(p.x / 20) + i * 31);
+        if (seed < .30) {
+          // Low, feathered forest fern.
           c.fillStyle = biomeIndex === 2 ? '#4d8074' : '#376f48';
-          c.fillRect(x, y-7, 2, 7); c.fillRect(x-4,y-5,4,2);
-          c.fillRect(x+2,y-6,5,2); c.fillRect(x-2,y-9,2,3);
-        } else if (seed < 0.40) { // mossy rock
-          c.fillStyle='#64746a'; c.fillRect(x-3,y-5,9,5);
-          c.fillStyle='#74965b'; c.fillRect(x-2,y-6,5,2);
-        } else if (seed > 0.91) { // tiny mushroom
-          c.fillStyle='#e2c7a0'; c.fillRect(x,y-4,2,4);
-          c.fillStyle='#a84d3d'; c.fillRect(x-2,y-6,6,3);
+          c.fillRect(x, y - 9, 2, 9);
+          c.fillRect(x - 5, y - 6, 5, 2); c.fillRect(x + 2, y - 7, 6, 2);
+          c.fillRect(x - 3, y - 10, 3, 2); c.fillRect(x + 2, y - 11, 4, 2);
+          c.fillStyle = '#6a9a65'; c.fillRect(x - 2, y - 8, 2, 2);
+        } else if (seed < .51) {
+          c.fillStyle = '#55685f'; c.fillRect(x - 4, y - 5, 10, 5);
+          c.fillStyle = '#8b9984'; c.fillRect(x - 3, y - 5, 5, 2);
+          c.fillStyle = '#73915b'; c.fillRect(x - 4, y - 6, 5, 2);
+        } else if (seed > .93) {
+          c.fillStyle = '#e2c7a0'; c.fillRect(x, y - 5, 2, 5);
+          c.fillStyle = '#a84d3d'; c.fillRect(x - 3, y - 7, 8, 3);
+          c.fillStyle = '#d98a5b'; c.fillRect(x - 1, y - 7, 3, 1);
         }
       }
     }
 
     function drawGroundDetails(c, p, sx) {
       const biome = BIOMES[GAME.currentLevelIndex % BIOMES.length];
+      c.fillStyle = biome.earth; c.fillRect(sx, p.y, p.w, p.h + 5);
+      // Layered sod, moss, and small stone seams. Decorations do not change collision.
+      c.fillStyle = '#263f30'; c.fillRect(sx, p.y + 4, p.w, 4);
       c.fillStyle = biome.grass; c.fillRect(sx, p.y, p.w, 5);
-      c.fillStyle = '#8ca96b';
-      for (let g = 4; g < p.w; g += 11) {
-        const world = Math.floor((p.x + g) / 11);
-        const sway = Math.round(Math.sin(sceneryTime * 0.055 + world) * 1);
-        c.fillRect(sx + g + sway, p.y - 3 - Math.floor(hashScenery(world) * 3), 2, 5);
+      c.fillStyle = 'rgba(179,199,126,.46)'; c.fillRect(sx, p.y, p.w, 1);
+      const begin = Math.max(0, Math.floor((GAME.cameraX - p.x) / 12) - 2);
+      const finish = Math.min(Math.ceil(p.w / 12) + 1, begin + Math.ceil(V_WIDTH / 12) + 6);
+      for (let i = begin; i < finish; i++) {
+        const local = i * 12 + 3, world = Math.floor((p.x + local) / 12);
+        const x = Math.round(sx + local);
+        const sway = Math.round(Math.sin(sceneryTime * .045 + world) * 1);
+        c.fillStyle = i % 3 ? biome.grass : '#8fa86c';
+        c.fillRect(x + sway, p.y - 3 - Math.floor(hashScenery(world) * 3), 2, 5);
+        if (hashScenery(world + 79) > .64) {
+          c.fillStyle = 'rgba(143,109,77,.45)';
+          c.fillRect(x + 2, p.y + 13 + Math.floor(hashScenery(world + 3) * 12), 6, 2);
+        }
+        if (hashScenery(world + 199) > .82) {
+          c.fillStyle = '#67736b'; c.fillRect(x, p.y + 23, 7, 4);
+          c.fillStyle = '#879286'; c.fillRect(x + 1, p.y + 23, 3, 1);
+        }
       }
-      c.fillStyle = biome.earth; c.fillRect(sx, p.y + 5, p.w, p.h);
-      c.fillStyle = '#6b5140';
-      for (let g = 10; g < p.w - 5; g += 24) c.fillRect(sx + g, p.y + 12 + (g % 3) * 4, 5, 3);
     }
     function drawPitWarnings(c, camX) {
       const ground = platforms.filter(p => p.h >= 45).sort((a,b) => a.x-b.x);
@@ -2122,22 +2349,121 @@
     }
 
     function drawRuka(c, x, y) {
-      // Rounded thatch roof, timber ribs, doorway and animated hearth smoke.
-      c.fillStyle = '#3c2b22'; c.fillRect(x + 8, y + 24, 66, 29);
-      c.fillStyle = '#8c623c';
-      c.beginPath(); c.moveTo(x, y + 28); c.quadraticCurveTo(x + 40, y - 22, x + 82, y + 28); c.lineTo(x + 75, y + 33); c.quadraticCurveTo(x + 40, y - 6, x + 7, y + 33); c.fill();
-      c.strokeStyle = '#b58a4d'; c.lineWidth = 2;
-      for (let i = 0; i < 6; i++) {
-        c.beginPath(); c.moveTo(x + 6 + i * 12, y + 27); c.lineTo(x + 38 + (i - 2.5) * 5, y + 3); c.stroke();
+      // v1.8.5: dark upper vent, enclosed pointed thatched roof. The doorway
+      // remains open, but the triangular upper wall has woven reed infill.
+      const px = Math.round(x), py = Math.round(y);
+      c.save(); c.translate(px, py);
+      c.fillStyle = 'rgba(26,20,17,.28)';
+      c.fillRect(2, 50, 84, 4); c.fillRect(12, 54, 65, 2);
+
+      // Continuous back wall, extending all the way to the roof ridge.
+      // Without this infill the sky used to show through the upper gable.
+      c.fillStyle = '#372c22';
+      c.beginPath(); c.moveTo(9, 30); c.lineTo(41, 5);
+      c.lineTo(74, 30); c.lineTo(74, 52); c.lineTo(9, 52);
+      c.closePath(); c.fill();
+      c.fillStyle = '#695039';
+      for (let i = 0; i < 9; i++) c.fillRect(12 + i * 7, 27, 2, 24);
+      c.fillStyle = '#4d3b2b';
+      for (let j = 0; j < 5; j++) c.fillRect(10, 29 + j * 5, 64, 1);
+
+      // Woven reed wall in the exposed inner gable, behind the roof edge.
+      c.save();
+      c.beginPath(); c.moveTo(11, 29); c.lineTo(41, 7);
+      c.lineTo(72, 29); c.closePath(); c.clip();
+      c.fillStyle = '#73573c'; c.fillRect(10, 7, 64, 25);
+      for (let row = 0; row < 8; row++) {
+        const yy = 9 + row * 3;
+        c.fillStyle = row % 2 ? '#9a7650' : '#4e3d2d';
+        c.fillRect(9, yy, 66, 1);
       }
-      c.fillStyle = '#211a17'; c.fillRect(x + 31, y + 28, 20, 25);
-      c.fillStyle = '#b77a38'; c.fillRect(x + 29, y + 28, 2, 25); c.fillRect(x + 51, y + 28, 2, 25);
-      c.fillStyle = '#e4a04a'; c.fillRect(x + 37, y + 43, 6, 5);
-      for (let i = 0; i < 5; i++) {
-        const rise = (sceneryTime * 0.4 + i * 10) % 58;
-        c.fillStyle = `rgba(222,226,221,${(1 - rise / 58) * 0.35})`;
-        c.fillRect(Math.round(x + 41 + Math.sin(sceneryTime * 0.025 + i) * 7), Math.round(y + 7 - rise), 5 + Math.floor(rise / 15), 4);
+      for (let col = 0; col < 17; col++) {
+        const xx = 11 + col * 4;
+        c.fillStyle = col % 2 ? '#b08a5c' : '#5b452f';
+        c.fillRect(xx, 7, 1, 24);
       }
+      c.restore();
+
+      // More pointed ridge, with a complete cap of thatch above the wall.
+      c.fillStyle = '#403020';
+      c.beginPath(); c.moveTo(0, 28); c.quadraticCurveTo(25, 2, 41, -4);
+      c.quadraticCurveTo(59, 2, 82, 28); c.lineTo(77, 35);
+      c.quadraticCurveTo(59, 13, 41, 10);
+      c.quadraticCurveTo(23, 13, 5, 35); c.closePath(); c.fill();
+      c.fillStyle = '#956e42';
+      c.beginPath(); c.moveTo(2, 26); c.quadraticCurveTo(27, 3, 41, 0);
+      c.quadraticCurveTo(56, 3, 80, 26); c.lineTo(74, 31);
+      c.quadraticCurveTo(55, 13, 41, 10);
+      c.quadraticCurveTo(25, 13, 9, 31); c.closePath(); c.fill();
+      // Reed strands follow the slope and stay within the thatched cap.
+      for (let i = 0; i < 14; i++) {
+        const xx = 5 + i * 5.4;
+        const t = Math.abs(xx - 41) / 41;
+        const yy = 1 + 25 * Math.pow(t, 1.18);
+        c.fillStyle = i % 3 === 0 ? '#d2a46a' : (i % 3 === 1 ? '#b38a55' : '#765333');
+        c.fillRect(Math.round(xx), Math.round(yy), 2, 4 + Math.round(t * 4));
+        c.fillRect(Math.round(xx - 1), Math.round(yy + 6), 3, 1);
+      }
+      for (let i = 0; i < 18; i++) {
+        const xx = 4 + i * 4;
+        const t = Math.abs(xx - 41) / 41;
+        const edge = 10 + 21 * Math.pow(t, 1.15);
+        c.fillStyle = i % 2 ? '#6d4b2d' : '#ae814a';
+        c.fillRect(xx, Math.round(edge), 2, 2 + (i % 3));
+      }
+
+      // v1.8.5: dark upper smoke/vent opening, inspired by the reference ruka.
+      // It is an opening into a shadowed interior, never a hole to the sky.
+      // The small triangular aperture sits just below the pointed ridge.
+      c.fillStyle = '#382719';
+      c.beginPath(); c.moveTo(30, 16); c.lineTo(41, 5);
+      c.lineTo(52, 16); c.lineTo(50, 21); c.lineTo(32, 21);
+      c.closePath(); c.fill();
+      c.fillStyle = '#110f0d';
+      c.beginPath(); c.moveTo(34, 16); c.lineTo(41, 9);
+      c.lineTo(48, 16); c.lineTo(47, 19); c.lineTo(35, 19);
+      c.closePath(); c.fill();
+      // A few barely visible interior reeds preserve depth without
+      // brightening the opening or exposing the background scenery.
+      c.fillStyle = '#2c241d';
+      c.fillRect(40, 13, 1, 6); c.fillRect(44, 16, 1, 3);
+      // Short overhanging thatch frames the aperture's upper edge.
+      c.fillStyle = '#a57b49';
+      c.fillRect(34, 13, 2, 2); c.fillRect(36, 11, 2, 2);
+      c.fillRect(38, 9, 2, 2); c.fillRect(40, 8, 3, 2);
+      c.fillRect(44, 10, 2, 2); c.fillRect(46, 12, 2, 2);
+
+      // Original recessed doorway and its small warm light remain intact.
+      c.fillStyle = '#211a16'; c.fillRect(30, 29, 23, 23);
+      c.fillStyle = '#100f0e'; c.fillRect(34, 32, 15, 20);
+      c.fillStyle = '#a57746'; c.fillRect(29, 28, 3, 24); c.fillRect(52, 28, 3, 24);
+      c.fillRect(29, 28, 26, 3);
+      c.fillStyle = '#d1a06a'; c.fillRect(30, 30, 1, 19); c.fillRect(53, 30, 1, 19);
+      c.fillStyle = '#6c3d20'; c.fillRect(38, 45, 9, 7);
+      c.fillStyle = '#e7a34d'; c.fillRect(40, 46, 5, 5);
+      c.fillStyle = '#f8d68b'; c.fillRect(42, 47, 2, 3);
+      c.fillStyle = '#776957'; c.fillRect(22, 50, 6, 2); c.fillRect(58, 51, 7, 2);
+      c.fillStyle = '#426044'; c.fillRect(5, 49, 2, 4); c.fillRect(8, 47, 2, 5);
+      c.fillRect(77, 48, 2, 5); c.fillRect(80, 50, 3, 3);
+
+      // v1.8.4: a fuller but still airy plume from the roof ridge.
+      // Staggered puffs drift gently and fade out high above the ruka.
+      for (let i = 0; i < 11; i++) {
+        const rise = (sceneryTime * .26 + i * 8.5) % 94;
+        const sway = Math.sin(sceneryTime * .012 + i * .82) * (2.2 + rise * .10);
+        const fadeIn = Math.min(1, rise / 11);
+        const fadeOut = Math.pow(1 - rise / 94, 1.12);
+        const alpha = fadeIn * fadeOut * .37;
+        const px = Math.round(42 + sway + rise * .095);
+        const py = Math.round(-7 - rise);
+        const size = 3 + Math.floor(rise / 23);
+        c.fillStyle = `rgba(216,225,220,${alpha.toFixed(3)})`;
+        c.fillRect(px, py, size + 1, 3 + Math.floor(rise / 33));
+        // A lighter offset pixel gives each puff a softer, broken-up edge.
+        c.fillStyle = `rgba(227,233,228,${(alpha * .48).toFixed(3)})`;
+        c.fillRect(px - 2, py + 1, 3, 2);
+      }
+      c.restore();
     }
 
     function checkAABB(a, b) {
@@ -2388,19 +2714,12 @@
       c.fillStyle = '#0f172a';
       c.fillRect(0, 0, 48, 48);
 
-      c.fillStyle = '#3f220f';
-      c.fillRect(22, 14, 4, 28);
-
-      c.fillStyle = lawen.leafColor;
-      c.fillRect(10, 18, 12, 8);
-      c.fillRect(26, 22, 12, 8);
-      c.fillRect(12, 30, 10, 6);
-      c.fillRect(26, 32, 10, 6);
-
-      c.fillStyle = lawen.flowerColor;
-      c.fillRect(20, 8, 8, 8);
-      c.fillRect(8, 16, 6, 6);
-      c.fillRect(34, 20, 6, 6);
+      // The learning card uses the same silhouette as the collectible.
+      c.save();
+      c.translate(4, 0);
+      c.scale(2, 2);
+      drawLawenSprite(c, lawen, 0, 0);
+      c.restore();
     }
 
     function reachRuka() {
