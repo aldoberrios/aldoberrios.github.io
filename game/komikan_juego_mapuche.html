@@ -38,13 +38,18 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
+    /* Keep SVG highlights anchored to their nodes: animate light, never geometry. */
     .node-highlight {
-      animation: pulse-ring 1.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      animation: legal-move-glow 2.2s ease-in-out infinite;
+      transform: none;
+      pointer-events: none;
     }
-    @keyframes pulse-ring {
-      0% { transform: scale(0.9); opacity: 0.9; }
-      50% { transform: scale(1.35); opacity: 0.4; }
-      100% { transform: scale(0.9); opacity: 0.9; }
+    @keyframes legal-move-glow {
+      0%, 100% { opacity: 0.72; stroke-opacity: 0.75; }
+      50% { opacity: 1; stroke-opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .node-highlight { animation: none; opacity: 1; }
     }
     .piece-selected {
       filter: drop-shadow(0 0 10px #f59e0b) brightness(1.2);
@@ -61,6 +66,33 @@
       border-radius: 3px;
     }
   </style>
+
+<style>
+:root{--gold:#f3c779;--ink:#0b1719;--panel:#142629}
+body{background:radial-gradient(ellipse at 50% -15%,#294743 0%,#102326 46%,#081417 100%)!important;color:#f6eddb}
+header{background:#102326ee!important;backdrop-filter:blur(18px);border-bottom:1px solid #b894554d!important}
+.fretwork-border{height:9px;background:repeating-linear-gradient(90deg,#b98a4c 0 12px,#203c3a 12px 18px,#d5ad6b 18px 23px,#203c3a 23px 36px)}
+.font-cinzel{letter-spacing:.075em}
+main>div:first-child{background:#132c2c!important;border:1px solid #b48b504d!important}
+.lg\:col-span-3{background:radial-gradient(ellipse at center,#4c654e 0%,#253e3b 75%,#142b2c 100%)!important;border:5px solid #9b7547!important;box-shadow:0 0 0 2px #243f3d,0 24px 70px #0008,inset 0 0 35px #071c1d!important}
+.lg\:col-span-1>div{background:#142b2d!important;border:1px solid #b48b5044!important}
+#komikanSvg{filter:drop-shadow(0 12px 14px #071a1b88)}
+#komikanSvg>rect:first-of-type{fill:#29463e}
+.board-line{stroke:#ead8a9;stroke-width:3.5;filter:drop-shadow(0 2px 1px #0008)}
+button,select{transition:transform .16s ease,background .16s ease,box-shadow .16s ease!important}
+button:hover{transform:translateY(-1px)}
+button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offset:3px}
+#gameLog{background:#091a1c!important}
+.action-toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 4px}
+.action-toolbar button,.mode-toggle{border:1px solid #b9976477;background:#1b3838;color:#f9ddb0;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:750}
+.action-toolbar button:hover,.mode-toggle:hover{background:#34524a}
+.action-toolbar button:disabled{opacity:.35;cursor:not-allowed}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#f3c779;color:#132521;padding:11px 20px;border-radius:30px;box-shadow:0 8px 30px #0008;z-index:90;font-weight:750;font-size:13px;pointer-events:none;opacity:0;transition:opacity .25s;max-width:90vw;text-align:center}
+#toast.show{opacity:1}
+#gameOverModal>div,#rulesModal>div{background:#142b2d!important;border-color:#bd995d!important}
+@media(max-width:640px){#komikanSvg{min-height:240px}.lg\:col-span-3{padding:4px!important}.action-toolbar button{flex:1}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body class="bg-[#0f1d2e] text-slate-100 min-h-screen flex flex-col justify-between">
 
@@ -76,7 +108,7 @@
           <h1 class="text-xl sm:text-2xl font-black tracking-wide font-cinzel text-amber-300 flex items-center gap-2">
             KOMIKAN <span class="text-xs font-normal text-sky-200 px-2 py-0.5 rounded bg-sky-900/60 border border-sky-700/50">El Leoncito</span>
           </h1>
-          <p class="text-xs text-slate-300">Juego Ancestral de Estrategia Mapuche</p>
+          <p class="text-xs text-slate-300">Estrategia • Patrimonio lúdico mapuche</p>
         </div>
       </div>
 
@@ -101,7 +133,7 @@
     <div class="w-full max-w-4xl bg-[#16273c] border border-sky-900/60 rounded-xl p-3 mb-3 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
       <!-- Captured Txewas / Trophy row -->
       <div class="flex items-center gap-3">
-        <span class="text-xs uppercase font-bold tracking-wider text-amber-400/90">Txewas Cazados:</span>
+        <span class="text-xs uppercase font-bold tracking-wider text-amber-400/90">Nüfalngechi Txewa:</span>
         <div id="capturedContainer" class="flex items-center gap-1.5 min-h-[30px] p-1 bg-slate-900/70 rounded-lg border border-slate-700/50">
           <span class="text-xs text-slate-500 px-2" id="noCapturesLabel">Ninguno aún</span>
         </div>
@@ -112,7 +144,7 @@
       <div class="flex items-center gap-3">
         <div id="turnBadge" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-sm">
           <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse" id="turnIndicatorDot"></span>
-          <span id="turnText" class="font-semibold text-slate-200">Turno de los Perritos (Txewa)</span>
+          <span id="turnText" class="font-semibold text-slate-200">Turno de los Perritos (Pu Txewa)</span>
         </div>
       </div>
     </div>
@@ -174,7 +206,12 @@
           </svg>
         </div>
 
-        <!-- Banner for Multi-Jump in progress -->
+        <div class="action-toolbar" role="toolbar" aria-label="Herramientas de juego">
+<button id="btnUndo" title="Deshacer movimiento (U)">↶ Deshacer</button>
+<button id="btnHint" title="Sugerencia de jugada (H)">✦ Pista</button>
+<button id="btnHelpMoves" title="Mostrar movimientos disponibles">◎ Movimientos</button>
+</div>
+<!-- Banner for Multi-Jump in progress -->
         <div id="multiJumpBanner" class="hidden mt-2 bg-amber-500/20 border border-amber-400 text-amber-200 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full flex items-center gap-2 animate-bounce">
           <span>🐾 ¡Captura múltiple disponible! Haz otro salto o presiona:</span>
           <button id="btnEndTurn" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-2 py-0.5 rounded text-xs">Terminar Turno</button>
@@ -192,7 +229,7 @@
             <label class="block text-xs font-medium text-slate-300 mb-1.5">Tu Bando:</label>
             <div class="grid grid-cols-2 gap-1.5 bg-slate-900/80 p-1 rounded-lg border border-slate-700/60">
               <button id="chooseTxewa" class="py-1.5 text-xs font-semibold rounded-md transition text-slate-200 bg-amber-700/70 border border-amber-500">
-                🐕 Txewas
+                🐕 Pu Txewa
               </button>
               <button id="choosePuma" class="py-1.5 text-xs font-semibold rounded-md transition text-slate-400 hover:text-slate-200">
                 🐆 Komikelu
@@ -219,7 +256,12 @@
           </div>
         </div>
 
-        <!-- Match Status / Metrics -->
+        <div class="bg-[#142337] border border-sky-900/60 rounded-xl p-4 shadow-lg">
+<h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 font-cinzel">Modo de juego</h2>
+<button id="btnMode" class="mode-toggle w-full" aria-label="Cambiar modo de juego">🤖 Contra la IA</button>
+<p id="modeHelp" class="text-xs text-slate-400 mt-2">Juega contra el ordenador.</p>
+</div>
+<!-- Match Status / Metrics -->
         <div class="bg-[#142337] border border-sky-900/60 rounded-xl p-4 shadow-lg">
           <h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 font-cinzel">Estado de Caza</h2>
           <div class="space-y-2 text-xs">
@@ -253,7 +295,8 @@
     </div>
   </main>
 
-  <!-- FOOTER -->
+  <div id="toast" role="status" aria-live="polite"></div>
+<!-- FOOTER -->
   <footer class="bg-[#0c1622] py-2 border-t border-sky-950 text-center text-xs text-slate-500">
     <p>Komikan (El Leoncito) • Resguardo Cultural Mapuche • Inteligencia Artificial interactiva</p>
   </footer>
@@ -273,9 +316,9 @@
 
         <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 space-y-2">
           <h4 class="font-bold text-amber-400">1. Las Fuerzas y el Tablero</h4>
-          <p>• <strong>12 Txewas (Perritos):</strong> Inician ocupando las dos columnas traseras y dos flancos en el cuadrado.</p>
+          <p>• <strong>12 Txewa (Perritos):</strong> Inician ocupando las dos columnas traseras y dos flancos en el cuadrado.</p>
           <p>• <strong>1 Komikelu (Puma):</strong> Inicia en la cúspide/cueva de la torre triangular adyacente.</p>
-          <p>• El tablero suma <strong>38 puntos de intersección</strong> conectados por líneas ortogonales y diagonales.</p>
+          <p>• El tablero suma <strong>34 puntos de intersección</strong> conectados por líneas ortogonales y diagonales.</p>
         </div>
 
         <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 space-y-2">
@@ -382,9 +425,13 @@
       }
     }
     const sound = new SoundEngine();
+    let gameEpoch = 0;
+    let localMode = false;
+    let undoStack = [];
+    let hintTimer = null;
 
     /* =========================================================================
-       BOARD GRAPH DEFINITION: 38 NODES
+       BOARD GRAPH DEFINITION: 34 NODES
        - 25 nodes in 5x5 Square grid (X: 0 to 4, Y: 0 to 4)
        - 13 nodes in the Triangle / Cave attached to Column 4 (X=4)
        ========================================================================= */
@@ -724,7 +771,7 @@
         const node = NODES[dogId];
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         g.dataset.id = dogId;
-        g.style.cursor = (STATE.turn === 'DOGS' && STATE.humanSide === 'DOGS' && !STATE.isGameOver) ? 'pointer' : 'default';
+        g.style.cursor = (STATE.turn === 'DOGS' && (STATE.humanSide === 'DOGS' || localMode) && !STATE.isGameOver) ? 'pointer' : 'default';
 
         if (STATE.selectedNode === dogId) {
           g.setAttribute('class', 'piece-selected');
@@ -765,7 +812,7 @@
         const node = NODES[STATE.pumaNode];
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         g.dataset.id = STATE.pumaNode;
-        g.style.cursor = (STATE.turn === 'PUMA' && STATE.humanSide === 'PUMA' && !STATE.isGameOver) ? 'pointer' : 'default';
+        g.style.cursor = (STATE.turn === 'PUMA' && (STATE.humanSide === 'PUMA' || localMode) && !STATE.isGameOver) ? 'pointer' : 'default';
 
         if (STATE.selectedNode === STATE.pumaNode) {
           g.setAttribute('class', 'piece-selected');
@@ -829,6 +876,14 @@
 
         g.appendChild(ring);
         g.appendChild(dot);
+        // Stable, generous tap target that does not animate.
+        const tapTarget = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        tapTarget.setAttribute('cx', targetNode.x);
+        tapTarget.setAttribute('cy', targetNode.y);
+        tapTarget.setAttribute('r', 25);
+        tapTarget.setAttribute('fill', 'transparent');
+        tapTarget.setAttribute('pointer-events', 'all');
+        g.appendChild(tapTarget);
 
         g.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -845,10 +900,10 @@
       const turnText = document.getElementById('turnText');
       if (STATE.turn === 'DOGS') {
         turnDot.className = 'w-3 h-3 rounded-full bg-amber-500 animate-pulse';
-        turnText.textContent = `Turno de los Perritos (Txewa)${STATE.humanSide === 'DOGS' ? ' • Tú' : ' • IA'}`;
+        turnText.textContent = `Turno de los Perritos (Txewa)${localMode ? ' • Jugador 1' : STATE.humanSide === 'DOGS' ? ' • Tú' : ' • IA'}`;
       } else {
         turnDot.className = 'w-3 h-3 rounded-full bg-red-400 animate-pulse';
-        turnText.textContent = `Turno del Komikelu (Puma)${STATE.humanSide === 'PUMA' ? ' • Tú' : ' • IA'}`;
+        turnText.textContent = `Turno del Komikelu (Puma)${localMode ? ' • Jugador 2' : STATE.humanSide === 'PUMA' ? ' • Tú' : ' • IA'}`;
       }
 
       // 2. Trophy captured dogs icons
@@ -886,7 +941,7 @@
 
       // 4. Multi-jump banner
       const multiBanner = document.getElementById('multiJumpBanner');
-      if (STATE.multiJumpActive && STATE.humanSide === 'PUMA' && STATE.turn === 'PUMA') {
+      if (STATE.multiJumpActive && (STATE.humanSide === 'PUMA' || localMode) && STATE.turn === 'PUMA') {
         multiBanner.classList.remove('hidden');
       } else {
         multiBanner.classList.add('hidden');
@@ -916,8 +971,8 @@
       }
 
       // Verify it's human player's turn
-      if (type === 'DOG' && (STATE.turn !== 'DOGS' || STATE.humanSide !== 'DOGS')) return;
-      if (type === 'PUMA' && (STATE.turn !== 'PUMA' || STATE.humanSide !== 'PUMA')) return;
+      if (type === 'DOG' && (STATE.turn !== 'DOGS' || STATE.humanSide !== 'DOGS' && !localMode)) return;
+      if (type === 'PUMA' && (STATE.turn !== 'PUMA' || STATE.humanSide !== 'PUMA' && !localMode)) return;
 
       if (STATE.selectedNode === id) {
         // Deselect
@@ -956,6 +1011,13 @@
        MOVE EXECUTION & STATE TRANSITION
        ========================================================================= */
     function executeMove(move) {
+      if(STATE.isGameOver)return;
+      const legal=STATE.turn==='DOGS'?getDogMoves(move.from):
+        STATE.multiJumpActive?getPumaJumps(STATE.pumaNode):getAllPumaMoves(STATE.pumaNode);
+      if(!legal.some(m=>m.from===move.from&&m.to===move.to&&m.captured===move.captured))return;
+      undoStack.push({puma:STATE.pumaNode,dogs:[...STATE.dogs],turn:STATE.turn,
+        captured:STATE.capturedCount,count:STATE.moveCount,multi:STATE.multiJumpActive});
+      if(undoStack.length>120)undoStack.shift();
       STATE.moveCount++;
 
       if (STATE.turn === 'DOGS') {
@@ -1000,9 +1062,10 @@
             updateUI();
             
             // If it's AI turn, execute chaining automatically
-            if (STATE.humanSide !== 'PUMA') {
+            if (STATE.humanSide !== 'PUMA' && !localMode) {
+              const epoch=gameEpoch;
               setTimeout(() => {
-                runAIPumaStep();
+                if(epoch===gameEpoch&&!localMode&&STATE.turn==='PUMA'&&!STATE.isGameOver)runAIPumaStep();
               }, 400);
             }
             return;
@@ -1055,7 +1118,7 @@
       const pumaMoves = getAllPumaMoves(STATE.pumaNode);
       if (pumaMoves.length === 0) {
         STATE.isGameOver = true;
-        endGame('DOGS', '¡Los Txewas han inmovilizado y asfixiado totalmente al Komikelu!');
+        endGame('DOGS', 'Pu Txewa han inmovilizado y asfixiado totalmente al Komikelu!');
         return;
       }
 
@@ -1097,112 +1160,109 @@
        INTELLIGENT AI ENGINE (Minimax + Heuristic Evaluations)
        ========================================================================= */
     function triggerAITurnIfNeeded() {
-      if (STATE.isGameOver) return;
-      if (STATE.turn === STATE.humanSide) return; // Human turn
-
-      const thinking = document.getElementById('aiThinkingBadge');
-      thinking.textContent = 'Pensando...';
-
-      const delay = STATE.humanSide === 'DOGS' ? 450 : 350;
-      setTimeout(() => {
-        if (STATE.turn === 'PUMA') {
-          runAIPumaStep();
-        } else {
-          runAIDogsStep();
-        }
-        thinking.textContent = '';
-      }, delay);
+      if(STATE.isGameOver||localMode||STATE.turn===STATE.humanSide)return;
+      const epoch=gameEpoch,side=STATE.turn;
+      const thinking=document.getElementById('aiThinkingBadge');
+      thinking.textContent='Pensando...';
+      setTimeout(()=>{
+        if(epoch!==gameEpoch||localMode||STATE.isGameOver||STATE.turn!==side)return;
+        if(side==='PUMA')runAIPumaStep();else runAIDogsStep();
+        thinking.textContent='';
+      },300);
     }
 
+    // Bounded adversarial search. One search ply represents a complete turn;
+    // multi-capture chains are enumerated as one puma action.
+    function searchMoves(pos) {
+      const occupied = new Set(pos.dogs), result=[];
+      if(pos.turn==='DOGS') {
+        for(const from of occupied) for(const to of ADJ[from]) if(to!==pos.puma&&!occupied.has(to)) {
+          const dogs=new Set(occupied);dogs.delete(from);dogs.add(to);
+          result.push({move:{from,to},next:{puma:pos.puma,dogs:[...dogs],turn:'PUMA'},captures:0});
+        }
+      } else {
+        const jumps=(from,dogs)=>{
+          const found=[];
+          for(const mid of ADJ[from]) if(dogs.has(mid)) {
+            const to=getJumpTarget(from,mid);
+            if(to!==null&&!dogs.has(to)&&to!==from)found.push({from,to,captured:mid,isJump:true});
+          }
+          return found;
+        };
+        const expand=(from,dogs,first,captured,depth)=>{
+          result.push({move:first,next:{puma:from,dogs:[...dogs],turn:'DOGS'},captures:captured});
+          if(depth>=8)return;
+          for(const jump of jumps(from,dogs)) {
+            const copy=new Set(dogs);copy.delete(jump.captured);
+            expand(jump.to,copy,first||jump,captured+1,depth+1);
+          }
+        };
+        for(const j of jumps(pos.puma,occupied)) {
+          const dogs=new Set(occupied);dogs.delete(j.captured);
+          expand(j.to,dogs,j,1,1);
+        }
+        for(const to of ADJ[pos.puma])if(!occupied.has(to))
+          result.push({move:{from:pos.puma,to,captured:null,isJump:false},next:{puma:to,dogs:pos.dogs,turn:'DOGS'},captures:0});
+      }
+      return result;
+    }
+    function evaluatePosition(pos) {
+      const dogs=new Set(pos.dogs), p=pos.puma;
+      if(dogs.size<=5)return 100000;
+      const freedom=ADJ[p].filter(n=>!dogs.has(n)).length;
+      const jumpCount=ADJ[p].filter(mid=>dogs.has(mid)&&(()=>{const t=getJumpTarget(p,mid);return t!==null&&!dogs.has(t);})()).length;
+      if(freedom===0&&jumpCount===0)return -100000;
+      let proximity=0;
+      for(const d of dogs) proximity+=Math.max(0,6-Math.hypot(NODES[d].c-NODES[p].c,NODES[d].r-NODES[p].r));
+      return (12-dogs.size)*190+freedom*16+jumpCount*45-proximity*1.8;
+    }
+    function chooseStrategicMove(side) {
+      const pos={puma:STATE.pumaNode,dogs:[...STATE.dogs],turn:side};
+      const difficulty=document.getElementById('aiDifficulty').value;
+      const options=searchMoves(pos);
+      if(!options.length)return null;
+      if(STATE.multiJumpActive){
+        const jumps=getPumaJumps(STATE.pumaNode);
+        return jumps.length?jumps.sort((a,b)=>ADJ[b.to].length-ADJ[a.to].length)[0]:null;
+      }
+      if(difficulty==='easy')return options[Math.floor(Math.random()*options.length)].move;
+      const depth=difficulty==='hard'?3:2;
+      let budget=difficulty==='hard'?6500:1800;
+      const memo=new Map();
+      function minimax(p,left,alpha,beta){
+        const val=evaluatePosition(p);
+        if(left===0||Math.abs(val)>=100000||--budget<=0)return val;
+        const key=p.puma+'|'+p.turn+'|'+p.dogs.slice().sort((a,b)=>a-b).join(',')+'|'+left;
+        if(memo.has(key))return memo.get(key);
+        const moves=searchMoves(p);
+        if(!moves.length)return p.turn==='DOGS'?100000:-100000;
+        const maximize=p.turn==='PUMA';let best=maximize?-Infinity:Infinity;
+        moves.sort((a,b)=>b.captures-a.captures);
+        for(const m of moves){
+          const v=minimax(m.next,left-1,alpha,beta);
+          best=maximize?Math.max(best,v):Math.min(best,v);
+          if(maximize)alpha=Math.max(alpha,best);else beta=Math.min(beta,best);
+          if(beta<=alpha||budget<=0)break;
+        }
+        if(budget>0)memo.set(key,best);
+        return best;
+      }
+      const maximize=side==='PUMA';let best=options[0],score=maximize?-Infinity:Infinity;
+      options.sort((a,b)=>b.captures-a.captures);
+      for(const o of options){
+        const value=minimax(o.next,depth-1,-Infinity,Infinity)+(Math.random()-.5)*(difficulty==='medium'?5:.15);
+        if(maximize?value>score:value<score){score=value;best=o;}
+        if(budget<=0)break;
+      }
+      return best.move;
+    }
     // AI Logic for PUMA:
     // Aggressive predator: always prioritizes captures & multi-captures, maintains board mobility, avoids dead ends.
     function runAIPumaStep() {
-      if (STATE.isGameOver) return;
-
-      const diff = document.getElementById('aiDifficulty').value;
-      const jumps = getPumaJumps(STATE.pumaNode);
-
-      // 1. Mandatory / Highly prioritized capture
-      if (jumps.length > 0) {
-        // Pick jump that yields best follow-up
-        let bestJump = jumps[0];
-        let maxFollowups = -1;
-
-        for (const j of jumps) {
-          // Simulate landing
-          const simDogs = new Set(STATE.dogs);
-          simDogs.delete(j.captured);
-          const nextJumps = getPumaJumpsSim(j.to, simDogs);
-          if (nextJumps.length > maxFollowups) {
-            maxFollowups = nextJumps.length;
-            bestJump = j;
-          }
-        }
-        executeMove(bestJump);
-        return;
-      }
-
-      // If in multi-jump and no more jumps exist, end turn
-      if (STATE.multiJumpActive) {
-        finishPumaTurn();
-        return;
-      }
-
-      // 2. Regular movement
-      const steps = getPumaSteps(STATE.pumaNode);
-      if (steps.length === 0) {
-        checkGameStatus();
-        return;
-      }
-
-      if (diff === 'easy') {
-        // Easy: pick random step
-        const pick = steps[Math.floor(Math.random() * steps.length)];
-        executeMove(pick);
-        return;
-      }
-
-      // Medium / Hard evaluation:
-      // Maximize degrees of freedom, approach remaining perritos, avoid corners with degree < 3
-      let bestMove = steps[0];
-      let bestScore = -Infinity;
-
-      steps.forEach(step => {
-        let score = 0;
-        const targetNode = NODES[step.to];
-
-        // Freedom of node (neighbors)
-        score += ADJ[step.to].length * 4;
-
-        // Proximity to dogs (predator instinct)
-        let minDogDist = 999;
-        STATE.dogs.forEach(dId => {
-          const dn = NODES[dId];
-          const dist = Math.hypot(dn.x - targetNode.x, dn.y - targetNode.y);
-          if (dist < minDogDist) minDogDist = dist;
-        });
-        score -= minDogDist * 0.05;
-
-        // Reward positions with future jump threats
-        for (const nId of ADJ[step.to]) {
-          if (STATE.dogs.has(nId)) {
-            const potentialLanding = getJumpTarget(step.to, nId);
-            if (potentialLanding !== null && !STATE.dogs.has(potentialLanding)) {
-              score += 25; // threat created!
-            }
-          }
-        }
-
-        // Slight randomness to avoid deterministic loops
-        score += (Math.random() * 2);
-
-        if (score > bestScore) {
-          bestScore = score;
-          bestMove = step;
-        }
-      });
-
-      executeMove(bestMove);
+      if(STATE.isGameOver||STATE.turn!=='PUMA'||localMode)return;
+      const move=chooseStrategicMove('PUMA');
+      if(move)executeMove(move);else if(STATE.multiJumpActive)finishPumaTurn();
+      else checkGameStatus();
     }
 
     function getPumaJumpsSim(fromId, currentDogs) {
@@ -1221,77 +1281,17 @@
     // AI Logic for DOGS (Txewas):
     // Pack hunting: compress boundary, never hand free capture meals to Puma, cut Puma mobility.
     function runAIDogsStep() {
-      if (STATE.isGameOver) return;
-      const allMoves = getAllDogsMoves();
-      if (allMoves.length === 0) {
-        checkGameStatus();
-        return;
-      }
-
-      const diff = document.getElementById('aiDifficulty').value;
-      if (diff === 'easy') {
-        const pick = allMoves[Math.floor(Math.random() * allMoves.length)];
-        executeMove(pick);
-        return;
-      }
-
-      let bestMove = allMoves[0];
-      let bestScore = -Infinity;
-
-      allMoves.forEach(move => {
-        let score = 0;
-
-        // Simulate move
-        const simDogs = new Set(STATE.dogs);
-        simDogs.delete(move.from);
-        simDogs.add(move.to);
-
-        // Check if this move gifts an immediate jump to the Puma
-        const immediateJumps = getPumaJumpsSim(STATE.pumaNode, simDogs);
-        if (immediateJumps.length > 0) {
-          score -= 100; // Big penalty for feeding the Puma
-        }
-
-        // Reward restricting Puma's possible moves
-        let pumaFreedom = 0;
-        for (const nId of ADJ[STATE.pumaNode]) {
-          if (!simDogs.has(nId)) pumaFreedom++;
-        }
-        score += (8 - pumaFreedom) * 15;
-
-        // Reward advancing toward the Puma to tighten the net
-        const pumaNodeObj = NODES[STATE.pumaNode];
-        const oldNodeObj = NODES[move.from];
-        const newNodeObj = NODES[move.to];
-        const oldDist = Math.hypot(oldNodeObj.x - pumaNodeObj.x, oldNodeObj.y - pumaNodeObj.y);
-        const newDist = Math.hypot(newNodeObj.x - pumaNodeObj.x, newNodeObj.y - pumaNodeObj.y);
-        if (newDist < oldDist) {
-          score += 6;
-        }
-
-        // Maintain pack cohesion (avoid lone over-extended dogs)
-        let neighborDogs = 0;
-        for (const nId of ADJ[move.to]) {
-          if (simDogs.has(nId)) neighborDogs++;
-        }
-        score += neighborDogs * 3;
-
-        // Small random noise
-        score += Math.random() * 2;
-
-        if (score > bestScore) {
-          bestScore = score;
-          bestMove = move;
-        }
-      });
-
-      executeMove(bestMove);
+      if(STATE.isGameOver||STATE.turn!=='DOGS'||localMode)return;
+      const move=chooseStrategicMove('DOGS');
+      if(move)executeMove(move);else checkGameStatus();
     }
 
     /* =========================================================================
        INITIALIZATION & RESTART
        ========================================================================= */
     function restartGame() {
+      gameEpoch++;undoStack=[];
+      document.getElementById('aiThinkingBadge').textContent='';
       STATE.pumaNode = 27; // In cave (Col 6, Row 2)
       STATE.dogs = initDogPositions();
       STATE.turn = 'DOGS';
@@ -1355,6 +1355,106 @@
     // Restart buttons
     document.getElementById('btnRestart').addEventListener('click', restartGame);
     document.getElementById('goRestart').addEventListener('click', restartGame);
+
+
+    function toast(msg){
+      const el=document.getElementById('toast');
+      el.textContent=msg;el.classList.add('show');
+      clearTimeout(toast._timer);toast._timer=setTimeout(()=>el.classList.remove('show'),2600);
+    }
+    function undoMove(){
+      if(!undoStack.length){toast('No hay movimientos para deshacer.');return;}
+      gameEpoch++;clearTimeout(hintTimer);
+      // In AI mode, roll back to the previous human turn, including capture chains.
+      let snap=undoStack.pop();
+      if(!localMode){
+        while(undoStack.length && snap.turn!==STATE.humanSide) snap=undoStack.pop();
+      }
+      STATE.pumaNode=snap.puma;STATE.dogs=new Set(snap.dogs);
+      STATE.turn=snap.turn;STATE.capturedCount=snap.captured;STATE.moveCount=snap.count;
+      STATE.multiJumpActive=snap.multi;STATE.multiJumpCurrentNode=snap.multi?snap.puma:null;
+      STATE.selectedNode=snap.multi?snap.puma:null;
+      STATE.validMoves=snap.multi?getPumaJumps(snap.puma):[];
+      STATE.isGameOver=false;
+      document.getElementById('gameOverModal').classList.add('hidden');
+      document.getElementById('aiThinkingBadge').textContent='';
+      appendLog('↶ Movimiento deshecho.');
+      updateUI();
+      if(!localMode && STATE.turn!==STATE.humanSide)triggerAITurnIfNeeded();
+    }
+    document.getElementById('btnUndo').addEventListener('click',undoMove);
+    document.getElementById('btnMode').addEventListener('click',()=>{
+      localMode=!localMode;
+      document.getElementById('btnMode').textContent=localMode?'👥 Dos jugadores (local)':'🤖 Contra la IA';
+      document.getElementById('modeHelp').textContent=localMode?'Turnos alternos en el mismo dispositivo.':'Juega contra el ordenador.';
+      document.getElementById('aiDifficulty').disabled=localMode;
+      restartGame();
+      toast(localMode?'Modo local activado':'Modo contra la IA activado');
+    });
+    document.getElementById('btnHint').addEventListener('click',()=>{
+      if(STATE.isGameOver)return;
+      if(!localMode && STATE.turn!==STATE.humanSide){toast('Espera tu turno.');return;}
+      const moves=STATE.turn==='DOGS'?getAllDogsMoves():STATE.multiJumpActive?
+        getPumaJumps(STATE.pumaNode):getAllPumaMoves();
+      if(!moves.length){toast('No hay movimientos disponibles.');return;}
+      // Prefer safe dog moves, or puma captures / high-mobility destinations.
+      const scored=moves.map(m=>{
+        let score=0;
+        if(STATE.turn==='PUMA'){
+          score=(m.isJump?100:0)+ADJ[m.to].filter(n=>!STATE.dogs.has(n)).length*3;
+        }else{
+          const dogs=new Set(STATE.dogs);dogs.delete(m.from);dogs.add(m.to);
+          const threats=getPumaJumpsSim(STATE.pumaNode,dogs).length;
+          score=-threats*80-ADJ[STATE.pumaNode].filter(n=>!dogs.has(n)).length*9;
+          score+=ADJ[m.to].filter(n=>dogs.has(n)).length*2;
+        }
+        return {m,score};
+      }).sort((a,b)=>b.score-a.score);
+      const pick=scored[0].m;
+      STATE.selectedNode=pick.from;
+      STATE.validMoves=STATE.turn==='DOGS'?getDogMoves(pick.from):
+        STATE.multiJumpActive?getPumaJumps(pick.from):getAllPumaMoves(pick.from);
+      updateUI();
+      toast('✦ Pista: sigue el destino resaltado.');
+      const ring=[...document.querySelectorAll('#highlightsGroup g')].find(g=>{
+        const c=g.querySelector('circle');return c&&+c.getAttribute('cx')===NODES[pick.to].x&&+c.getAttribute('cy')===NODES[pick.to].y;
+      });
+      if(ring)ring.querySelector('circle').setAttribute('stroke-width','7');
+    });
+    document.getElementById('btnHelpMoves').addEventListener('click',()=>{
+      if(STATE.isGameOver)return;
+      if(!localMode&&STATE.turn!==STATE.humanSide){toast('Espera tu turno.');return;}
+      if(STATE.turn==='PUMA'){
+        STATE.selectedNode=STATE.pumaNode;
+        STATE.validMoves=STATE.multiJumpActive?getPumaJumps(STATE.pumaNode):getAllPumaMoves();
+        updateUI();toast('Destinos del Komikelu resaltados.');
+      }else{
+        const dogs=[...STATE.dogs].filter(d=>getDogMoves(d).length);
+        if(!dogs.length)return;
+        const index=dogs.indexOf(STATE.selectedNode);
+        const next=dogs[(index+1)%dogs.length];
+        STATE.selectedNode=next;STATE.validMoves=getDogMoves(next);updateUI();
+        toast('Mostrando movimientos de un Txewa. Pulsa otra vez para cambiar.');
+      }
+    });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){rulesModal.classList.add('hidden');STATE.selectedNode=null;STATE.validMoves=[];updateUI();}
+      if(e.target.matches('input,select,textarea'))return;
+      if(e.key.toLowerCase()==='u')undoMove();
+      if(e.key.toLowerCase()==='h')document.getElementById('btnHint').click();
+    });
+    // Ensure every node is keyboard accessible, including destinations.
+    const oldBuildSvgBoard=buildSvgBoard;
+    buildSvgBoard=function(){
+      oldBuildSvgBoard();
+      nodesGroup.querySelectorAll('.board-node-target').forEach(el=>{
+        el.setAttribute('tabindex','0');el.setAttribute('role','button');
+        el.setAttribute('aria-label','Punto '+el.dataset.id);
+        el.addEventListener('keydown',e=>{
+          if(e.key==='Enter'||e.key===' '){e.preventDefault();onNodeClicked(+el.dataset.id);}
+        });
+      });
+    };
 
     // Initial boot
     window.addEventListener('load', () => {
