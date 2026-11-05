@@ -67,31 +67,78 @@
     }
   </style>
 
+
 <style>
-:root{--gold:#f3c779;--ink:#0b1719;--panel:#142629}
-body{background:radial-gradient(ellipse at 50% -15%,#294743 0%,#102326 46%,#081417 100%)!important;color:#f6eddb}
-header{background:#102326ee!important;backdrop-filter:blur(18px);border-bottom:1px solid #b894554d!important}
-.fretwork-border{height:9px;background:repeating-linear-gradient(90deg,#b98a4c 0 12px,#203c3a 12px 18px,#d5ad6b 18px 23px,#203c3a 23px 36px)}
+/* Restored Gemini-inspired midnight-blue palette, preserving newer game controls. */
 .font-cinzel{letter-spacing:.075em}
-main>div:first-child{background:#132c2c!important;border:1px solid #b48b504d!important}
-.lg\:col-span-3{background:radial-gradient(ellipse at center,#4c654e 0%,#253e3b 75%,#142b2c 100%)!important;border:5px solid #9b7547!important;box-shadow:0 0 0 2px #243f3d,0 24px 70px #0008,inset 0 0 35px #071c1d!important}
-.lg\:col-span-1>div{background:#142b2d!important;border:1px solid #b48b5044!important}
-#komikanSvg{filter:drop-shadow(0 12px 14px #071a1b88)}
-#komikanSvg>rect:first-of-type{fill:#29463e}
-.board-line{stroke:#ead8a9;stroke-width:3.5;filter:drop-shadow(0 2px 1px #0008)}
 button,select{transition:transform .16s ease,background .16s ease,box-shadow .16s ease!important}
 button:hover{transform:translateY(-1px)}
-button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offset:3px}
-#gameLog{background:#091a1c!important}
+button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
 .action-toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 4px}
-.action-toolbar button,.mode-toggle{border:1px solid #b9976477;background:#1b3838;color:#f9ddb0;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:750}
-.action-toolbar button:hover,.mode-toggle:hover{background:#34524a}
+.action-toolbar button,.mode-toggle{border:1px solid #5b7da477;background:#1e3a5f;color:#dbeafe;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:750}
+.action-toolbar button:hover,.mode-toggle:hover{background:#2d527e}
 .action-toolbar button:disabled{opacity:.35;cursor:not-allowed}
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#f3c779;color:#132521;padding:11px 20px;border-radius:30px;box-shadow:0 8px 30px #0008;z-index:90;font-weight:750;font-size:13px;pointer-events:none;opacity:0;transition:opacity .25s;max-width:90vw;text-align:center}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#fbbf24;color:#17283c;padding:11px 20px;border-radius:30px;box-shadow:0 8px 30px #0008;z-index:90;font-weight:750;font-size:13px;pointer-events:none;opacity:0;transition:opacity .25s;max-width:90vw;text-align:center}
 #toast.show{opacity:1}
-#gameOverModal>div,#rulesModal>div{background:#142b2d!important;border-color:#bd995d!important}
 @media(max-width:640px){#komikanSvg{min-height:240px}.lg\:col-span-3{padding:4px!important}.action-toolbar button{flex:1}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* KOMIKAN 2.4: mobile-first controls, restored full-size desktop layout. */
+#mobileOptionsLabel{display:none}
+#boardViewport{min-width:0}
+#btnBoardZoom{display:none}
+@media(max-width:1023px){
+  #gameMain{justify-content:flex-start;padding-top:8px;padding-bottom:12px}
+  #gameLayout{gap:10px}
+  #statusBar{padding:8px 10px;margin-bottom:8px;gap:6px;flex-direction:row;flex-wrap:wrap;justify-content:space-between}
+  #statusBar>div{min-width:0}
+  #statusBar #capturedContainer{display:none}
+  #statusBar #turnBadge{padding:5px 8px;font-size:11px}
+  #statusBar .tracking-wider{font-size:10px}
+  #boardPanel{padding:5px!important;border-width:2px;border-radius:12px}
+  #boardViewport{overflow-x:auto;overflow-y:hidden;justify-content:flex-start;scrollbar-width:thin;scrollbar-color:#50749d #15283f;overscroll-behavior-x:contain}
+  #komikanSvg{display:block;width:100%;min-width:0;min-height:0!important;max-height:none;height:auto;flex-shrink:0}
+  #boardViewport.board-zoomed #komikanSvg{width:680px;max-width:none}
+  #btnBoardZoom{display:inline-flex;align-items:center;justify-content:center}
+  .action-toolbar{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:7px 0 2px}
+  .action-toolbar button{min-width:0;padding:9px 3px;font-size:11px;min-height:42px;white-space:normal}
+  #mobileOptions{min-width:0;width:100%;border:1px solid #385575;border-radius:12px;background:#142337;overflow:hidden}
+  #mobileOptionsLabel{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px;color:#fcd34d;font-size:13px;font-weight:700;cursor:pointer;list-style:none;min-height:46px}
+  #mobileOptionsLabel::-webkit-details-marker{display:none}
+  #mobileOptions[open] #mobileOptionsLabel{border-bottom:1px solid #385575}
+  #mobileOptions[open] #mobileOptionsLabel span{transform:rotate(180deg)}
+  #optionsContent{padding:10px}
+  header .max-w-6xl{padding-top:6px;padding-bottom:6px}
+  header .w-10.h-10{width:32px;height:32px}
+  header h1{font-size:18px}
+  header p{display:none}
+  footer{display:none}
+}
+@media(min-width:1024px){
+  /* Restore the original desktop board + visible sidebar arrangement. */
+  #gameMain{justify-content:flex-start;padding-top:22px;padding-bottom:24px}
+  #gameLayout{max-width:1152px;grid-template-columns:minmax(0,3fr) minmax(245px,1fr);gap:18px;align-items:start}
+  #statusBar{max-width:1152px}
+  #boardPanel{grid-column:1;min-width:0}
+  #boardViewport{overflow:visible;justify-content:center}
+  #komikanSvg{width:100%;max-height:76vh;height:auto}
+  #mobileOptions{grid-column:2;display:block!important;min-width:0;width:100%;overflow:visible}
+  #mobileOptionsLabel{display:none!important}
+  #optionsContent{display:flex!important;flex-direction:column;gap:12px}
+  #btnBoardZoom{display:none!important}
+}
+@media(max-width:700px) and (orientation:landscape){
+  #gameMain{padding-top:4px}
+  #statusBar{padding:4px 9px;margin-bottom:5px}
+  #gameLayout{grid-template-columns:minmax(0,1fr) 185px;gap:8px;align-items:start}
+  #boardPanel{min-width:0}
+  #mobileOptions{align-self:start}
+  #mobileOptionsLabel{font-size:11px;padding:10px}
+  .action-toolbar{margin-top:3px}
+  .action-toolbar button{min-height:34px;padding:4px 2px;font-size:10px}
+  #boardViewport.board-zoomed #komikanSvg{width:620px}
+}
+@media(prefers-reduced-motion:reduce){#mobileOptionsLabel span{transition:none}}
 </style>
 </head>
 <body class="bg-[#0f1d2e] text-slate-100 min-h-screen flex flex-col justify-between">
@@ -127,10 +174,10 @@ button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offs
   </header>
 
   <!-- MAIN PLAY AREA -->
-  <main class="max-w-6xl w-full mx-auto px-2 sm:px-4 py-4 flex-1 flex flex-col items-center justify-center">
+  <main id="gameMain" class="max-w-6xl w-full mx-auto px-2 sm:px-4 py-4 flex-1 flex flex-col items-center justify-center">
 
     <!-- TOP CAPTURED AREA & STATUS -->
-    <div class="w-full max-w-4xl bg-[#16273c] border border-sky-900/60 rounded-xl p-3 mb-3 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div id="statusBar" class="w-full max-w-4xl bg-[#16273c] border border-sky-900/60 rounded-xl p-3 mb-3 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
       <!-- Captured Txewas / Trophy row -->
       <div class="flex items-center gap-3">
         <span class="text-xs uppercase font-bold tracking-wider text-amber-400/90">Nüfalngechi Txewa:</span>
@@ -150,16 +197,16 @@ button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offs
     </div>
 
     <!-- GAME BOARD & SIDEBAR LAYOUT -->
-    <div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
+    <div id="gameLayout" class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
       
       <!-- BOARD CANVAS WRAPPER (Col 1-3) -->
-      <div class="lg:col-span-3 bg-[#1e344e] border-4 border-[#0c1a29] rounded-2xl p-2 sm:p-4 shadow-2xl relative flex flex-col items-center justify-center overflow-hidden">
+      <div id="boardPanel" class="lg:col-span-3 bg-[#1e344e] border-4 border-[#0c1a29] rounded-2xl p-2 sm:p-4 shadow-2xl relative flex flex-col items-center justify-center overflow-hidden">
         
         <!-- Subtle Mapuche geometric background watermark -->
         <div class="absolute inset-0 opacity-5 pointer-events-none bg-greca"></div>
 
         <!-- SVG Interactive Board -->
-        <div class="w-full relative flex justify-center items-center">
+        <div id="boardViewport" class="w-full relative flex justify-center items-center">
           <svg id="komikanSvg" viewBox="0 0 920 540" class="w-full h-auto max-h-[72vh] select-none touch-none filter drop-shadow-xl">
             <defs>
               <!-- Drop shadows and filters -->
@@ -210,6 +257,7 @@ button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offs
 <button id="btnUndo" title="Deshacer movimiento (U)">↶ Deshacer</button>
 <button id="btnHint" title="Sugerencia de jugada (H)">✦ Pista</button>
 <button id="btnHelpMoves" title="Mostrar movimientos disponibles">◎ Movimientos</button>
+<button id="btnBoardZoom" type="button" aria-pressed="false" title="Ampliar tablero para tocar con precisión">⤢ Ampliar</button>
 </div>
 <!-- Banner for Multi-Jump in progress -->
         <div id="multiJumpBanner" class="hidden mt-2 bg-amber-500/20 border border-amber-400 text-amber-200 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full flex items-center gap-2 animate-bounce">
@@ -219,7 +267,9 @@ button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offs
       </div>
 
       <!-- CONTROL PANEL / SIDEBAR (Col 4) -->
-      <div class="lg:col-span-1 flex flex-col gap-3">
+      <details id="mobileOptions" class="lg:col-span-1">
+        <summary id="mobileOptionsLabel">⚙️ Opciones, estadísticas y registro <span aria-hidden="true">⌄</span></summary>
+        <div id="optionsContent" class="flex flex-col gap-3">
         <!-- Configuration Card -->
         <div class="bg-[#142337] border border-sky-900/60 rounded-xl p-4 shadow-lg">
           <h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-3 font-cinzel">Configuración</h2>
@@ -290,7 +340,8 @@ button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offs
             <div class="text-slate-500 italic">Comienza la partida tradicional.</div>
           </div>
         </div>
-      </div>
+        </div>
+      </details>
 
     </div>
   </main>
@@ -424,6 +475,28 @@ button:focus-visible,select:focus-visible{outline:3px solid #f3c779;outline-offs
         });
       }
     }
+    // Native <details> hides its content when closed, even if the inner div is
+    // display:flex. Keep it open on desktop, collapsed by default on mobile.
+    const desktopOptionsQuery = window.matchMedia('(min-width: 1024px)');
+    const responsiveOptions = document.getElementById('mobileOptions');
+    function syncResponsiveOptions(e) {
+      responsiveOptions.open = e.matches;
+    }
+    syncResponsiveOptions(desktopOptionsQuery);
+    if (desktopOptionsQuery.addEventListener) {
+      desktopOptionsQuery.addEventListener('change', syncResponsiveOptions);
+    } else {
+      desktopOptionsQuery.addListener(syncResponsiveOptions);
+    }
+    // Optional magnification helps on narrow screens without requiring landscape.
+    document.getElementById('btnBoardZoom').addEventListener('click', () => {
+      const viewport = document.getElementById('boardViewport');
+      const button = document.getElementById('btnBoardZoom');
+      const zoomed = viewport.classList.toggle('board-zoomed');
+      button.setAttribute('aria-pressed', String(zoomed));
+      button.textContent = zoomed ? '⤡ Ajustar' : '⤢ Ampliar';
+      viewport.scrollLeft = 0;
+    });
     const sound = new SoundEngine();
     let gameEpoch = 0;
     let localMode = false;
