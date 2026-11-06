@@ -1,0 +1,16 @@
+.:
+files.txt
+komikan
+komikan_juego_mapuche.html
+leftraru.html
+natrüng.rmd
+old
+
+./komikan:
+index.html
+
+./old:
+komikan_juego_mapuche.html
+lawen.txt
+leftraru.html
+leftraru_v1_8_9.html
