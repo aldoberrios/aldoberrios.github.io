@@ -184,6 +184,19 @@ body.board-is-expanded{overflow:hidden}
   #boardPanel.board-expanded #komikanSvg{width:100%!important;height:auto!important;max-height:calc(100dvh - 100px)!important}
 }
 
+
+/* KOMIKAN 3.1: discoverable side selection on phones and tablets. */
+#mobileSidePicker{display:none}
+@media(max-width:1023px){
+ #mobileSidePicker{display:block;width:100%;margin:0 0 10px;padding:11px;background:#16273c;border:1px solid #365879;border-radius:14px;box-shadow:0 6px 18px #0003}
+ #mobileSidePicker .side-picker-title{font-size:12px;color:#fcd34d;font-weight:800;text-align:center;letter-spacing:.03em;margin-bottom:8px}
+ #mobileSidePicker .side-picker-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #mobileSidePicker .side-choice{display:flex;align-items:center;justify-content:center;gap:7px;min-height:51px;padding:8px 6px;border:2px solid #4c6583;border-radius:12px;background:#20344e;color:#dbeafe;font-size:13px;font-weight:800;line-height:1.2;text-align:center}
+ #mobileSidePicker .side-choice[aria-pressed="true"]{background:#79511c;border-color:#fbbf24;color:#fff3c4;box-shadow:0 0 0 2px #fbbf2433,0 0 14px #fbbf242e}
+ #mobileSidePicker .side-choice:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+ #mobileSidePicker .side-picker-description{font-size:11px;color:#b8cbe2;text-align:center;margin-top:8px;line-height:1.35}
+ #mobileSidePicker[hidden]{display:none!important}
+}
 </style>
 </head>
 <body class="bg-[#0f1d2e] text-slate-100 min-h-screen flex flex-col justify-between">
@@ -220,6 +233,16 @@ body.board-is-expanded{overflow:hidden}
 
   <!-- MAIN PLAY AREA -->
   <main id="gameMain" class="max-w-6xl w-full mx-auto px-2 sm:px-4 py-4 flex-1 flex flex-col items-center justify-center">
+
+    <!-- Visible side selection on mobile; desktop retains the configuration selector. -->
+    <section id="mobileSidePicker" aria-label="Elegir bando">
+      <div class="side-picker-title">¿CON QUIÉN QUIERES JUGAR?</div>
+      <div class="side-picker-actions" role="group" aria-label="Tu bando">
+        <button type="button" id="mobileChooseTxewa" class="side-choice" aria-pressed="true">🐕 Pu Txewa</button>
+        <button type="button" id="mobileChoosePuma" class="side-choice" aria-pressed="false">🐆 Komikelu</button>
+      </div>
+      <p class="side-picker-description">Rodea al Komikelu o caza a los Txewa. Cambiar de bando reinicia la partida.</p>
+    </section>
 
     <!-- TOP CAPTURED AREA & STATUS -->
     <div id="statusBar" class="w-full max-w-4xl bg-[#16273c] border border-sky-900/60 rounded-xl p-3 mb-3 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -1491,23 +1514,42 @@ body.board-is-expanded{overflow:hidden}
       toast(chained ? 'Variante: capturas encadenadas activadas.' : 'Regla: una captura por turno.');
     });
 
-    // Role switch buttons
+    // One shared role-switch path for desktop and mobile selectors.
     const btnTxewa = document.getElementById('chooseTxewa');
     const btnPuma = document.getElementById('choosePuma');
+    const mobileTxewa = document.getElementById('mobileChooseTxewa');
+    const mobilePuma = document.getElementById('mobileChoosePuma');
+    const mobileSidePicker = document.getElementById('mobileSidePicker');
 
-    btnTxewa.addEventListener('click', () => {
-      STATE.humanSide = 'DOGS';
-      btnTxewa.className = 'py-1.5 text-xs font-semibold rounded-md transition text-slate-200 bg-amber-700/70 border border-amber-500';
-      btnPuma.className = 'py-1.5 text-xs font-semibold rounded-md transition text-slate-400 hover:text-slate-200';
-      restartGame();
-    });
+    function syncSidePickers() {
+      const dogsSelected = STATE.humanSide === 'DOGS';
+      btnTxewa.className = dogsSelected
+        ? 'py-1.5 text-xs font-semibold rounded-md transition text-slate-200 bg-amber-700/70 border border-amber-500'
+        : 'py-1.5 text-xs font-semibold rounded-md transition text-slate-400 hover:text-slate-200';
+      btnPuma.className = !dogsSelected
+        ? 'py-1.5 text-xs font-semibold rounded-md transition text-slate-200 bg-amber-700/70 border border-amber-500'
+        : 'py-1.5 text-xs font-semibold rounded-md transition text-slate-400 hover:text-slate-200';
+      mobileTxewa.setAttribute('aria-pressed', String(dogsSelected));
+      mobilePuma.setAttribute('aria-pressed', String(!dogsSelected));
+      // Local mode controls both sides, so a side picker would be misleading.
+      mobileSidePicker.hidden = localMode;
+      btnTxewa.disabled = localMode;
+      btnPuma.disabled = localMode;
+      btnTxewa.setAttribute('aria-pressed', String(dogsSelected));
+      btnPuma.setAttribute('aria-pressed', String(!dogsSelected));
+    }
 
-    btnPuma.addEventListener('click', () => {
-      STATE.humanSide = 'PUMA';
-      btnPuma.className = 'py-1.5 text-xs font-semibold rounded-md transition text-slate-200 bg-amber-700/70 border border-amber-500';
-      btnTxewa.className = 'py-1.5 text-xs font-semibold rounded-md transition text-slate-400 hover:text-slate-200';
+    function selectHumanSide(side) {
+      if (localMode || STATE.humanSide === side) return;
+      STATE.humanSide = side;
+      syncSidePickers();
       restartGame();
-    });
+    }
+    btnTxewa.addEventListener('click', () => selectHumanSide('DOGS'));
+    btnPuma.addEventListener('click', () => selectHumanSide('PUMA'));
+    mobileTxewa.addEventListener('click', () => selectHumanSide('DOGS'));
+    mobilePuma.addEventListener('click', () => selectHumanSide('PUMA'));
+    syncSidePickers();
 
     // Sound toggle
     const btnSound = document.getElementById('btnSoundToggle');
@@ -1561,6 +1603,7 @@ body.board-is-expanded{overflow:hidden}
       document.getElementById('btnMode').textContent=localMode?'👥 Dos jugadores (local)':'🤖 Contra la IA';
       document.getElementById('modeHelp').textContent=localMode?'Turnos alternos en el mismo dispositivo.':'Juega contra el ordenador.';
       document.getElementById('aiDifficulty').disabled=localMode;
+      syncSidePickers();
       restartGame();
       toast(localMode?'Modo local activado':'Modo contra la IA activado');
     });
