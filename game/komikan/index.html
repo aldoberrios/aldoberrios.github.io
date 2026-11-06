@@ -110,9 +110,8 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
   #boardPanel{padding:5px!important;border-width:2px;border-radius:12px}
   #boardViewport{overflow-x:auto;overflow-y:hidden;justify-content:flex-start;scrollbar-width:thin;scrollbar-color:#50749d #15283f;overscroll-behavior-x:contain}
   #komikanSvg{display:block;width:100%;min-width:0;min-height:0!important;max-height:none;height:auto;flex-shrink:0}
-  #boardViewport.board-zoomed #komikanSvg{width:680px;max-width:none}
   #btnBoardZoom{display:inline-flex;align-items:center;justify-content:center}
-  .action-toolbar{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:7px 0 2px}
+  .action-toolbar{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:7px 0 2px}
   .action-toolbar button{min-width:0;padding:9px 3px;font-size:11px;min-height:42px;white-space:normal}
   #mobileOptions{min-width:0;width:100%;border:1px solid #385575;border-radius:12px;background:#142337;overflow:hidden}
   #mobileOptionsLabel{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 14px;color:#fcd34d;font-size:13px;font-weight:700;cursor:pointer;list-style:none;min-height:46px}
@@ -148,9 +147,43 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
   #mobileOptionsLabel{font-size:11px;padding:10px}
   .action-toolbar{margin-top:3px}
   .action-toolbar button{min-height:34px;padding:4px 2px;font-size:10px}
-  #boardViewport.board-zoomed #komikanSvg{width:620px}
 }
 @media(prefers-reduced-motion:reduce){#mobileOptionsLabel span{transition:none}}
+/* KOMIKAN 2.9: readable 3-button toolbar and full-board expanded mode. */
+@media(max-width:1023px){
+  .action-toolbar{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .action-toolbar button{font-size:clamp(12px,3vw,15px);font-weight:700;min-height:48px;padding:9px 5px;white-space:nowrap}
+  #boardViewport{overflow:hidden;justify-content:center}
+}
+body.board-is-expanded{overflow:hidden}
+#boardPanel.board-expanded{
+  position:fixed!important;inset:0!important;z-index:1000!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;
+  max-width:none!important;margin:0!important;padding:8px!important;
+  border:0!important;border-radius:0!important;background:#152b44!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+}
+#boardPanel.board-expanded #boardViewport{
+  flex:1 1 auto!important;min-height:0!important;width:100%!important;
+  overflow:hidden!important;display:flex!important;justify-content:center!important;align-items:center!important;
+}
+#boardPanel.board-expanded #komikanSvg{
+  width:100%!important;height:100%!important;max-width:100%!important;
+  max-height:100%!important;min-height:0!important;object-fit:contain!important;
+}
+#boardPanel.board-expanded .action-toolbar{
+  flex:0 0 auto!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  width:min(100%,500px)!important;gap:10px!important;margin:6px auto 2px!important;
+}
+#boardPanel.board-expanded .action-toolbar button{
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  min-height:42px!important;font-size:14px!important;padding:8px!important;
+}
+#boardPanel.board-expanded #btnBoardZoom{display:flex!important}
+@media(orientation:portrait) and (max-width:1023px){
+  #boardPanel.board-expanded #komikanSvg{width:100%!important;height:auto!important;max-height:calc(100dvh - 100px)!important}
+}
+
 </style>
 </head>
 <body class="bg-[#0f1d2e] text-slate-100 min-h-screen flex flex-col justify-between">
@@ -301,7 +334,6 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
         <div class="action-toolbar" role="toolbar" aria-label="Herramientas de juego">
 <button id="btnUndo" title="Deshacer movimiento (U)">↶ Deshacer</button>
 <button id="btnHint" title="Sugerencia de jugada (H)">✦ Pista</button>
-<button id="btnHelpMoves" title="Mostrar movimientos disponibles">◎ Movimientos</button>
 <button id="btnBoardZoom" type="button" aria-pressed="false" title="Ampliar tablero para tocar con precisión">⤢ Ampliar</button>
 </div>
 <!-- Banner for Multi-Jump in progress -->
@@ -533,14 +565,34 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
     } else {
       desktopOptionsQuery.addListener(syncResponsiveOptions);
     }
-    // Optional magnification helps on narrow screens without requiring landscape.
-    document.getElementById('btnBoardZoom').addEventListener('click', () => {
-      const viewport = document.getElementById('boardViewport');
-      const button = document.getElementById('btnBoardZoom');
-      const zoomed = viewport.classList.toggle('board-zoomed');
-      button.setAttribute('aria-pressed', String(zoomed));
-      button.textContent = zoomed ? '⤡ Ajustar' : '⤢ Ampliar';
-      viewport.scrollLeft = 0;
+    // Expanded board: immersive, fully fitted view (no horizontal cropping).
+    const expandButton = document.getElementById('btnBoardZoom');
+    const boardPanel = document.getElementById('boardPanel');
+    let expandedBoard = false;
+    async function setExpandedBoard(expanded) {
+      expandedBoard = expanded;
+      boardPanel.classList.toggle('board-expanded', expanded);
+      document.body.classList.toggle('board-is-expanded', expanded);
+      expandButton.setAttribute('aria-pressed', String(expanded));
+      expandButton.textContent = expanded ? '✕ Cerrar' : '⤢ Ampliar';
+      if (expanded) {
+        // Fullscreen/landscape requests require browser and device support.
+        try { if (boardPanel.requestFullscreen && !document.fullscreenElement) await boardPanel.requestFullscreen(); } catch (_) {}
+        try { if (screen.orientation && screen.orientation.lock && document.fullscreenElement) await screen.orientation.lock('landscape'); } catch (_) {}
+      } else {
+        try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (_) {}
+        try { if (document.fullscreenElement) await document.exitFullscreen(); } catch (_) {}
+      }
+    }
+    expandButton.addEventListener('click', () => setExpandedBoard(!expandedBoard));
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && expandedBoard) {
+        expandedBoard = false;
+        boardPanel.classList.remove('board-expanded');
+        document.body.classList.remove('board-is-expanded');
+        expandButton.setAttribute('aria-pressed', 'false');
+        expandButton.textContent = '⤢ Ampliar';
+      }
     });
     const sound = new SoundEngine();
     let gameEpoch = 0;
@@ -1603,24 +1655,8 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
         ring.appendChild(star);
       }
     });
-    document.getElementById('btnHelpMoves').addEventListener('click',()=>{
-      if(STATE.isGameOver)return;
-      if(!localMode&&STATE.turn!==STATE.humanSide){toast('Espera tu turno.');return;}
-      if(STATE.turn==='PUMA'){
-        STATE.selectedNode=STATE.pumaNode;
-        STATE.validMoves=STATE.multiJumpActive?getPumaJumps(STATE.pumaNode):getAllPumaMoves();
-        updateUI();toast('Destinos del Komikelu resaltados.');
-      }else{
-        const dogs=[...STATE.dogs].filter(d=>getDogMoves(d).length);
-        if(!dogs.length)return;
-        const index=dogs.indexOf(STATE.selectedNode);
-        const next=dogs[(index+1)%dogs.length];
-        STATE.selectedNode=next;STATE.validMoves=getDogMoves(next);updateUI();
-        toast('Mostrando movimientos de un Txewa. Pulsa otra vez para cambiar.');
-      }
-    });
     document.addEventListener('keydown',e=>{
-      if(e.key==='Escape'){rulesModal.classList.add('hidden');STATE.selectedNode=null;STATE.validMoves=[];updateUI();}
+      if(e.key==='Escape'){if(expandedBoard)setExpandedBoard(false);rulesModal.classList.add('hidden');STATE.selectedNode=null;STATE.validMoves=[];updateUI();}
       if(e.target.matches('input,select,textarea'))return;
       if(e.key.toLowerCase()==='u')undoMove();
       if(e.key.toLowerCase()==='h')document.getElementById('btnHint').click();
