@@ -338,7 +338,7 @@ body.board-is-expanded{overflow:hidden}
 </div>
 <!-- Banner for Multi-Jump in progress -->
         <div id="multiJumpBanner" class="hidden mt-2 bg-amber-500/20 border border-amber-400 text-amber-200 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full flex items-center gap-2 animate-bounce">
-          <span>🐾 ¡Captura múltiple disponible! Haz otro salto o presiona:</span>
+          <span>🐾 Variante encadenada: puedes saltar de nuevo o presionar:</span>
           <button id="btnEndTurn" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-2 py-0.5 rounded text-xs">Terminar Turno</button>
         </div>
       </div>
@@ -372,6 +372,16 @@ body.board-is-expanded{overflow:hidden}
               <option value="medium" selected>Media (Estratégico)</option>
               <option value="hard">Experta (Minimax / Agresivo)</option>
             </select>
+          </div>
+
+          <!-- Optional capture rule; one capture is the default. -->
+          <div class="mb-3 pt-2 border-t border-slate-800">
+            <label for="captureRule" class="block text-xs font-medium text-slate-300 mb-1.5">Capturas del Komikelu por turno:</label>
+            <select id="captureRule" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-2 focus:ring-1 focus:ring-amber-400 focus:outline-none">
+              <option value="single" selected>Una captura (predeterminado)</option>
+              <option value="chain">Capturas encadenadas (opcional)</option>
+            </select>
+            <p class="text-[11px] text-slate-400 mt-1">Variante configurable; no presupone una regla histórica.</p>
           </div>
 
           <!-- Sound FX Toggle -->
@@ -452,7 +462,7 @@ body.board-is-expanded{overflow:hidden}
         <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 space-y-2">
           <h4 class="font-bold text-amber-400">2. Movimientos y Capturas</h4>
           <p>• <strong>Movimiento simple:</strong> Ambos bandos pueden mover una casilla hacia cualquier nodo conectado vacío adyacente.</p>
-          <p>• <strong>Captura del Puma:</strong> Salta sobre un perrito adyacente cayendo en la casilla vacía inmediatamente posterior en línea recta. ¡Puede encadenar <em>saltos múltiples</em> consecutivos!</p>
+          <p>• <strong>Captura del Puma:</strong> Salta sobre un perrito adyacente cayendo en la casilla vacía inmediatamente posterior en línea recta. Por defecto, realiza <strong>una captura por turno</strong>. La variante de <em>capturas encadenadas</em> puede activarse en Configuración.</p>
           <p>• <strong>Los perritos no comen:</strong> Avanzan coordinadamente en manada para cerrar caminos.</p>
         </div>
 
@@ -594,6 +604,7 @@ body.board-is-expanded{overflow:hidden}
         expandButton.textContent = '⤢ Ampliar';
       }
     });
+    const chainCapturesEnabled = () => document.getElementById('captureRule').value === 'chain';
     const sound = new SoundEngine();
     let gameEpoch = 0;
     let localMode = false;
@@ -1182,7 +1193,7 @@ body.board-is-expanded{overflow:hidden}
 
           // Check for chained double / multiple jumps
           const followUpJumps = getPumaJumps(move.to);
-          if (followUpJumps.length > 0) {
+          if (chainCapturesEnabled() && followUpJumps.length > 0) {
             // Can jump again!
             STATE.multiJumpActive = true;
             STATE.multiJumpCurrentNode = move.to;
@@ -1322,7 +1333,7 @@ body.board-is-expanded{overflow:hidden}
         };
         const expand=(from,dogs,first,captured,depth)=>{
           result.push({move:first,next:{puma:from,dogs:[...dogs],turn:'DOGS'},captures:captured});
-          if(depth>=8)return;
+          if(!chainCapturesEnabled() || depth>=8)return;
           for(const jump of jumps(from,dogs)) {
             const copy=new Set(dogs);copy.delete(jump.captured);
             expand(jump.to,copy,first||jump,captured+1,depth+1);
@@ -1474,6 +1485,12 @@ body.board-is-expanded{overflow:hidden}
       }
     }
 
+    document.getElementById('captureRule').addEventListener('change', () => {
+      const chained = chainCapturesEnabled();
+      restartGame();
+      toast(chained ? 'Variante: capturas encadenadas activadas.' : 'Regla: una captura por turno.');
+    });
+
     // Role switch buttons
     const btnTxewa = document.getElementById('chooseTxewa');
     const btnPuma = document.getElementById('choosePuma');
@@ -1573,7 +1590,7 @@ body.board-is-expanded{overflow:hidden}
         return {o,replies,worstImmediateCapture};
       });
       // If a no-capture dog move exists, never recommend one that gives the
-      // puma an immediate capture (including multi-jump combinations).
+      // puma an immediate capture (including multi-jump combinations when enabled).
       const safest=side==='DOGS'
         ? Math.min(...evaluated.map(x=>x.worstImmediateCapture)) : 0;
       const shortlist=side==='DOGS'
