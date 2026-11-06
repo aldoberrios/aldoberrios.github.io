@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KOMIKAN (El Leoncito) - Juego Tradicional Mapuche</title>
+  <title>KOMIKAN — Komikelu Cazador · Piezas ilustradas</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,6 +50,18 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .node-highlight { animation: none; opacity: 1; }
+    }
+    /* The recommended hint is vivid magenta, distinct from green legal moves. */
+    #highlightsGroup .hint-target .node-highlight {
+      animation: hint-pulse 1.1s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px #ff4fd8) drop-shadow(0 0 4px #fff0a6);
+    }
+    @keyframes hint-pulse {
+      0%, 100% { opacity: 1; stroke-opacity: 1; }
+      50% { opacity: .62; stroke-opacity: .9; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #highlightsGroup .hint-target .node-highlight { animation: none; opacity: 1; }
     }
     .piece-selected {
       filter: drop-shadow(0 0 10px #f59e0b) brightness(1.2);
@@ -230,6 +242,39 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
                 <stop offset="45%" stop-color="#92400e" />
                 <stop offset="100%" stop-color="#451a03" />
               </radialGradient>
+              <!-- Self-contained illustrated playing pieces: no external images required. -->
+              <symbol id="txewaPortrait" viewBox="-25 -25 50 50">
+                <circle r="21" fill="#33261e" stroke="#f7c96e" stroke-width="2.5"/>
+                <!-- Drooping ears, distinct from the puma's round ears -->
+                <path d="M-12 -11 Q-24 -17 -21 0 Q-18 12 -12 6 L-9 -9Z" fill="#663a24" stroke="#24170f" stroke-width="1.2"/>
+                <path d="M12 -11 Q24 -17 21 0 Q18 12 12 6 L9 -9Z" fill="#663a24" stroke="#24170f" stroke-width="1.2"/>
+                <path d="M-15 -13 Q0 -23 15 -13 L15 4 Q13 17 0 19 Q-13 17 -15 4Z" fill="#c88a4c" stroke="#4b2b1d" stroke-width="1.3"/>
+                <path d="M-11 -11 Q0 -19 11 -11 Q8 -3 0 -2 Q-8 -3 -11 -11Z" fill="#a96535" opacity=".65"/>
+                <ellipse cx="-7" cy="0" rx="2.4" ry="3.1" fill="#201b19"/>
+                <ellipse cx="7" cy="0" rx="2.4" ry="3.1" fill="#201b19"/>
+                <circle cx="-7.7" cy="-1" r=".8" fill="#fff8e7"/>
+                <circle cx="6.3" cy="-1" r=".8" fill="#fff8e7"/>
+                <path d="M-9 6 Q0 1 9 6 Q12 14 0 16 Q-12 14 -9 6Z" fill="#f1d0a1"/>
+                <path d="M-5 6 Q0 3 5 6 L2 10 Q0 11 -2 10Z" fill="#2c211d"/>
+                <path d="M0 10 L0 12 M0 12 Q-3 14 -5 12 M0 12 Q3 14 5 12" fill="none" stroke="#513426" stroke-width="1.1" stroke-linecap="round"/>
+              </symbol>
+              <symbol id="komikeluPortrait" viewBox="-25 -25 50 50">
+                <circle r="22" fill="#3d2919" stroke="#ffd56e" stroke-width="3"/>
+                <!-- Puma's small rounded ears -->
+                <circle cx="-14" cy="-13" r="7" fill="#b98248" stroke="#49301e" stroke-width="1.5"/>
+                <circle cx="14" cy="-13" r="7" fill="#b98248" stroke="#49301e" stroke-width="1.5"/>
+                <circle cx="-14" cy="-13" r="3.2" fill="#6d4a42"/>
+                <circle cx="14" cy="-13" r="3.2" fill="#6d4a42"/>
+                <path d="M-17 -12 Q0 -22 17 -12 Q21 0 13 13 Q0 23 -13 13 Q-21 0 -17 -12Z" fill="#d9a365" stroke="#5e3a23" stroke-width="1.3"/>
+                <path d="M-12 -6 Q-7 -11 -2 -6 M2 -6 Q7 -11 12 -6" fill="none" stroke="#6b4528" stroke-width="2" stroke-linecap="round"/>
+                <path d="M-12 -2 Q-7 -6 -2 -2 Q-7 2 -12 -2 M2 -2 Q7 -6 12 -2 Q7 2 2 -2" fill="#332b1f"/>
+                <circle cx="-7" cy="-2" r="1.3" fill="#f8db74"/>
+                <circle cx="7" cy="-2" r="1.3" fill="#f8db74"/>
+                <path d="M-12 7 Q-7 3 0 7 Q7 3 12 7 Q12 17 0 17 Q-12 17 -12 7Z" fill="#f5e5cb"/>
+                <path d="M-5 6 Q0 3 5 6 L0 10Z" fill="#5a3830"/>
+                <path d="M0 10 L0 13 M0 13 Q-3 15 -6 12 M0 13 Q3 15 6 12" stroke="#684639" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <path d="M-7 10 L-20 7 M-7 12 L-21 12 M7 10 L20 7 M7 12 L21 12" fill="none" stroke="#f7ead1" stroke-width=".8" stroke-linecap="round"/>
+              </symbol>
             </defs>
 
             <!-- Board backdrop pattern outline -->
@@ -838,86 +883,47 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
 
     function renderPieces() {
       piecesGroup.innerHTML = '';
+      const NS = 'http://www.w3.org/2000/svg';
 
-      // 1. Render Dogs (Txewas)
-      STATE.dogs.forEach(dogId => {
-        const node = NODES[dogId];
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.dataset.id = dogId;
-        g.style.cursor = (STATE.turn === 'DOGS' && (STATE.humanSide === 'DOGS' || localMode) && !STATE.isGameOver) ? 'pointer' : 'default';
+      // Draw a recognizable animal portrait at each board intersection.
+      // The transparent touch target stays large even on small screens.
+      function animalPiece(nodeId, symbolId, type) {
+        const node = NODES[nodeId];
+        const g = document.createElementNS(NS, 'g');
+        g.dataset.id = nodeId;
+        g.setAttribute('role', 'button');
+        g.setAttribute('aria-label', type === 'DOG' ? 'Txewa' : 'Komikelu');
+        g.style.cursor = (STATE.turn === (type === 'DOG' ? 'DOGS' : 'PUMA') &&
+          (STATE.humanSide === (type === 'DOG' ? 'DOGS' : 'PUMA') || localMode) &&
+          !STATE.isGameOver) ? 'pointer' : 'default';
+        if (STATE.selectedNode === nodeId) g.setAttribute('class', 'piece-selected');
 
-        if (STATE.selectedNode === dogId) {
-          g.setAttribute('class', 'piece-selected');
-        }
+        const portrait = document.createElementNS(NS, 'use');
+        portrait.setAttribute('href', '#' + symbolId);
+        portrait.setAttribute('x', node.x - 25);
+        portrait.setAttribute('y', node.y - 25);
+        portrait.setAttribute('width', 50);
+        portrait.setAttribute('height', 50);
+        portrait.setAttribute('filter', 'url(#shadow)');
+        portrait.setAttribute('pointer-events', 'none');
+        g.appendChild(portrait);
 
-        // Outer rim
-        const outer = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        outer.setAttribute('cx', node.x);
-        outer.setAttribute('cy', node.y);
-        outer.setAttribute('r', 19);
-        outer.setAttribute('fill', 'url(#dogWood)');
-        outer.setAttribute('stroke', '#fcd34d');
-        outer.setAttribute('stroke-width', 3);
-        outer.setAttribute('filter', 'url(#shadow)');
-
-        // Inner center core
-        const inner = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        inner.setAttribute('cx', node.x);
-        inner.setAttribute('cy', node.y);
-        inner.setAttribute('r', 8);
-        inner.setAttribute('fill', '#1c1917');
-        inner.setAttribute('stroke', '#f59e0b');
-        inner.setAttribute('stroke-width', 1.5);
-
-        g.appendChild(outer);
-        g.appendChild(inner);
-
-        g.addEventListener('click', (e) => {
+        const hit = document.createElementNS(NS, 'circle');
+        hit.setAttribute('cx', node.x);
+        hit.setAttribute('cy', node.y);
+        hit.setAttribute('r', 26);
+        hit.setAttribute('fill', 'transparent');
+        hit.setAttribute('pointer-events', 'all');
+        g.appendChild(hit);
+        g.addEventListener('click', e => {
           e.stopPropagation();
-          onPieceClicked('DOG', dogId);
+          onPieceClicked(type, nodeId);
         });
-
-        piecesGroup.appendChild(g);
-      });
-
-      // 2. Render Komikelu (Puma)
-      if (STATE.pumaNode !== null) {
-        const node = NODES[STATE.pumaNode];
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.dataset.id = STATE.pumaNode;
-        g.style.cursor = (STATE.turn === 'PUMA' && (STATE.humanSide === 'PUMA' || localMode) && !STATE.isGameOver) ? 'pointer' : 'default';
-
-        if (STATE.selectedNode === STATE.pumaNode) {
-          g.setAttribute('class', 'piece-selected');
-        }
-
-        // Puma Base
-        const outer = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        outer.setAttribute('cx', node.x);
-        outer.setAttribute('cy', node.y);
-        outer.setAttribute('r', 21);
-        outer.setAttribute('fill', 'url(#pumaGlow)');
-        outer.setAttribute('stroke', 'url(#goldBorder)');
-        outer.setAttribute('stroke-width', 4.5);
-        outer.setAttribute('filter', 'url(#shadow)');
-
-        // Golden Eye / Core
-        const core = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        core.setAttribute('cx', node.x);
-        core.setAttribute('cy', node.y);
-        core.setAttribute('r', 6);
-        core.setAttribute('fill', '#f59e0b');
-
-        g.appendChild(outer);
-        g.appendChild(core);
-
-        g.addEventListener('click', (e) => {
-          e.stopPropagation();
-          onPieceClicked('PUMA', STATE.pumaNode);
-        });
-
         piecesGroup.appendChild(g);
       }
+
+      STATE.dogs.forEach(id => animalPiece(id, 'txewaPortrait', 'DOG'));
+      if (STATE.pumaNode !== null) animalPiece(STATE.pumaNode, 'komikeluPortrait', 'PUMA');
     }
 
     function renderHighlights() {
@@ -1489,35 +1495,113 @@ button:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offs
       restartGame();
       toast(localMode?'Modo local activado':'Modo contra la IA activado');
     });
+    // Tactical hint search: a dog move is not "safe" just because its own
+    // destination is safe. Inspect the puma's best immediate capture chain,
+    // then look at the dogs' possible replies to the puma's response.
+    function chooseHintMove() {
+      const side=STATE.turn;
+      const root={puma:STATE.pumaNode,dogs:[...STATE.dogs],turn:side};
+      if(STATE.multiJumpActive){
+        const jumps=getPumaJumps(STATE.pumaNode);
+        if(!jumps.length)return null;
+        // During a capture chain, the same side must keep jumping.
+        return jumps.map(j=>({move:j,score:(()=>{
+          const dogs=new Set(STATE.dogs);dogs.delete(j.captured);
+          const next={puma:j.to,dogs:[...dogs],turn:'PUMA'};
+          const continuation=searchMoves(next).filter(x=>x.captures>0);
+          return 190+Math.max(0,...continuation.map(x=>x.captures))*190+evaluatePosition(next)*.01;
+        })()})).sort((a,b)=>b.score-a.score)[0].move;
+      }
+      const candidates=searchMoves(root);
+      if(!candidates.length)return null;
+      const evaluated=candidates.map(o=>{
+        const replies=searchMoves(o.next);
+        const worstImmediateCapture=side==='DOGS'
+          ? Math.max(0,...replies.map(r=>r.captures)) : 0;
+        return {o,replies,worstImmediateCapture};
+      });
+      // If a no-capture dog move exists, never recommend one that gives the
+      // puma an immediate capture (including multi-jump combinations).
+      const safest=side==='DOGS'
+        ? Math.min(...evaluated.map(x=>x.worstImmediateCapture)) : 0;
+      const shortlist=side==='DOGS'
+        ? evaluated.filter(x=>x.worstImmediateCapture===safest) : evaluated;
+      let chosen=null, best=side==='PUMA'?-Infinity:Infinity;
+      let remaining=11000;
+      // A bounded 3-ply adversarial search: us -> opponent -> us.
+      for(const item of shortlist){
+        let responseValue=side==='PUMA'?Infinity:-Infinity;
+        if(!item.replies.length){
+          responseValue=evaluatePosition(item.o.next);
+        } else {
+          for(const reply of item.replies){
+            let continuation=evaluatePosition(reply.next);
+            if(remaining>0){
+              const followups=searchMoves(reply.next);
+              if(followups.length){
+                const maximize=reply.next.turn==='PUMA';
+                let v=maximize?-Infinity:Infinity;
+                // Prefer tactical moves first under the computation budget.
+                followups.sort((x,y)=>y.captures-x.captures);
+                for(const f of followups){
+                  v=maximize?Math.max(v,evaluatePosition(f.next)):
+                    Math.min(v,evaluatePosition(f.next));
+                  if(--remaining<=0)break;
+                }
+                continuation=v;
+              }
+            }
+            // Puma maximizes the score, dogs minimize it.
+            responseValue=side==='PUMA'?Math.min(responseValue,continuation):
+              Math.max(responseValue,continuation);
+          }
+        }
+        // Deterministic hints: no random noise. Safety takes priority above.
+        if(chosen===null||(side==='PUMA'?responseValue>best:responseValue<best)){
+          chosen=item.o.move;best=responseValue;
+        }
+      }
+      return chosen;
+    }
     document.getElementById('btnHint').addEventListener('click',()=>{
       if(STATE.isGameOver)return;
       if(!localMode && STATE.turn!==STATE.humanSide){toast('Espera tu turno.');return;}
-      const moves=STATE.turn==='DOGS'?getAllDogsMoves():STATE.multiJumpActive?
-        getPumaJumps(STATE.pumaNode):getAllPumaMoves();
-      if(!moves.length){toast('No hay movimientos disponibles.');return;}
-      // Prefer safe dog moves, or puma captures / high-mobility destinations.
-      const scored=moves.map(m=>{
-        let score=0;
-        if(STATE.turn==='PUMA'){
-          score=(m.isJump?100:0)+ADJ[m.to].filter(n=>!STATE.dogs.has(n)).length*3;
-        }else{
-          const dogs=new Set(STATE.dogs);dogs.delete(m.from);dogs.add(m.to);
-          const threats=getPumaJumpsSim(STATE.pumaNode,dogs).length;
-          score=-threats*80-ADJ[STATE.pumaNode].filter(n=>!dogs.has(n)).length*9;
-          score+=ADJ[m.to].filter(n=>dogs.has(n)).length*2;
-        }
-        return {m,score};
-      }).sort((a,b)=>b.score-a.score);
-      const pick=scored[0].m;
+      const pick=chooseHintMove();
+      if(!pick){toast('No hay movimientos disponibles.');return;}
       STATE.selectedNode=pick.from;
       STATE.validMoves=STATE.turn==='DOGS'?getDogMoves(pick.from):
         STATE.multiJumpActive?getPumaJumps(pick.from):getAllPumaMoves(pick.from);
       updateUI();
-      toast('✦ Pista: sigue el destino resaltado.');
+      toast('✦ Pista estratégica: sigue la estrella rosa ★.');
       const ring=[...document.querySelectorAll('#highlightsGroup g')].find(g=>{
         const c=g.querySelector('circle');return c&&+c.getAttribute('cx')===NODES[pick.to].x&&+c.getAttribute('cy')===NODES[pick.to].y;
       });
-      if(ring)ring.querySelector('circle').setAttribute('stroke-width','7');
+      if(ring){
+        // A hint is different from an ordinary legal move: make the recommended
+        // destination unmistakable without changing the geometry or hit target.
+        ring.classList.add('hint-target');
+        const halo=ring.querySelector('circle');
+        halo.setAttribute('fill','rgba(236,72,153,0.55)');
+        halo.setAttribute('stroke','#ff4fd8');
+        halo.setAttribute('stroke-width','6');
+        halo.setAttribute('r','23');
+        halo.setAttribute('stroke-dasharray','none');
+        const dot=ring.querySelectorAll('circle')[1];
+        if(dot){dot.setAttribute('fill','#fff4a3');dot.setAttribute('r','8');}
+        const star=document.createElementNS('http://www.w3.org/2000/svg','text');
+        star.setAttribute('x',NODES[pick.to].x);
+        star.setAttribute('y',NODES[pick.to].y-31);
+        star.setAttribute('text-anchor','middle');
+        star.setAttribute('font-size','24');
+        star.setAttribute('font-weight','900');
+        star.setAttribute('fill','#fff0a6');
+        star.setAttribute('stroke','#8c175f');
+        star.setAttribute('stroke-width','0.8');
+        star.setAttribute('paint-order','stroke');
+        star.setAttribute('pointer-events','none');
+        star.textContent='★';
+        ring.appendChild(star);
+      }
     });
     document.getElementById('btnHelpMoves').addEventListener('click',()=>{
       if(STATE.isGameOver)return;
