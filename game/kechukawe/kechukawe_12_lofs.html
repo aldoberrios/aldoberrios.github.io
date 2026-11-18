@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kechukawe — Circular board</title><style>
+:root{color-scheme:dark;--bg:#10231e;--ink:#f5ebd6;--muted:#c6c6ae;--gold:#f4c879}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0%,#2d4a3d,#10231e 70%);color:var(--ink);font:16px/1.5 system-ui,sans-serif}.wrap{max-width:1080px;margin:auto;padding:22px 16px 50px}header{text-align:center}h1{font-family:Georgia,serif;font-size:clamp(2rem,5vw,3.4rem);margin:0}header p{color:var(--muted);margin:5px 0 18px}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:18px;align-items:start}.panel{background:#1c352d;border:1px solid #5a7566;border-radius:18px;padding:18px;box-shadow:0 10px 35px #0004}.board{width:100%;display:block;touch-action:manipulation}.sector{stroke:#e9d5a5;stroke-width:2}.slot{cursor:pointer;stroke:#f8e9c8;stroke-width:2.2;transition:stroke-width .15s}.slot:hover,.slot:focus{stroke:#fff;stroke-width:4}.slot.available{stroke:#fff6b0;stroke-width:3.5;filter:drop-shadow(0 0 5px #ffe08a)}.slot:focus{outline:none}.territory-label{fill:#fff3d6;font-size:13px;font-weight:750;text-anchor:middle;paint-order:stroke;stroke:#173128;stroke-width:3px}.center-label{fill:#ffe6ad;text-anchor:middle;font:bold 23px Georgia,serif}.center-small{fill:#e8d9b9;text-anchor:middle;font:11px system-ui,sans-serif}.score{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.player{border:1px solid #668071;border-radius:12px;padding:10px;background:#122820}.player.active{outline:2px solid var(--gold)}.player strong{display:block}.player small{color:#c9d4c7}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px}button,select{font:inherit}button{background:#dcb86e;color:#18251d;border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}button:hover:not(:disabled){background:#f1d18f}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#355649;color:#f8e9cf;border:1px solid #74917e}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}select{background:#10251e;color:var(--ink);border:1px solid #789180;padding:9px;border-radius:9px;max-width:100%}.die{font:700 56px Georgia,serif;text-align:center;border:2px solid #d9bb82;border-radius:16px;background:#12291f;margin:10px 0;padding:4px}.message{min-height:65px;color:#ffe0a0;font-weight:650}.instructions{margin-top:16px;color:#d6dece}.instructions h2{color:var(--ink);font-size:1.1rem}a{color:#f4d79d}footer{text-align:center;color:#bbc9b9;margin-top:20px;font-size:.85rem}@media(max-width:760px){.layout{grid-template-columns:1fr}.wrap{padding:12px}.panel{padding:12px}}
+
+/* Four triangular sides and one square base, rendered as a rotating 3D pyramid. */
+.die{font-size:initial;min-height:245px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at center,#365547,#10291f 75%)}
+.die-stage{width:220px;height:185px;display:grid;place-items:center}
+#kechukan-canvas{width:220px;height:185px;max-width:100%;display:block;filter:drop-shadow(0 12px 8px #0007)}
+.die-caption{font-size:.88rem;color:#f7ddb0;font-weight:700;letter-spacing:.02em;margin-top:3px;text-align:center}
+</style></head><body><div class="wrap"><header><h1>Kechukawe</h1><p>A circular-board digital adaptation of a Mapuche game · Meli Witran Mapu</p></header><div class="layout"><section class="panel"><svg id="board" class="board" viewBox="0 0 600 600" role="group" aria-label="Circular Kechukawe board with four territories and twelve positions per territory"></svg><div class="score" id="scores"></div></section><aside class="panel"><label for="mode">Players</label><br><select id="mode"><option value="1">1 human + 3 computer players</option><option value="2">2 humans + 2 computer players</option><option value="4">4 humans (same device)</option></select><div class="controls"><button id="new">New game</button></div><div id="turn" aria-live="polite"></div><div class="die" id="die" aria-label="3D five-sided kechukan"><div class="die-stage"><canvas id="kechukan-canvas" width="440" height="370" role="img" aria-label="Rotating wooden square pyramid with four triangular numbered sides and a fifth number on its base"></canvas></div><div class="die-caption" id="die-caption">Ready to roll</div></div><div class="controls"><button id="roll">Roll kechukan</button><button id="auto" class="secondary" hidden>Auto-place remaining</button></div><div class="message" id="message" aria-live="polite"></div><div class="instructions"><h2>How to play</h2><p>Each territory has 12 positions arranged in three curved rows (5–4–3) and begins with one occupied <em>lof</em>. Roll 1–4 to place that many pieces in empty positions in your territory. Once it is full, use remaining points to remove opponents’ pieces by selecting them. Rolling <strong>5</strong> (the rare point landing, approximately 1% of rolls) wins immediately.</p><p>Click highlighted circles to spend each point. You can choose where to remove opposing pieces. Players who lose all their pieces after the opening round are eliminated. The last remaining player wins.</p><p><strong>Source:</strong> Adapted from the Ngulumapu version described in <a href="https://www.scribd.com/document/450292692/kechukawe" target="_blank" rel="noopener">Kechukawe (Scribd)</a>. The interactive turn handling and automatic opponents are modern design choices, not claims about historical practice.</p></div></aside></div><footer>Offline playable · 48-position circular board · Elongated 3D pyramid kechukan animation · No accounts or external libraries needed</footer></div><script>
+(()=>{'use strict';const NS='http://www.w3.org/2000/svg';const names=['Puelmapu','Pikunmapu','Lafkenmapu','Willimapu'];const colors=['#dfab62','#77afbd','#d98077','#91ba7d'];const shades=['#70502d','#2b5862','#713b38','#45643d'];const board=document.getElementById('board'),scores=document.getElementById('scores'),turn=document.getElementById('turn'),die=document.getElementById('die'),message=document.getElementById('message'),roll=document.getElementById('roll'),auto=document.getElementById('auto'),mode=document.getElementById('mode'),kechukan=document.getElementById('kechukan-canvas'),dieCaption=document.getElementById('die-caption');let spinToken=0,spinAngle=0,spinning=false;let pieces,active,points,rolled,over,round,humans,timer=0;function el(tag,attrs,parent){let x=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs||{}))x.setAttribute(k,v);(parent||board).appendChild(x);return x}function polar(r,a){let t=a*Math.PI/180;return [300+r*Math.cos(t),300+r*Math.sin(t)]}function pathSector(a,b){let p=polar(258,a),q=polar(258,b);return `M300 300 L${p[0]} ${p[1]} A258 258 0 0 1 ${q[0]} ${q[1]} Z`}function human(p){return p<humans}function alive(p){return pieces[p].some(Boolean)}function empty(p){return pieces[p].findIndex(v=>!v)}function legal(p,i){if(over||!rolled||points<=0||!human(active))return false;if(empty(active)!==-1)return p===active&&!pieces[p][i];return p!==active&&p>=0&&pieces[p][i]&&alive(p)}function paint(){board.replaceChildren();el('circle',{cx:300,cy:300,r:276,fill:'#0d241d',stroke:'#e2c78d','stroke-width':7});for(let p=0;p<4;p++){let start=-45+p*90,end=start+90;el('path',{d:pathSector(start,end),fill:shades[p],class:'sector'});let labelAngle=start+45,xy=polar(223,labelAngle);let text=el('text',{x:xy[0],y:xy[1],class:'territory-label'});text.textContent=names[p];for(let i=0;i<12;i++){/* Three broad quarter-circle arcs: five outer, four middle, three inner.
+           Spread nearly to the sector boundaries, while retaining generous margins. */
+        const row=i<5?0:i<9?1:2;
+        const offset=i-(row===0?0:row===1?5:9);
+        const count=[5,4,3][row];
+        const r=[231,190,149][row];
+        const spread=[74,72,68][row];
+        const a=start+45+(offset/(count-1)-.5)*spread;
+        let pt=polar(r,a);let c=el('circle',{cx:pt[0],cy:pt[1],r:17,fill:pieces[p][i]?colors[p]:'#17372d',class:'slot'+(legal(p,i)?' available':''),tabindex:legal(p,i)?'0':'-1',role:'button','aria-label':`${names[p]}, position ${i+1}, ${pieces[p][i]?'occupied':'empty'}`});if(pieces[p][i]){el('circle',{cx:pt[0],cy:pt[1],r:7,fill:'#fff7dc','pointer-events':'none'})}c.addEventListener('click',()=>choose(p,i));c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(p,i)}})}}el('circle',{cx:300,cy:300,r:54,fill:'#142e25',stroke:'#f0d6a4','stroke-width':3});let t=el('text',{x:300,y:296,class:'center-label'});t.textContent='Kechukawe';let s=el('text',{x:300,y:317,class:'center-small'});s.textContent='Meli Witran Mapu';scores.innerHTML=names.map((n,p)=>`<div class="player ${active===p&&!over?'active':''}" style="opacity:${alive(p)?1:.48}"><strong><span class="dot" style="background:${colors[p]}"></span>${n}</strong><small>${pieces[p].filter(Boolean).length}/12 lof · ${human(p)?'Human':'Computer'}${!alive(p)?' · out':''}</small></div>`).join('');turn.textContent=over?'Game over':`Turn: ${names[active]} (${human(active)?'human':'computer'})`;roll.disabled=over||rolled||spinning||!human(active);auto.hidden=!(rolled&&points>0&&human(active));}function finish(text){over=true;rolled=false;points=0;message.textContent=text;paint()}function next(){rolled=false;points=0;round++;for(let n=0;n<4;n++){active=(active+1)%4;if(alive(active))break}if(pieces.filter(a=>a.some(Boolean)).length===1){finish(`${names[active]} wins!`);return}message.textContent=`${names[active]}: roll the kechukan.`;dieCaption.textContent='Ready to roll';paint();if(!human(active))timer=setTimeout(computer,650)}function choose(p,i){if(!legal(p,i))return;pieces[p][i]=p===active?true:false;points--;message.textContent=points?`${points} point${points===1?'':'s'} remaining — choose a highlighted position.`:'Turn complete.';paint();if(points===0)setTimeout(next,400)}/* A square pyramid: four triangular sides (1–4) and a square base (5).
+   The five-point result is intentionally rare (1%), as requested. */
+const ctx=kechukan.getContext('2d');
+// Taller, narrower square pyramid. The base is numbered 5.
+const vertices=[[-.72,-1.05,-.72],[.72,-1.05,-.72],[.72,-1.05,.72],[-.72,-1.05,.72],[0,2.05,0]];
+const faces=[{v:[0,1,4],n:1,c:'#d5a56a'},{v:[1,2,4],n:2,c:'#c28c53'},{v:[2,3,4],n:3,c:'#e3b67b'},{v:[3,0,4],n:4,c:'#bb804a'},{v:[3,2,1,0],n:5,c:'#916038'}];
+function projected(ax,ay,az){
+  const w=kechukan.width,h=kechukan.height;
+  return vertices.map(([x,y,z])=>{
+    let cy=Math.cos(ay),sy=Math.sin(ay),cx=Math.cos(ax),sx=Math.sin(ax),cz=Math.cos(az),sz=Math.sin(az);
+    let xx=x*cy+z*sy,zz=-x*sy+z*cy,yy=y*cx-zz*sx;zz=y*sx+zz*cx;
+    let fx=xx*cz-yy*sz,fy=xx*sz+yy*cz;let scale=98*4.8/(5.6-zz);
+    return {x:w/2+fx*scale,y:h/2-fy*scale,z:zz};
+  });
+}
+function signedArea(v){let sum=0;for(let i=0;i<v.length;i++){let a=v[i],b=v[(i+1)%v.length];sum+=a.x*b.y-b.x*a.y}return sum/2}
+function drawPyramid(ax=-.34,ay=.48,az=.10){
+  const w=kechukan.width,h=kechukan.height;ctx.clearRect(0,0,w,h);
+  const pts=projected(ax,ay,az);
+  // Draw only faces facing the viewer, so hidden numbers cannot show through.
+  const visible=faces.map(f=>({...f,poly:f.v.map(i=>pts[i])})).filter(f=>signedArea(f.poly)<-0.1)
+    .sort((a,b)=>a.poly.reduce((s,p)=>s+p.z,0)/a.poly.length-b.poly.reduce((s,p)=>s+p.z,0)/b.poly.length);
+  for(const f of visible){let v=f.poly;ctx.beginPath();ctx.moveTo(v[0].x,v[0].y);for(let i=1;i<v.length;i++)ctx.lineTo(v[i].x,v[i].y);ctx.closePath();
+    ctx.fillStyle=f.c;ctx.fill();ctx.strokeStyle='#684322';ctx.lineWidth=5;ctx.lineJoin='round';ctx.stroke();
+    let mx=v.reduce((a,p)=>a+p.x,0)/v.length,my=v.reduce((a,p)=>a+p.y,0)/v.length;
+    ctx.fillStyle='#392519';ctx.font='bold 49px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(f.n),mx,my);
+  }
+}
+// Pick a resting orientation where the rolled triangular face has the largest
+// visible projected area. The caption and the dominant face always agree.
+function restingPose(value){
+  if(value===5)return [Math.PI,0,0];
+  let best=null,bestScore=-Infinity;
+  for(let xi=-.72;xi<=.72;xi+=.12){for(let yi=-Math.PI;yi<Math.PI;yi+=.075){
+    const pts=projected(xi,yi,0);
+    const areas=faces.slice(0,4).map(f=>Math.max(0,-signedArea(f.v.map(i=>pts[i]))));
+    const target=areas[value-1],other=Math.max(...areas.filter((_,i)=>i!==value-1));
+    const score=target-other*.55;
+    if(target>other&&score>bestScore){bestScore=score;best=[xi,yi,0]}
+  }}
+  return best||[-.3,(value-1)*Math.PI/2,0];
+}
+function rollDie(){if(over||rolled||spinning)return;spinning=true;rolled=true;
+  const value=Math.random()<.01?5:1+Math.floor(Math.random()*4);
+  dieCaption.textContent='Rolling…';paint();const token=++spinToken;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const duration=reduced?0:1600,start=performance.now(),base=spinAngle;
+  const finishRoll=()=>{if(token!==spinToken)return;spinning=false;spinAngle=base+Math.PI*6;
+    // The rolled number is always the most visible face; 5 is the rare point landing.
+    drawPyramid(...restingPose(value));
+    dieCaption.textContent=value===5?'5 — rare point landing!':`Result: ${value}`;
+    if(value===5){finish(`${names[active]} rolled the rare 5 and wins immediately!`);return}
+    points=value;message.textContent=`Rolled ${value}. ${empty(active)!==-1?'Fill your territory first.':'Remove opponents’ pieces.'}`;
+    paint();if(!human(active))timer=setTimeout(computerMoves,550);
+  };
+  if(!duration){finishRoll();return}
+  function frame(now){if(token!==spinToken)return;let t=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-t,3);
+    drawPyramid(-.34+ease*Math.PI*5.8,base+ease*Math.PI*9.5,.1+Math.sin(ease*Math.PI*6)*.28);
+    if(t<1)requestAnimationFrame(frame);else finishRoll();}
+  requestAnimationFrame(frame);
+}
+function computerMoves(){if(over||human(active)||!rolled)return;while(points>0){let e=empty(active);if(e!==-1){pieces[active][e]=true;points--;continue}let options=[];for(let p=0;p<4;p++)if(p!==active)for(let i=0;i<12;i++)if(pieces[p][i])options.push([p,i]);if(!options.length)break;let [p,i]=options[Math.floor(Math.random()*options.length)];pieces[p][i]=false;points--}message.textContent=`${names[active]} finished its turn.`;paint();timer=setTimeout(next,650)}function computer(){if(!over&&!human(active))rollDie()}function autoPlace(){if(!rolled||!human(active)||over)return;while(points>0){let e=empty(active);if(e!==-1){pieces[active][e]=true;points--;continue}let options=[];for(let p=0;p<4;p++)if(p!==active)for(let i=0;i<12;i++)if(pieces[p][i])options.push([p,i]);if(!options.length)break;let [p,i]=options[Math.floor(Math.random()*options.length)];pieces[p][i]=false;points--}message.textContent='Turn complete.';paint();timer=setTimeout(next,450)}function reset(){clearTimeout(timer);spinToken++;spinning=false;spinAngle=0;drawPyramid();humans=Number(mode.value);pieces=Array.from({length:4},()=>Array(12).fill(false));for(let p=0;p<4;p++)pieces[p][0]=true;active=0;points=0;rolled=false;over=false;round=0;dieCaption.textContent='Ready to roll';message.textContent='Puelmapu starts. Roll the kechukan!';paint()}document.getElementById('new').addEventListener('click',reset);roll.addEventListener('click',rollDie);auto.addEventListener('click',autoPlace);mode.addEventListener('change',reset);reset()})();
+</script></body></html>
