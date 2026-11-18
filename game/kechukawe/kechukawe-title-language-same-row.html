@@ -1,0 +1,376 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kechukawe — Circular board</title><style>
+:root{color-scheme:dark;--bg:#10231e;--ink:#f5ebd6;--muted:#c6c6ae;--gold:#f4c879}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0%,#2d4a3d,#10231e 70%);color:var(--ink);font:16px/1.5 system-ui,sans-serif}.wrap{max-width:1080px;margin:auto;padding:22px 16px 50px}header{text-align:center}h1{font-family:Georgia,serif;font-size:clamp(2rem,5vw,3.4rem);margin:0}header p{color:var(--muted);margin:5px 0 18px}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:18px;align-items:start}.panel{background:#1c352d;border:1px solid #5a7566;border-radius:18px;padding:18px;box-shadow:0 10px 35px #0004}.board{width:100%;display:block;touch-action:manipulation}.sector{stroke:#e9d5a5;stroke-width:2}.slot{cursor:pointer;stroke:#f8e9c8;stroke-width:2.2;transition:stroke-width .15s}.slot:hover,.slot:focus{stroke:#fff;stroke-width:4}.slot.available{stroke:#fff6b0;stroke-width:3.5;filter:drop-shadow(0 0 5px #ffe08a)}.slot:focus{outline:none}.territory-label{fill:#fff3d6;font-size:13px;font-weight:750;text-anchor:middle;paint-order:stroke;stroke:#173128;stroke-width:3px}.center-label{fill:#ffe6ad;text-anchor:middle;font:bold 17px Georgia,serif}.center-small{fill:#e8d9b9;text-anchor:middle;font:9px system-ui,sans-serif}.score{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.player{border:1px solid #668071;border-radius:12px;padding:10px;background:#122820}.player.active{outline:2px solid var(--gold)}.player strong{display:block}.player small{color:#c9d4c7}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px}button,select{font:inherit}button{background:#dcb86e;color:#18251d;border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}button:hover:not(:disabled){background:#f1d18f}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#355649;color:#f8e9cf;border:1px solid #74917e}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}select{background:#10251e;color:var(--ink);border:1px solid #789180;padding:9px;border-radius:9px;max-width:100%}.die{font:700 56px Georgia,serif;text-align:center;border:2px solid #d9bb82;border-radius:16px;background:#12291f;margin:10px 0;padding:4px}.message{min-height:65px;color:#ffe0a0;font-weight:650}.instructions{margin-top:16px;color:#d6dece}.instructions h2{color:var(--ink);font-size:1.1rem}a{color:#f4d79d}footer{text-align:center;color:#bbc9b9;margin-top:20px;font-size:.85rem}@media(max-width:760px){.layout{grid-template-columns:1fr}.wrap{padding:12px}.panel{padding:12px}}
+
+/* Four triangular sides and one square base, rendered as a rotating 3D pyramid. */
+.die{font-size:initial;min-height:245px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at center,#365547,#10291f 75%)}
+.die-stage{width:220px;height:185px;display:grid;place-items:center}
+#kechukan-canvas{width:220px;height:185px;max-width:100%;display:block;filter:drop-shadow(0 12px 8px #0007)}
+.die-caption{font-size:.88rem;color:#f7ddb0;font-weight:700;letter-spacing:.02em;margin-top:3px;text-align:center}
+.language{display:flex;justify-content:flex-end;gap:7px;margin-bottom:8px}.language button{padding:6px 12px;background:#355649;color:#f8e9cf;border:1px solid #74917e}.language button.lang-active{background:#dcb86e;color:#18251d;border-color:#dcb86e}
+/* Responsive game cockpit: keep the board and the kechukan together in view. */
+.mobile-settings,.rules-box{margin-top:10px}
+.mobile-settings>summary,.rules-box>summary{cursor:pointer;color:#ffe0a0;font-weight:750;padding:9px 10px;border:1px solid #668071;border-radius:9px;list-style-position:inside}
+.mobile-settings .settings-content{padding-top:10px}
+.settings-en,.rules-en{display:none}
+html[lang="en"] .settings-en,html[lang="en"] .rules-en{display:inline}
+html[lang="en"] .settings-es,html[lang="en"] .rules-es{display:none}
+@media(min-width:761px){
+ .mobile-settings{display:contents}
+ .mobile-settings>summary{display:none}
+ .mobile-settings .settings-content{display:contents}
+ .rules-box>summary{display:none}
+ .rules-box:not([open]) .instructions{display:block}
+}
+@media(max-width:760px){
+ html,body{min-height:100%;overflow-x:hidden}
+ .wrap{height:100dvh;min-height:400px;max-width:620px;padding:6px 9px 8px;display:flex;flex-direction:column;overflow:hidden}
+ header{flex:none}
+ header .language{margin:0 0 2px}
+ header .language button{padding:3px 9px;font-size:12px}
+ h1{font-size:clamp(1.35rem,5vw,1.9rem);line-height:1.08}
+ header p{font-size:10px;line-height:1.15;margin:1px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:6px}
+ .layout>.panel{min-width:0;padding:6px 8px;border-radius:12px}
+ .layout>section.panel{display:grid;grid-template-rows:minmax(0,1fr) auto;min-height:0;align-items:stretch;overflow:hidden}
+ .board{min-height:0;max-height:100%;width:100%;height:100%;object-fit:contain;align-self:center;justify-self:center}
+ .score{flex:none;gap:4px;margin:4px 0 0}
+ .player{padding:4px 6px;border-radius:7px;font-size:11px;line-height:1.25;min-width:0}
+ .player .dot{width:8px;height:8px;margin-right:4px}
+ .player small{font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .layout>aside.panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"turn turn" "die actions" "message message" "settings rules";gap:4px 8px;align-items:center}
+ #turn{grid-area:turn;font-size:12px;font-weight:700;line-height:1.25}
+ .die{grid-area:die;margin:0;min-height:0;padding:2px;border-radius:10px}
+ .die-stage{width:100%;height:clamp(90px,16dvh,138px)}
+ #kechukan-canvas{width:auto;height:100%;max-width:100%;object-fit:contain}
+ .die-caption{font-size:11px;line-height:1.2;padding:2px 0 3px}
+ aside>.controls{grid-area:actions;display:flex;flex-direction:column;gap:5px;margin:0}
+ aside>.controls button{width:100%;padding:10px 5px;font-size:clamp(11px,3vw,14px);line-height:1.2;min-height:42px}
+ .message{grid-area:message;min-height:0;max-height:3.2em;overflow:auto;font-size:11px;line-height:1.3}
+ .mobile-settings{grid-area:settings;margin:0;min-width:0}
+ .rules-box{grid-area:rules;margin:0;min-width:0}
+ .mobile-settings>summary,.rules-box>summary{padding:5px 3px;font-size:11px;text-align:center;list-style:none}
+ .mobile-settings>summary::-webkit-details-marker,.rules-box>summary::-webkit-details-marker{display:none}
+ .mobile-settings[open],.rules-box[open]{position:fixed;z-index:20;inset:auto 9px max(9px,env(safe-area-inset-bottom)) 9px;max-height:75dvh;overflow:auto;background:#1c352d;border:2px solid #dcb86e;border-radius:13px;padding:10px;box-shadow:0 0 0 100vmax #0009}
+ .mobile-settings[open] .settings-content{padding:8px 2px}
+ .mobile-settings select{width:100%;font-size:13px}.settings-content>#auto:not([hidden]){display:block;width:100%;margin-top:8px}
+ .rules-box .instructions{margin:8px 2px;font-size:13px;line-height:1.45}
+ .rules-box .instructions h2{margin:0 0 6px}
+ footer{display:none}
+}
+@media(max-width:760px) and (orientation:landscape){
+ .wrap{max-width:none}
+ header p{display:none}
+ .layout{grid-template-columns:minmax(0,1.3fr) minmax(220px,1fr);grid-template-rows:minmax(0,1fr)}
+ .layout>aside.panel{align-content:center}
+ .die-stage{height:clamp(60px,22dvh,115px)}
+}
+@media(max-width:760px) and (max-height:550px) and (orientation:portrait){
+ header p{display:none}
+ .die-stage{height:65px}
+ .player small{font-size:9px}
+}
+
+/* Saturated colours and an interactive kechukan on touch screens. */
+.sector{stroke:#ead9af;stroke-width:2}.slot{stroke:#f9e7c4;stroke-width:2.5}
+.slot.available{stroke:#fff1a5;stroke-width:4;filter:none}
+.die{touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:border-color .15s,transform .15s}
+.die.die-ready{cursor:pointer;border-color:#ffe4a3;box-shadow:0 0 0 2px #f1c16c44,inset 0 0 18px #edc47a22}
+.die.die-ready:active{transform:scale(.97);border-color:#fff4c9}
+.die:focus-visible{outline:3px solid #fff0aa;outline-offset:3px}
+.die[aria-disabled="true"]{cursor:default}#kechukan-canvas{pointer-events:none}
+@media(max-width:760px){.layout>.panel{background:#142b24}
+.die{background:radial-gradient(ellipse at center,#294b3b,#0a2118 78%)}
+.die.die-ready::after{content:'Toca para lanzar';font-size:10px;color:#ffe2a0;line-height:1.2;margin:0 0 3px}
+html[lang="en"] .die.die-ready::after{content:'Tap to roll'}}
+
+/* Tactile piece supply: each marker represents a placement still to make. */
+.piece-tray{border:1px solid #9d8760;border-radius:10px;background:#10291f;padding:6px 10px;margin:5px 0;color:#ffe3ac}
+.piece-tray[hidden]{display:none!important}
+.tray-label{font-size:12px;font-weight:750;margin-bottom:4px}
+.tray-pieces{display:flex;flex-wrap:wrap;gap:7px;min-height:22px;align-items:center}
+.tray-piece{display:inline-block;width:22px;height:22px;border-radius:50%;background:#dca963;border:2px solid #ffe3a6;box-shadow:inset 0 0 0 5px #b98042,0 2px 4px #0007;animation:piece-in .2s ease-out both}
+@keyframes piece-in{from{transform:scale(.65);opacity:.4}to{transform:scale(1);opacity:1}}
+@media(max-width:760px){.piece-tray{grid-area:tray;margin:0;padding:5px 8px}.tray-label{font-size:11px}.tray-pieces{gap:5px}.tray-piece{width:19px;height:19px}.layout>aside.panel{grid-template-areas:"turn turn" "die actions" "tray tray" "message message" "settings rules"}}
+/* Compact mobile arrangement: no unused vertical band between the two panels. */
+.die-values{font:600 11px/1.1 system-ui,sans-serif;color:#c9b68b;letter-spacing:.18em;margin:2px 0 0}
+@media(max-width:760px){
+ .wrap{height:100dvh;min-height:0;overflow-y:auto;overflow-x:hidden}
+ .layout{flex:0 0 auto;display:grid;grid-template-rows:auto auto;align-content:start;align-items:stretch;gap:10px}
+ .layout>section.panel{height:auto;min-height:0;display:flex;flex-direction:column}
+ .board{flex:none;width:100%;height:auto;max-height:min(54dvh,calc(100vw - 36px));aspect-ratio:1/1;object-fit:contain}
+ .score{margin-top:6px}
+ .layout>aside.panel{align-self:start}
+ .die-stage{height:clamp(95px,16dvh,145px)}
+}
+@media(max-width:760px) and (orientation:landscape){
+ .layout{grid-template-columns:minmax(0,1.3fr) minmax(220px,1fr);grid-template-rows:auto;align-items:start}
+ .board{max-height:calc(100dvh - 85px)}
+}
+
+/* The die is the roll control; the larger touchable supply replaces both buttons. */
+#roll,#auto{display:none!important}
+.piece-tray{cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;border-color:#e5c27e;transition:background .15s}
+.piece-tray:hover,.piece-tray:focus-visible{background:#244936;outline:2px solid #f6d48c;outline-offset:2px}
+.piece-tray[aria-disabled="true"]{pointer-events:none}
+.tray-pieces{gap:11px;justify-content:center;padding:6px 0}
+.tray-piece{width:34px;height:34px;border-width:3px;box-shadow:inset 0 0 0 8px #a77544,0 3px 7px #0008}
+.flying-piece{position:fixed;z-index:1000;width:30px;height:30px;border:3px solid #ffe5aa;border-radius:50%;box-shadow:inset 0 0 0 7px #9b693e,0 4px 12px #0008;pointer-events:none;will-change:transform}
+@media(max-width:760px){
+ .layout>aside.panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"turn" "die" "tray" "message" "settings" "rules";gap:5px}
+ .die-stage{height:clamp(115px,19dvh,180px)}
+ .tray-piece{width:clamp(31px,8vw,43px);height:clamp(31px,8vw,43px)}
+ .piece-tray{padding:8px}
+ .tray-label{text-align:center;font-size:12px}
+ .mobile-settings,.rules-box{width:100%}
+}
+@media(max-width:760px) and (orientation:landscape){.layout>aside.panel{grid-template-columns:1fr;grid-template-areas:"turn" "die" "tray" "message" "settings" "rules"}.die-stage{height:clamp(75px,22dvh,120px)}}
+
+/* Final mobile cockpit: die on the left, tappable pieces on the right. */
+@media(max-width:760px){
+ .layout>aside.panel{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"turn turn" "die tray" "message message" "settings rules";gap:5px 8px;align-items:stretch}
+ .die{width:100%;min-width:0;align-self:stretch;justify-content:center}
+ .die-stage{width:100%;height:clamp(100px,16dvh,145px)}
+ .piece-tray{grid-area:tray;margin:0;min-width:0;min-height:100%;padding:7px 5px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px}
+ .piece-tray[hidden]{display:none!important}
+ .tray-label{font-size:12px;line-height:1.3;text-align:center}
+ .tray-pieces{width:100%;display:flex;justify-content:center;align-content:center;flex-wrap:wrap;gap:9px;padding:4px}
+ .tray-piece{width:clamp(35px,9vw,49px);height:clamp(35px,9vw,49px);flex:0 0 auto}
+ .mobile-settings,.rules-box{width:100%}
+}
+@media(max-width:760px) and (orientation:landscape){
+ .layout>aside.panel{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"turn turn" "die tray" "message message" "settings rules"}
+ .die-stage{height:clamp(70px,22dvh,120px)}
+}
+.tray-piece{cursor:pointer;touch-action:manipulation}.tray-piece:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+/* Five stationary, finger-sized piece positions; spent positions stay reserved. */
+.tray-pieces{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px!important;justify-items:center;align-items:center;min-height:48px;padding:7px 0!important;}
+.tray-piece{display:block;width:min(100%,42px)!important;height:auto!important;aspect-ratio:1/1;min-width:0;min-height:0;padding:0;border-radius:50%;cursor:pointer;touch-action:manipulation;animation:none!important;transition:opacity .12s,transform .12s;}
+.tray-piece:not(.spent):active{transform:scale(.88)}
+.tray-piece.spent{visibility:hidden;pointer-events:none;}
+.piece-tray[aria-disabled="true"]{pointer-events:auto}
+@media(max-width:760px){.tray-pieces{gap:3px!important}.tray-piece{width:min(100%,44px)!important}.piece-tray{padding:6px 5px}}
+
+/* Title and language controls share one compact header row. */
+header .header-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+header .header-row h1{grid-column:2;grid-row:1;text-align:center;white-space:nowrap}
+header .header-row .language{grid-column:3;grid-row:1;justify-self:end;display:flex;gap:5px;align-items:center;margin:0}
+@media(max-width:760px){
+ header .header-row{grid-template-columns:minmax(0,1fr) auto;gap:6px}
+ header .header-row h1{grid-column:1;justify-self:start;font-size:clamp(1.25rem,5.2vw,1.9rem)}
+ header .header-row .language{grid-column:2;gap:4px}
+ header .header-row .language button{padding:4px 7px;font-size:clamp(10px,2.7vw,12px);white-space:nowrap}
+ header p{margin:1px 0 4px}
+}
+</style></head><body><div class="wrap"><header><div class="header-row"><div class="language"><button type="button" id="lang-es" class="lang-active" aria-pressed="true">Español</button><button type="button" id="lang-en" aria-pressed="false">English</button></div><h1>Kechukawe</h1></div><p>A circular-board digital adaptation of a Mapuche game · Meli Witran Mapu</p></header><div class="layout"><section class="panel"><svg id="board" class="board" viewBox="0 0 600 600" role="group" aria-label="Circular Kechukawe board with four territories and twelve positions per territory"></svg><div class="score" id="scores"></div></section><aside class="panel"><details class="mobile-settings"><summary><span class="settings-es">Opciones de partida</span><span class="settings-en">Game options</span></summary><div class="settings-content"><label for="mode">Players</label><br><select id="mode"><option value="half">Puelmapu vs Ngulumapu · Human vs AI (default)</option><option value="1">1 human + 3 computer players</option><option value="2">2 humans + 2 computer players</option><option value="4">4 humans (same device)</option><option value="team">1 human (Puelmapu + Lafkenmapu) vs 1 AI (Pikunmapu + Willimapu)</option></select><div class="controls"><button id="new">New game</button></div></div></details><div id="turn" aria-live="polite"></div><div class="die" id="die" role="button" aria-label="Lanzar kechukan tocando el dado" aria-disabled="false" title="Toca el kechukan para lanzarlo"><div class="die-stage"><canvas id="kechukan-canvas" width="440" height="370" role="img" aria-label="Rotating wooden square pyramid with four triangular numbered sides and a fifth number on its base"></canvas></div><div class="die-caption" id="die-caption">Ready to roll</div></div><div class="piece-tray" id="piece-tray" role="button" tabindex="0" aria-live="polite" hidden><div class="tray-label" id="tray-label"></div><div class="tray-pieces" id="tray-pieces"></div></div><div class="message" id="message" aria-live="polite"></div><details class="rules-box"><summary><span class="rules-es">Cómo jugar</span><span class="rules-en">How to play</span></summary><div class="instructions"><h2>How to play</h2><p><strong>Default two-half game:</strong> Puelmapu (right) and Ngulumapu (left) each have 24 lofs. You control the entire right half; the AI controls the entire left half. You may place pieces anywhere in your half. In this mode the 24 lofs follow the straight dividing edge and outer curve of each semicircle with approximately even spacing. The four-quarter modes retain their original 12-lof arrangements, territory names and colours.</p><p>In four-territory modes, each territory has 12 positions: one at the pointed end, three along each straight side, and five around the outer curve and begins with one occupied <em>lof</em>. Roll 1–4 to place that many pieces in empty positions in your territory. Once it is full, use remaining points to remove opponents’ pieces by selecting them. Rolling <strong>5</strong> (the rare point landing, approximately 1% of rolls) wins immediately.</p><p>Click highlighted circles to spend each point. You can choose where to remove opposing pieces. Players who lose all their pieces are eliminated. In team mode, you control two territories against two AI-controlled territories; teammates cannot capture each other, and the last team with pieces wins.</p><p><strong>Source:</strong> Adapted from the Ngulumapu version described in <a href="https://www.scribd.com/document/450292692/kechukawe" target="_blank" rel="noopener">Kechukawe (Scribd)</a>. The interactive turn handling and automatic opponents are modern design choices, not claims about historical practice.</p></div></details></aside></div><footer>Offline playable · 48-position circular board · Elongated 3D pyramid kechukan animation · No accounts or external libraries needed</footer></div><script>
+(()=>{'use strict';const NS='http://www.w3.org/2000/svg';const names=['Puelmapu','Pikunmapu','Lafkenmapu','Willimapu'];const colors=['#f0b75b','#5dc2d2','#ed8279','#9bd46d'];const shades=['#9a5c28','#245d73','#873c42','#416d34'];const board=document.getElementById('board'),scores=document.getElementById('scores'),turn=document.getElementById('turn'),die=document.getElementById('die'),message=document.getElementById('message'),roll=document.getElementById('roll'),auto=document.getElementById('auto'),mode=document.getElementById('mode'),kechukan=document.getElementById('kechukan-canvas'),dieCaption=document.getElementById('die-caption'),pieceTray=document.getElementById('piece-tray'),trayLabel=document.getElementById('tray-label'),trayPieces=document.getElementById('tray-pieces');let halfMode=false,teamMode=false;let spinToken=0,spinAngle=0,spinning=false;let pieces,active,points,rolled,over,round,humans,timer=0;let placingAnimation=false,animationToken=0;let queuedPlacements=0;
+let language='es';const englishInstructions=document.querySelector('.instructions').innerHTML;const spanishInstructions='<h2>Cómo jugar</h2><p><strong>Partida predeterminada de dos mitades:</strong> Puelmapu (derecha) y Ngulumapu (izquierda) tienen 24 lofs cada uno. Controlas toda la mitad derecha y la IA controla la izquierda. Puedes colocar fichas en cualquier posición de tu mitad. Los 24 lofs siguen el borde recto y el arco exterior de cada semicírculo, con una separación aproximadamente uniforme. Los modos de cuatro territorios conservan su distribución original de 12 lofs, sus nombres y colores.</p><p>En los modos de cuatro territorios, cada territorio tiene 12 posiciones: una en la punta, tres a lo largo de cada lado recto y cinco en el arco exterior. Cada territorio comienza con un <em>lof</em> ocupado. Lanza el kechukan: si obtienes entre 1 y 4, coloca esa cantidad de fichas en posiciones vacías de tu territorio. Cuando esté lleno, utiliza los puntos restantes para retirar fichas rivales. Obtener un <strong>5</strong> (una caída excepcional sobre la punta, con una probabilidad aproximada del 1 %) da la victoria inmediata.</p><p>Pulsa los círculos resaltados para gastar tus puntos. Puedes elegir qué fichas rivales retirar. Quien pierde todas sus fichas queda eliminado. En el modo por equipos, controlas dos territorios frente a dos territorios de la IA; los compañeros no pueden capturarse entre sí y gana el último equipo que conserve fichas.</p><p><strong>Fuente:</strong> Adaptación de la versión de Ngulumapu descrita en <a href="https://www.scribd.com/document/450292692/kechukawe" target="_blank" rel="noopener">Kechukawe (Scribd)</a>. La gestión interactiva de turnos y los oponentes automáticos son decisiones de diseño modernas, no afirmaciones sobre la práctica histórica.</p>';
+const translations={es:{header:'Adaptación digital de un juego mapuche con tablero circular · Meli Witran Mapu',players:'Jugadores',new:'Nueva partida',roll:'Lanzar kechukan',auto:'Colocar fichas restantes',footer:'Se puede jugar sin conexión · Tablero circular de 48 posiciones · Animación 3D del kechukan piramidal · Sin cuentas ni bibliotecas externas',modes:['Puelmapu vs Ngulumapu · Persona contra IA (predeterminado)','1 persona + 3 jugadores de IA','2 personas + 2 jugadores de IA','4 personas (mismo dispositivo)','1 persona (Puelmapu + Lafkenmapu) contra 1 IA (Pikunmapu + Willimapu)'],human:'Persona',computer:'IA',out:' · eliminado',gameover:'Fin de la partida',turn:'Turno',ready:'Listo para lanzar',rolling:'Lanzando…',result:'Resultado',rare:'5 — ¡caída excepcional sobre la punta!',rareWin:'obtuvo el excepcional 5 y gana inmediatamente!',wins:'gana!',humanTeam:'¡Gana el equipo humano!',computerTeam:'¡Gana el equipo de la IA!',rollPrompt:'lanza el kechukan.',remaining:'puntos restantes — elige una posición resaltada.',complete:'Turno terminado.',rolled:'Salió',fill:'Llena primero tu territorio.',remove:'Retira fichas rivales.',position:'posición',occupied:'ocupada',empty:'vacía',halfStart:'Puelmapu (mitad derecha) contra Ngulumapu (mitad izquierda). Puedes colocar fichas en cualquiera de tus 24 posiciones. ¡Lanza para comenzar!',teamStart:'Partida por equipos: controlas Puelmapu y Lafkenmapu. La IA controla Pikunmapu y Willimapu. ¡Lanza para comenzar!',fourStart:'Empieza Puelmapu. ¡Lanza el kechukan!'},en:{header:'A circular-board digital adaptation of a Mapuche game · Meli Witran Mapu',players:'Players',new:'New game',roll:'Roll kechukan',auto:'Auto-place remaining',footer:'Offline playable · 48-position circular board · Elongated 3D pyramid kechukan animation · No accounts or external libraries needed',modes:['Puelmapu vs Ngulumapu · Human vs AI (default)','1 human + 3 computer players','2 humans + 2 computer players','4 humans (same device)','1 human (Puelmapu + Lafkenmapu) vs 1 AI (Pikunmapu + Willimapu)'],human:'Human',computer:'Computer',out:' · out',gameover:'Game over',turn:'Turn',ready:'Ready to roll',rolling:'Rolling…',result:'Result',rare:'5 — rare point landing!',rareWin:'rolled the rare 5 and wins immediately!',wins:'wins!',humanTeam:'Human team wins!',computerTeam:'Computer team wins!',rollPrompt:'roll the kechukan.',remaining:'points remaining — choose a highlighted position.',complete:'Turn complete.',rolled:'Rolled',fill:'Fill your territory first.',remove:'Remove opponents’ pieces.',position:'position',occupied:'occupied',empty:'empty',halfStart:'Puelmapu (right half) versus Ngulumapu (left half). You can place pieces anywhere across your 24 positions. Roll to begin!',teamStart:'Team game: you control Puelmapu and Lafkenmapu. The computer controls Pikunmapu and Willimapu. Roll to begin!',fourStart:'Puelmapu starts. Roll the kechukan!'}};
+function t(key){return translations[language][key]}
+function setLanguage(lang){language=lang;document.documentElement.lang=lang;document.querySelector('header p').textContent=t('header');document.querySelector('label[for="mode"]').textContent=t('players');document.getElementById('new').textContent=t('new');roll.textContent=t('roll');auto.textContent=t('auto');document.querySelector('footer').textContent=t('footer');[...mode.options].forEach((o,i)=>o.textContent=t('modes')[i]);document.querySelector('.instructions').innerHTML=lang==='es'?spanishInstructions:englishInstructions;for(const code of ['es','en']){let b=document.getElementById('lang-'+code);b.classList.toggle('lang-active',code===lang);b.setAttribute('aria-pressed',String(code===lang))}refreshText();updateTray();}
+function refreshText(){if(!pieces)return;dieCaption.textContent=spinning?t('rolling'):(lastRoll===null?t('ready'):(lastRoll===5?t('rare'):`${t('result')}: ${lastRoll}`));if(!over)message.textContent=rolled?`${t('rolled')} ${lastRoll}. ${empty(active)!==-1?t('fill'):t('remove')}`:(round===0?(halfMode?t('halfStart'):teamMode?t('teamStart'):t('fourStart')):`${playerName(active)}: ${t('rollPrompt')}`);paint()}
+let lastRoll=null;
+const halfNames=['Puelmapu','Ngulumapu'],halfColors=['#f0b75b','#9bd46d'],halfShades=['#995b2b','#356b43'];
+function count(){return halfMode?2:4}function playerName(p){return halfMode?halfNames[p]:names[p]}function playerColor(p){return halfMode?halfColors[p]:colors[p]}
+function human(p){return halfMode?p===0:teamMode?(p===0||p===2):p<humans}
+function friendly(a,b){return teamMode&&human(a)===human(b)}
+function alive(p){return pieces[p].some(Boolean)}function empty(p){return pieces[p].findIndex(v=>!v)}
+function legal(p,i){if(over||placingAnimation||!rolled||points<=0||!human(active))return false;if(empty(active)!==-1)return p===active&&!pieces[p][i];return p!==active&&!friendly(active,p)&&pieces[p][i]}
+function el(tag,attrs,parent){let x=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs||{}))x.setAttribute(k,v);(parent||board).appendChild(x);return x}
+function polar(r,a){let t=a*Math.PI/180;return [300+r*Math.cos(t),300+r*Math.sin(t)]}
+function pathSector(a,b){let p=polar(258,a),q=polar(258,b);return `M300 300 L${p[0]} ${p[1]} A258 258 0 0 1 ${q[0]} ${q[1]} Z`}
+function updateTray(){
+ const show=!over&&rolled&&!spinning&&points>0&&human(active);
+ pieceTray.hidden=!show;
+ if(!show)return;
+ const placing=empty(active)!==-1;
+ trayLabel.textContent=language==='es'?(placing?`Toca cada ficha para colocarla (${points} ${points===1?'restante':'restantes'})`:`Toca cada ficha para retirar una rival (${points} ${points===1?'restante':'restantes'})`):(placing?`Tap each piece to place it (${points} left)`:`Tap each piece to remove an opponent (${points} left)`);
+ // Keep all five physical positions permanently in the DOM. Empty positions
+ // stay transparent rather than causing the remaining tokens to re-centre.
+ if(trayPieces.children.length!==5){trayPieces.replaceChildren();for(let i=0;i<5;i++){
+   const piece=document.createElement('button');piece.type='button';piece.className='tray-piece';piece.dataset.slot=String(i);trayPieces.appendChild(piece);
+ }}
+ [...trayPieces.children].forEach((piece,i)=>{
+   const available=i<points;
+   piece.classList.toggle('spent',!available);
+   piece.disabled=!available;
+   piece.setAttribute('aria-label',language==='es'?`Ficha ${i+1}: ${available?'toca para colocar':'utilizada'}`:`Piece ${i+1}: ${available?'tap to place':'used'}`);
+   piece.style.background=playerColor(active);
+ });
+}
+function paint(){updateTray();board.replaceChildren();el('circle',{cx:300,cy:300,r:276,fill:'#0d241d',stroke:'#e2c78d','stroke-width':7});
+ if(halfMode){ // Two uninterrupted, contiguous semicircles: right and left.
+   el('path',{d:'M300 42 A258 258 0 0 1 300 558 L300 42 Z',fill:halfShades[0],class:'sector'});
+   el('path',{d:'M300 558 A258 258 0 0 1 300 42 L300 558 Z',fill:halfShades[1],class:'sector'});
+   for(let p=0;p<2;p++){let t=el('text',{x:p===0?444:156,y:304,class:'territory-label',style:'font-size:19px'});t.textContent=halfNames[p]}
+ }else{for(let p=0;p<4;p++){let start=-45+p*90;el('path',{d:pathSector(start,start+90),fill:shades[p],class:'sector'});let xy=polar(149,start+45);let t=el('text',{x:xy[0],y:xy[1],class:'territory-label'});t.textContent=names[p]}}
+ // Two-half mode has its own 24-lof perimeter geometry; four-quarter modes keep their original 12-lof layout.
+ if(halfMode){
+   for(let p=0;p<2;p++){
+     const side=p===0?1:-1;
+     const coords=[];
+     // Four positions down the upper straight edge, sixteen around the
+     // semicircular outer edge, and four up the lower straight edge.
+     // Spacing is about 46–52 SVG units, with no overlapping circles.
+     for(let j=0;j<4;j++)coords.push([300+side*30,300-(25+j*52)]);
+     for(let j=0;j<16;j++){
+       const angle=(p===0?-82:-98)+(p===0?164:-164)*j/15;
+       coords.push(polar(231,angle));
+     }
+     for(let j=0;j<4;j++)coords.push([300+side*30,300+(181-j*52)]);
+     coords.forEach(([x,y],idx)=>drawSlot(p,idx,x,y));
+   }
+ }else{
+   for(let sector=0;sector<4;sector++){
+     let start=-45+sector*90,theta=start*Math.PI/180,ux=Math.cos(theta),uy=Math.sin(theta),vx=-Math.sin(theta),vy=Math.cos(theta);
+     for(let i=0;i<12;i++){
+       let padding=27,outer=258-padding,x,y;
+       if(i===0){[x,y]=polar(40,start+45)}
+       else if(i<=3){let t=74+(i-1)*49;x=300+ux*t+vx*padding;y=300+uy*t+vy*padding}
+       else if(i<=8){let inset=Math.asin(padding/outer),angle=theta+inset+(i-4)*(Math.PI/2-2*inset)/4;x=300+outer*Math.cos(angle);y=300+outer*Math.sin(angle)}
+       else{let t=172-(i-9)*49;x=300+ux*padding+vx*t;y=300+uy*padding+vy*t}
+       drawSlot(sector,i,x,y);
+     }
+   }
+ }
+ function drawSlot(p,idx,x,y){
+   let c=el('circle',{cx:x,cy:y,r:17,fill:pieces[p][idx]?playerColor(p):'#17372d',class:'slot'+(legal(p,idx)?' available':''),'data-player':p,'data-index':idx,tabindex:legal(p,idx)?'0':'-1',role:'button','aria-label':`${playerName(p)}, ${t('position')} ${idx+1}, ${pieces[p][idx]?t('occupied'):t('empty')}`});
+   if(pieces[p][idx])el('circle',{cx:x,cy:y,r:7,fill:'#fff7dc','pointer-events':'none'});
+   c.addEventListener('click',()=>choose(p,idx));c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(p,idx)}});
+ }
+ scores.innerHTML=Array.from({length:count()},(_,p)=>`<div class="player ${active===p&&!over?'active':''}" style="opacity:${alive(p)?1:.48}"><strong><span class="dot" style="background:${playerColor(p)}"></span>${playerName(p)}</strong><small>${pieces[p].filter(Boolean).length}/${pieces[p].length} lof · ${human(p)?t('human'):t('computer')}${!alive(p)?t('out'):''}</small></div>`).join('');
+ turn.textContent=over?t('gameover'):`${t('turn')}: ${playerName(active)} (${human(active)?t('human'):t('computer')})`;const rollUnavailable=over||rolled||spinning||!human(active);die.setAttribute('aria-disabled',String(rollUnavailable));die.tabIndex=rollUnavailable?-1:0;die.classList.toggle('die-ready',!rollUnavailable);}
+function finish(text){over=true;rolled=false;points=0;message.textContent=text;paint()}
+function next(){rolled=false;points=0;round++;for(let n=0;n<count();n++){active=(active+1)%count();if(alive(active))break}
+ if(teamMode){const h=alive(0)||alive(2),c=alive(1)||alive(3);if(!h||!c){finish(h?t('humanTeam'):t('computerTeam'));return}}
+ else if(pieces.filter(a=>a.some(Boolean)).length===1){finish(`${playerName(active)} ${t('wins')}`);return}
+ message.textContent=`${playerName(active)}: ${t('rollPrompt')}`;dieCaption.textContent=t('ready');paint();if(!human(active))timer=setTimeout(computer,650)}
+function choose(p,i){if(placingAnimation||!legal(p,i))return;pieces[p][i]=p===active;points--;message.textContent=points?`${points} ${t('remaining')}`:t('complete');paint();if(points===0)timer=setTimeout(next,400)}
+/* A square pyramid: four triangular sides (1–4) and a square base (5).
+   The five-point result is intentionally rare (1%), as requested. */
+const ctx=kechukan.getContext('2d');
+// Taller, narrower square pyramid. The base is numbered 5.
+const vertices=[[-.72,-1.05,-.72],[.72,-1.05,-.72],[.72,-1.05,.72],[-.72,-1.05,.72],[0,2.05,0]];
+const faces=[{v:[0,1,4],n:1,c:'#d5a56a'},{v:[1,2,4],n:2,c:'#c28c53'},{v:[2,3,4],n:3,c:'#e3b67b'},{v:[3,0,4],n:4,c:'#bb804a'},{v:[3,2,1,0],n:5,c:'#916038'}];
+function projected(ax,ay,az){
+  const w=kechukan.width,h=kechukan.height;
+  return vertices.map(([x,y,z])=>{
+    let cy=Math.cos(ay),sy=Math.sin(ay),cx=Math.cos(ax),sx=Math.sin(ax),cz=Math.cos(az),sz=Math.sin(az);
+    let xx=x*cy+z*sy,zz=-x*sy+z*cy,yy=y*cx-zz*sx;zz=y*sx+zz*cx;
+    let fx=xx*cz-yy*sz,fy=xx*sz+yy*cz;let scale=(window.matchMedia('(max-width:760px)').matches?74:98)*4.8/(5.6-zz);
+    return {x:w/2+fx*scale,y:h/2-fy*scale,z:zz};
+  });
+}
+function signedArea(v){let sum=0;for(let i=0;i<v.length;i++){let a=v[i],b=v[(i+1)%v.length];sum+=a.x*b.y-b.x*a.y}return sum/2}
+function drawPyramid(ax=-.34,ay=.48,az=.10){
+  const w=kechukan.width,h=kechukan.height;ctx.clearRect(0,0,w,h);
+  const pts=projected(ax,ay,az);
+  // Draw only faces facing the viewer, so hidden numbers cannot show through.
+  const visible=faces.map(f=>({...f,poly:f.v.map(i=>pts[i])})).filter(f=>signedArea(f.poly)<-0.1)
+    .sort((a,b)=>a.poly.reduce((s,p)=>s+p.z,0)/a.poly.length-b.poly.reduce((s,p)=>s+p.z,0)/b.poly.length);
+  // Label every *visible* face. The size adapts to the projected face area
+  // so adjacent numerals stay inside their own triangles rather than overlapping.
+  for(const f of visible){
+    const v=f.poly,area=Math.abs(signedArea(v));
+    ctx.beginPath();ctx.moveTo(v[0].x,v[0].y);
+    for(let i=1;i<v.length;i++)ctx.lineTo(v[i].x,v[i].y);
+    ctx.closePath();ctx.fillStyle=f.c;ctx.fill();
+    ctx.strokeStyle='#684322';ctx.lineWidth=5;ctx.lineJoin='round';ctx.stroke();
+    if(area<110)continue;
+    const center=v.reduce((a,p)=>({x:a.x+p.x/v.length,y:a.y+p.y/v.length}),{x:0,y:0});
+    const fontSize=Math.max(13,Math.min(42,Math.sqrt(area)*.43));
+    ctx.save();ctx.clip();ctx.fillStyle='#392519';
+    ctx.font='bold '+fontSize+'px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(String(f.n),center.x,center.y);ctx.restore();
+  }
+}
+// Pick a resting orientation where the rolled triangular face has the largest
+// visible projected area. The caption and the dominant face always agree.
+function restingPose(value){
+  if(value===5)return [Math.PI,0,0];
+  let best=null,bestScore=-Infinity;
+  for(let xi=-.72;xi<=.72;xi+=.12){for(let yi=-Math.PI;yi<Math.PI;yi+=.075){
+    const pts=projected(xi,yi,0);
+    const areas=faces.slice(0,4).map(f=>Math.max(0,-signedArea(f.v.map(i=>pts[i]))));
+    const target=areas[value-1],other=Math.max(...areas.filter((_,i)=>i!==value-1));
+    const score=target-other*.55;
+    if(target>other&&score>bestScore){bestScore=score;best=[xi,yi,0]}
+  }}
+  return best||[-.3,(value-1)*Math.PI/2,0];
+}
+function rollDie(){if(over||rolled||spinning)return;spinning=true;rolled=true;
+  const value=Math.random()<.01?5:1+Math.floor(Math.random()*4);lastRoll=value;
+  dieCaption.textContent=t('rolling');paint();const token=++spinToken;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const duration=reduced?0:1600,start=performance.now(),base=spinAngle;
+  const finishRoll=()=>{if(token!==spinToken)return;spinning=false;spinAngle=base+Math.PI*6;
+    // The rolled number is always the most visible face; 5 is the rare point landing.
+    drawPyramid(...restingPose(value));
+    dieCaption.textContent=value===5?t('rare'):`${t('result')}: ${value}`;
+    if(value===5){finish(`${playerName(active)} ${t('rareWin')}`);return}
+    points=value;message.textContent=`${t('rolled')} ${value}. ${empty(active)!==-1?t('fill'):t('remove')}`;
+    paint();if(!human(active))timer=setTimeout(computerMoves,550);
+  };
+  if(!duration){finishRoll();return}
+  function frame(now){if(token!==spinToken)return;let t=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-t,3);
+    drawPyramid(-.34+ease*Math.PI*5.8,base+ease*Math.PI*9.5,.1+Math.sin(ease*Math.PI*6)*.28);
+    if(t<1)requestAnimationFrame(frame);else finishRoll();}
+  requestAnimationFrame(frame);
+}
+
+// Every tap earns ONE flight. Rapid taps are queued and animated in sequence.
+// Five slots stay fixed so the supply never jumps sideways.
+function requestPiecePlacement(){
+ if(over||spinning||!rolled||points<=0||!human(active))return;
+ if(queuedPlacements>=points)return;
+ queuedPlacements++;
+ if(!placingAnimation)void animateQueuedPieces();
+}
+async function animateQueuedPieces(){
+ if(placingAnimation)return;
+ placingAnimation=true;
+ const token=++animationToken;
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ while(queuedPlacements>0&&points>0&&token===animationToken&&!over){
+  queuedPlacements--;
+  let target=null;
+  const e=empty(active);
+  if(e!==-1)target=[active,e];
+  else{
+   const choices=[];
+   for(let p=0;p<count();p++)if(p!==active&&!friendly(active,p))
+    for(let i=0;i<pieces[p].length;i++)if(pieces[p][i])choices.push([p,i]);
+   if(!choices.length)break;
+   target=choices[Math.floor(Math.random()*choices.length)];
+  }
+  const [p,i]=target;
+  // The rightmost available piece is spent; the other slots never move.
+  const origin=trayPieces.children[points-1];
+  const destination=board.querySelector(`.slot[data-player="${p}"][data-index="${i}"]`);
+  if(origin&&destination&&!reduced){
+   const a=origin.getBoundingClientRect(),b=destination.getBoundingClientRect();
+   const dot=document.createElement('span');dot.className='flying-piece';
+   dot.style.background=playerColor(active);
+   dot.style.left=`${a.left+a.width/2}px`;dot.style.top=`${a.top+a.height/2}px`;
+   document.body.appendChild(dot);
+   origin.style.visibility='hidden';
+   const dx=(b.left+b.width/2)-(a.left+a.width/2),dy=(b.top+b.height/2)-(a.top+a.height/2);
+   const flight=dot.animate([
+    {transform:'translate(-50%,-50%) scale(1)',opacity:1},
+    {transform:`translate(calc(${dx}px - 50%),calc(${dy-28}px - 50%)) scale(1.2)`,opacity:1,offset:.6},
+    {transform:`translate(calc(${dx}px - 50%),calc(${dy}px - 50%)) scale(.75)`,opacity:1}
+   ],{duration:420,easing:'ease-in-out'});
+   try{await flight.finished}catch(err){}dot.remove();
+   origin.style.visibility='';
+  }
+  if(token!==animationToken)return;
+  pieces[p][i]=p===active;points--;
+  message.textContent=points?`${points} ${t('remaining')}`:t('complete');
+  paint();
+ }
+ if(token!==animationToken)return;
+ queuedPlacements=0;placingAnimation=false;paint();
+ if(points===0)timer=setTimeout(next,350);
+}
+function computerMoves(){if(over||human(active)||!rolled)return;while(points>0){let e=empty(active);if(e!==-1){pieces[active][e]=true;points--;continue}let options=[];for(let p=0;p<count();p++)if(p!==active&&!friendly(active,p))for(let i=0;i<pieces[p].length;i++)if(pieces[p][i])options.push([p,i]);if(!options.length)break;let [p,i]=options[Math.floor(Math.random()*options.length)];pieces[p][i]=false;points--}message.textContent=`${playerName(active)}: ${t('complete')}`;paint();timer=setTimeout(next,650)}function computer(){if(!over&&!human(active))rollDie()}function autoPlace(){if(!rolled||!human(active)||over)return;while(points>0){let e=empty(active);if(e!==-1){pieces[active][e]=true;points--;continue}let options=[];for(let p=0;p<count();p++)if(p!==active&&!friendly(active,p))for(let i=0;i<pieces[p].length;i++)if(pieces[p][i])options.push([p,i]);if(!options.length)break;let [p,i]=options[Math.floor(Math.random()*options.length)];pieces[p][i]=false;points--}message.textContent=t('complete');paint();timer=setTimeout(next,450)}function reset(){animationToken++;placingAnimation=false;queuedPlacements=0;document.querySelectorAll('.flying-piece').forEach(el=>el.remove());clearTimeout(timer);spinToken++;spinning=false;spinAngle=0;drawPyramid();halfMode=mode.value==='half';teamMode=mode.value==='team';humans=teamMode?2:Number(mode.value);pieces=Array.from({length:count()},()=>Array(halfMode?24:12).fill(false));for(let p=0;p<count();p++)pieces[p][0]=true;active=0;points=0;rolled=false;over=false;round=0;lastRoll=null;dieCaption.textContent=t('ready');message.textContent=halfMode?t('halfStart'):teamMode?t('teamStart'):t('fourStart');paint()}document.querySelectorAll('.mobile-settings,.rules-box').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)document.querySelectorAll('.mobile-settings,.rules-box').forEach(other=>{if(other!==d)other.open=false})}));trayPieces.addEventListener('click',e=>{if(e.target.closest('.tray-piece:not(.spent)'))requestPiecePlacement()});document.getElementById('new').addEventListener('click',reset);die.addEventListener('click',rollDie);die.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();rollDie()}});mode.addEventListener('change',reset);document.getElementById('lang-es').addEventListener('click',()=>setLanguage('es'));document.getElementById('lang-en').addEventListener('click',()=>setLanguage('en'));reset();setLanguage('es')})();
+</script></body></html>
