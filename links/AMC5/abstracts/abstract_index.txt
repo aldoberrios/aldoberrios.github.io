@@ -1,0 +1,1800 @@
+==================================================
+FILENAME: 10.pdf
+==================================================
+Types of Evidence for (and against) Oblique Subjecthood in Old English
+
+How can subjecthood be reconstructed in a historical language when its principal diagnostics do
+not converge? In Old English, some verbs licence the leftmost experiencer argument in a case
+other than the nominative. These oblique experiencers, often marked in the dative, occur
+particularly in expressions of happenstance, obligation, emotion, and perception. Under a
+canonical definition based on nominative case and verbal agreement, such constructions have
+traditionally been analysed as impersonal and subjectless. Other properties, however, including
+argument position, discourse prominence, semantic role and syntactic behaviour, suggest that
+some oblique experiencers function as non-canonical subjects (Barðdal 2023; Allen 1995).
+
+This paper examines the evidential value of case marking, verbal agreement, word order,
+argument structure, semantics and textual provenance in the analysis a small selection of Old
+English psychological verbs. The study is based on all their occurrences extracted from the
+Dictionary of Old English Corpus and manually coded for experiencer case, co-arguments,
+clause type, constituent position and text type.
+
+A preliminary study shows that such verbs may display different profiles. Ofþyncan ‘regret’
+strongly favours a dative experiencer, while (of)hreowan ‘pity’ permits several argument-
+structure patterns and sceamian ‘to be ashamed’ shows substantial competition between dative,
+
+==================================================
+FILENAME: 11.pdf
+==================================================
+Abbreviations as quantitative evidence for historical English: the case
+of etc.
+
+Abbreviation is an ever-present feature of written language, found in medieval manuscripts, early printed books,
+modern text messages, and everything in between. But what kind of linguistic evidence do abbreviations
+actually constitute? How can we best model them, and how can we study them? The aim of the present paper is
+to provide a quantitative, corpus-based study of abbreviations of et cetera in Early Modern letters, as well as in
+modern e-mails and WhatsApp messages.
+
+Abbreviations for the Latin phrase et cetera are among the longest-standing abbreviation conventions in the
+English language. As early as 1822, Blackwood’s Edinburgh Magazine humorously commented on the phrase’s
+overuse in scientific discourse, coining the adverbial form etceteraly to satirize its ubiquity: “To write critically,
+scientifically … etceteraly” (OED). In linguistics, etc. is often treated as a general extender (see Overstreet
+1999; Carroll 2008; Ewata and Oribhabor 2019), but it differs from other general extenders (and so on, and
+stuff) in being Latin in origin, abbreviated, and highly formulaic.
+
+The present paper examines abbreviations of ‘et cetera’ in three corpora:
+
+Corpus of Early English Correspondence (CEEC): Early Modern correspondence
+A Transhistorical Corpus of Written English (TWCE): 21st-century WhatsApp messages
+
+==================================================
+FILENAME: 12.pdf
+==================================================
+Variation and change in the argument structure of three-place verbs in Indo-European
+
+Three-place verbs have received considerably less attention than two-place verbs in both cross-
+linguistic and Indo-European (IE) comparative studies. While variation in coding frames has
+extensively been investigated for two-place verbs (e.g. Malchukov 2005; Haspelmath 2015b; Say
+2014; 2025; Alfimova 2024; Creissels 2024), research on three-place verbs has focused
+predominantly on ditransitive verbs (Malchukov, Haspelmath & Comrie 2010; Haspelmath 2015a),
+leaving the wider class of three-place verbs, including e.g. verbs of caused motion and filling,
+comparatively understudied. This paper investigates the coding frames of three-place verbs across
+IE using data from the PaVeDa database (Luraghi et al. 2024). Data primarily consists of coding
+frames for 35 meanings associated to trivalent verbs in 11 ancient IE languages.
+        The paper addresses three interconnected questions. First, what is the extent of variation in
+the coding of third arguments in with three-place verbs across ancient IE languages? This involves
+both assessing the ditransitive alignment pattern for individual meanings as well as comparing
+individual flagging pattern (following Alfimova 2024). In total, 15 different flagging patterns were
+individuated. These cluster around neatly distinct poles: ditransitive verbs proper, verbs of caused
+motion and verbs with Source- and Instrument-like third arguments (Figure 1). Second, I focus
+diachronic developments in six lineages (Ancient Greek > Modern Greek, Old Latin > Italian, Old
+Irish > Modern Irish, Old Church Slavonic > Russian, Old Norse > Icelandic, and Avestan >
+Western Farsi), to explore trends in stability and change in alignment patterns and coding strategies.
+
+==================================================
+FILENAME: 13.pdf
+==================================================
+From correlation to causation: explaining actuation differences in be going to and go to
+with contextual strength of association
+When investigating language change, historical linguists typically look for specific factors
+which might explain why a specific change has happened. For be going to, it has for instance
+been argued that specific contexts allowed the inference of purely futural meanings without
+motion, so that it developed into a future-time expression (e.g. Traugott & Trousdale 2013;
+Budts & Petré 2016). These types of studies can attest that a given factor (e.g. contextual
+inference) correlates with a given change (be going to becoming a future-time expression), but
+not whether it causes the change. This is the so-called actuation problem: explaining why a
+change happens when and where it does (Weinreich et al. 1968). Actuation is difficult to
+investigate because of the many potential factors involved. Often language-external factors
+(e.g. contact, sociolinguistic variation) are invoked, but these factors cannot account for all
+actuation differences, e.g. actuation differences in a single variety (Walkden 2017).
+In this paper, I argue that language-internal factors may explain such actuation differences in a
+single variety. For a case study, I investigate the differences in actuation between the two
+periphrastic GO-expressions be going to and go to. Both expressions originally meant ‘going
+somewhere in order to do something’ and both could express intention in early Modern English
+but only be going to developed further futural meanings (e.g. plan, prediction) (Petré 2016). As
+a factor I investigate contextual strength of association i.e. how strongly the expressions are
+associated with a given context in comparison to competing future-time expressions will and
+
+==================================================
+FILENAME: 14.pdf
+==================================================
+                       Studying Nahuatl variation in the colonial period:
+         Types of evidence and methodological issues in approaching Tlaxcala Nahuatl
+
+Historical linguistics is notoriously confronted with what William Labov (1972: 100) famously
+labelled as “bad data”, i.e., evidence that is random, incomplete, often scarce, frequently shaped by
+power relations that determine what is relevant (and thus knowable), and limited in terms of both the
+domains of language use it reflects and the social groups represented (see, e.g., Romaine 1982; Winter
+1999; Sornicola 2019). Nevertheless, one should take as much information as possible from such
+data, by carefully evaluating it from a linguistic, philological, and historical point of view, bearing in
+mind that each case presents its own specific challenges and should be assessed on its own terms.
+The paper focuses on the Nahuatl variety of Tlaxcala in the colonial period (1521–1821), which is
+attested by a number of direct sources belonging to different genres, including historical texts – such
+as the Annals of Tlaxcala (Townsend 2010) and the Anónimo Mexicano (Crapo and Glass-Coffin
+2005) –, several legal and administrative documents (Solís et al. 1984; Lockhart et al. 1986; Sullivan
+1987), and others (cf., e.g., Olko and Brylak 2018; Macuil Martínez 2024). To these, one should add
+sporadic information found in missionary grammatical and lexicographic works, which, although
+generally describing the variety referred to as “Classical Nahuatl”, occasionally provide hints on other
+Nahuatl dialects (cf., e.g., Whittaker 1988; Guzmán Betancourt 1993; Flores Farfán 2007). Finally,
+additional insights may also come from dialectological surveys of contemporary Nahuatl varieties
+spoken in the same region (e.g., Bright 1967; Lastra and Horcasitas 1979).
+
+==================================================
+FILENAME: 15.pdf
+==================================================
+Missionary correspondence as a source for studying language contact in the Ottoman
+Balkans during the 17th century
+
+This study examines missionary correspondence as a source for investigating language contact in
+the multilingual Ottoman Balkans during the seventeenth century. The analysis is based
+on Litterae missionarum, a collection of 1,142 letters written in Latin and Italian between 1572 and
+1717 by Catholic missionaries working in territories of the Ottoman Empire corresponding to
+present-day Bosnia and Herzegovina, Croatia, Hungary, Romania, and Serbia. For the purposes of
+this study, a subcorpus of 43 Italian-language letters written in Bosnia and Herzegovina (Sarajevo,
+Tuzla, Fojnica, Rama, Modriča, Olovo, Banja Luka, and Kreševo) during the seventeenth century
+was compiled. The letters were predominantly authored by friars of Bosnian origin serving in the
+Franciscan Province of Bosna Srebrena and were addressed to the seat of the Sacra Congregatio de
+Propaganda Fide in Rome.
+
+Although composed in Italian, the correspondence documents the social, administrative, and
+religious realities of Ottoman Bosnia and Herzegovina by describing the life, beliefs, customs, and
+practices of the local population. Although intended as administrative and pastoral reports rather
+than linguistic descriptions, they preserve evidence of communication across linguistic, political,
+and religious boundaries. As such, the letters preserve lexical traces of sustained contact between
+Italian and the linguistic environment of Ottoman Bosnia. The analysis focuses on lexical items
+
+==================================================
+FILENAME: 16.pdf
+==================================================
+       Methodological Issues in Using Written Records as Sources for Historical Dialectology
+
+    Written records constitute the principal source of evidence for the historical study of dialectal
+variation. Their value for research on the history of dialects, however, is far from uniform and therefore
+requires careful methodological assessment. Two complementary approaches can be distinguished. The
+first investigates the geographical and chronological distribution of individual linguistic features,
+whereas the second examines the full range of dialectal features preserved in individual texts in order to
+reconstruct their dialectal profile. Although these approaches share a number of methodological
+challenges, each also raises its own interpretative questions.
+    The interpretation of historical evidence depends fundamentally on the chosen point of comparison.
+Data from written records may be evaluated either against the present-day standard language or against
+evidence from other contemporary sources. While comparison with the modern standard is often
+unavoidable when working with large corpora, it can also lead to misleading conclusions, since forms
+that differ from the present-day standard do not necessarily represent dialectal features in their original
+historical context.
+    The dialectological interpretation of written records is influenced not only by orthographic practices
+but also by linguistic variation within the sources themselves. In the case of phenomena in the Old
+Hungarian period (895–1526), it is essential to recognise that the recorded forms do not invariably reflect
+the dialect of the local speech community but may instead preserve the linguistic usage of the scribe or
+copyist. Another major methodological challenge is the uneven geographical and chronological
+
+==================================================
+FILENAME: 17.pdf
+==================================================
+                   Material variation as evidence of linguistic variation and change
+
+Much research on Medieval Latin is based on critical editions, which present a subjective interpretation of
+a putative archetype (Vanderputten/Breitbarth 2026). In view of the extreme fluidity and material plural-
+ity of medieval textual transmission, such an approach obscures much variation, as has been recognised in
+New Philology (e.g., Nichols 1990; Cerquiglini 1999). This paper advocates taking Lauersdorf’s (2019)
+historical sociolinguistics adage “use all the data!” a step further, by incorporating not only as many
+material witnesses of a text as possible, but also the rich historical and material metadata associated with
+them.
+     Using a corpus of Latin hagiographic texts from Lotharingia from the Long Tenth Century (c. 880–
+1030), we argue that the manuscript record constitutes a crucial source of evidence for understanding
+language variation and change. The chosen corpus and period are particularly suitable for this purpose:
+Tenth-century Lotharingia was a multilingual area, straddling the Romance–Germanic language bound-
+ary. Latin was no longer acquired as a native language (e.g. Wright 2002, Barrau 2011), yet remained the
+principal language of writing and learned communication, despite considerable variation in users’ com-
+petence. At the same time, hagiographical texts continued to be produced and circulated widely. Unlike
+more rigidly transmitted biblical texts, their manuscript transmission preserves traces of both conscious
+and unconscious adaptation.
+     The manuscripts display variation at multiple linguistic levels. Phonologically motivated spellings
+such as ammonita < admonita ‘admonished’ and prumptu < promptu ‘readily’ suggest oral influences
+
+==================================================
+FILENAME: 18.pdf
+==================================================
+           Mark Twain and a Methodology for Idiolectal Reconstruction
+
+Crystal (e.g. 2017: 337) emphasises that his Shakespearean ‘Original Pronunciation’
+is not ‘Shakespeare’s pronunciation’, nor ‘a single accent’, but the reconstruction of a
+phonological system. Conversely, our research programme explores how we can
+reconstruct the voice of a single historical individual through the marriage of wide-
+ranging phonological evidence and contemporary reports and biographical details
+pertaining to the character in question.
+
+Mark Twain (1835-1910) is not only a colossal figure in US literature, but was also a
+celebrated speaker with a unique style of delivery (‘drawl’) and an acute sensitivity to
+dialect, such that his biographer noted ‘Not to have heard Mark Twain is to have
+missed much of the value of his utterance’ (Paine 1912). Recordings of his voice
+were made, but tantalisingly none survived.
+
+This paper employs a hybrid methodology to reconstruct Twain’s voice. First, we
+survey the (understudied) dialectal landscape of nineteenth-century America
+focusing on the regions pertinent to the well-travelled author’s life, including Virginia
+and Kentucky where early settlers to Missouri were from (such as Twain’s parents).
+We collate de-, pre-, and proscriptions in the evidence provided by dictionaries
+
+==================================================
+FILENAME: 19.pdf
+==================================================
+Proper Names as Sources for Historical Linguistics
+Historical linguistics makes extensive use of the evidence provided by proper names in reconstructing
+the linguistic conditions of the medieval Carpathian Basin (the Kingdom of Hungary). This is because,
+during the first centuries of literacy in Hungary, written documentation was represented almost
+exclusively by Latin-language sources (charters, gesta and chronicles), while only four Hungarian-
+language texts have survived, containing altogether no more than approximately five hundred words.
+Consequently, for the study of the 11–13th centuries, the primary sources for historical linguistic research
+are the tens of thousands of extant Latin charters together with a small number of narrative historical
+sources.
+The Hungarian-language material preserved in Latin charters and narrative historical texts (gesta and
+chronicles) consists predominantly of proper names. Their recording in the vernacular was motivated by
+legal and practical considerations, since preserving their identifying function required that they be
+documented in their original linguistic form. This practice was characteristic of medieval European
+charters in general and naturally served as a model for charter-issuing practice in the Kingdom of
+Hungary. As a result, Latin written sources preserve several hundred thousand Hungarian place names
+and personal names from a period when continuous Hungarian texts are only sporadically attested. One
+of the most important of these sources is the Gesta Hungarorum of Anonymus, composed around 1217
+(and also available in English translation), which provides valuable evidence for the Hungarian language
+of the early 13th century.
+Drawing on the linguistic material of this source, my presentation offers an overview of the ways in
+
+==================================================
+FILENAME: 1.pdf
+==================================================
+   The Demonstrative Pronouns and the Absence of a Definite Article in Old East Slavic
+
+
+This paper investigates the syntax, semantics, and diachronic development of demonstrative
+pronouns in Old East Slavic (OES) and explains the absence of a grammaticalized definite
+article. This study pursues the central question: Why did the demonstrative in OES fail to
+grammaticalize into a definite article? Although the problem of the diachronic development of
+the demonstrative pronouns and the emergence of the definite article has been addressed in Old
+South Slavic (Mladenova 2007, 2009; Dimitrova-Vulchanova and Vulchanov 2010, Dimitrova-
+Vulchanova and Vulchanov 2012; Šimko 2020) and Old Church Slavonic (Kuznetsov 2020), it
+has not received much attention in Old East Slavic.
+
+Based on a quantitative corpus study of the Ostromir Gospel (1056–1057) and the Arkhangelsk
+Gospel (1092), I show that OES demonstratives retain full inflectional morphology, exhibit
+flexible word order (Dem–N and N–Dem), and lack a fixed syntactic position and phonological
+reduction characteristic of grammaticalization. Adopting a Minimalist diachronic framework, I
+argue that OES demonstratives function as NP-internal referential operators that bind the
+nominal variable and yield referential expressions without projecting a DP layer. I propose that
+the absence of a definite article in OES follows from the interaction of (i) rich case morphology,
+(ii) robust φ-feature concord, and (iii) the absence of structural pressure for the specifier as head
+
+==================================================
+FILENAME: 20.pdf
+==================================================
+(Re)-assessing the productivity of Old and Middle English a- and ge-: what the
+Tolerance Principle can tell us
+
+Old English (OE) employed an elaborate system of inseparable prefixes, including ge- and
+a- to mark the resultative or telic interpretation of the predicate. These prefixes were lost
+quite suddenly in the transition from OE to Middle English (ME), although ge- occurred at
+some frequency well into ME. The prefixes and their loss have received significant attention
+in the literature in terms of their function and the causes for their loss (Hiltunen 1983;
+Elenbaas 2007; Los et al. 2012; Thim 2012, a.o.). Nevertheless, the question how individual
+prefixes are represented in the grammar, in particular to what extent prefixation is a
+productive (derivational) process, remains open.
+​        This talk (re-)assesses the evidence for the productivity of two prefixes: ge- and a-.
+We focus on these two prefixes because it has been suggested that they function similarly
+and can be used interchangeably. At the same time, ge- and a- differ substantially in both
+their type and token frequencies (cf. Molineaux 2012). This may indicate a different status in
+the grammar, although this cannot straightforwardly be assessed using traditional notions of
+productivity, which measure adult language production but crucially not child acquisition. We
+will take an innovative acquisition-based approach, building on Yang’s Tolerance and
+Sufficiency Principles (TSP) (Yang 2016, see Kodner 2022, Trips & Rainsford 2022 for
+historical applications). We assume that (i) productivity learning takes place via type
+
+==================================================
+FILENAME: 21.pdf
+==================================================
+        Contact explains patterns of language change in Italo-Romance varieties
+
+This study quantifies the relationship between language change and contact (Weinreich 1953,
+Thomason/Kaufmann 1988) analysing dialectal Italo-Romance varieties. Dialectal varieties are
+ideal for this purpose: they offer rich variation within a constrained area and often differ in
+single features, facilitating variable identification. Previous dialectometric studies have indeed
+shown that synchronic geographical distance explains around 20–50% of linguistic distance
+(Seguy 1971; Nerbonne 2010 a.o.), but these approaches cannot directly quantify change
+because current distributions reflect stratified historical processes. To overcome this, we
+develop a novel methodology that treats features as the unit of analysis and, crucially, adopts a
+diachronic design. For each feature F, we independently calculate a change measure and a
+contact measure, testing their relationship via regression.
+The change measure is derived by comparing three sources for Italo‑Romance varieties
+separated by 70–100 years: the AIS (1920s), the ASIt (1990–now), and the Manzini & Savoia
+Corpus (1990–now). For 23 selected Fs, we tag each F’s value at each datapoint in both time
+periods, link varieties across sources via geographical proximity (<15 km) and dialectal
+classification (Pellegrini 1977), and compute the absolute value difference for each linked pair
+across the time-span. The average difference across pairs is the change measure per F.
+The contact measure is defined from the older source (AIS). For each F, we loop through all
+AIS datapoints; at each point, we count the number of neighbouring datapoints (within a 50km
+
+==================================================
+FILENAME: 22.pdf
+==================================================
+ ‘Opening’ in Central Peninsular North Germanic: the evidence of geography and history
+Throughout much of the Central Peninsular North Germanic (CPNG) area that straddles Norway and
+Sweden—roughly coextensive with the geographical distribution of retroflex consonants (Ronge
+1993, Bye 2025, Riccardelli 2025)—Old Norse (ON) developed opened (=centralised and lowered)
+allophones/reflexes of short back vowels /ŭ ŏ ǫ̆ ă/ (Larsen 1885, 1894; cf. Hoff 1962). Within
+the retroflexion zone, opening excludes northern Bothnian and East Swedish (Ostrobothnian and
+Estonian Swedish), as well as a couple of relic areas in East Norwegian (Nord Gudbrandsdal) and
+Svealand (Älvdalen, Orsa). The dialectology of opening, including its triggers, lexical exceptions,
+and interaction with earlier and later sound changes, is highly complex. This paper sets out to
+show that the picture becomes considerably clearer when viewed through a geolinguistic lens, in
+particular when additional connections are sought in the known history of the period the changes
+occurred. To this end, we leverage the wealth of the available high-quality dialect descriptions,
+dictionaries and historical treatments of localised phenomena bequeathed us by researchers in both
+the Norwegian and Swedish traditions (see selected references) and compare the areal distribution
+of each innovation, mapped using R (R Core Team 2024), with the trajectories of known pilgrimage
+routes to Nidaros, or Trondheim, associated with the medieval cult of St. Olaf (Authén Blom 1968).
+    The dialect data is drawn from reflexes of Old Norse light (CV̆C) and heavy (CV̆CC(V)) root
+words with short back vowels: CŭC, CŏC, CăC; CŭCC(V), CŏCC(V), CăCC(V). Light-root disylla-
+bles (CŭCV, CŏCV, CăCV) are excluded since they are the domain for metaphony, which obscures
+the conditions for any opening. Light- and heavy-root environments behave differently with respect
+
+==================================================
+FILENAME: 23.pdf
+==================================================
+Knowing Your Self: Comparative and Corpus Evidence for Old English
+Reflexives and Intensifiers
+Both building blocks of modern complex reflexives— coreferentially used
+pronouns and intensifier self—coexisted in Old English (OE), yet traditional
+accounts treat them as separate systems (van Gelderen, 2000).
+Reassessing this view, I show that OE already featured a verb-driven
+reflexive–intensifier system which continues throughout Middle English.
+This finding for Old English is made possible by leveraging the lemmatised
+York–Helsinki Parsed Corpus of Old English (LYCOE; Taylor et al., 2024).
+Comprehensive lemmatisation allows for precise tracking of self across all
+inflections while also isolating and considering verbal type—a key variable
+known to govern the distribution of simple versus complex reflexives in
+present-day languages (Reinhart & Reuland, 1993). Granular analysis
+reveals that OE self systematically targeted object-DP reflexives following
+specific semantic classes of verbs. Bringing this lemmatised corpus data
+into dialogue with comparative Germanic evidence shows that OE was not
+an unstable transitional system, but rather mirrored modern Germanic
+patterns where reflexive intensification is pragmatically and semantically
+driven (Reuland & Everaert, 2023). Ultimately, this demonstrates how
+combining lemmatised corpus evidence with comparative typology
+
+==================================================
+FILENAME: 24.pdf
+==================================================
+A Dutchman in the South Atlan0c … and his contribu0on to English new-dialect forma0on
+
+Pieter Willem Groen, born in April 1808 in Katwijk aan Zee, Zuid-Holland, in the Netherlands,
+was shipwrecked on Tristan da Cunha in 1836. He spent the rest of his life in the South
+AtlanIc, acIng as Chief Islander and spokesman with the outside world, and died in 1902
+(Taylor 1856, Brander 1940). The social history and sociolinguisIc evoluIon of Tristan da
+Cunha English (TdCE) has been well researched (Schreier 2003), but the foreign contribuIon
+has remained somewhat under the radar. It is undisputed that contact between diﬀerent
+BriIsh input varieIes, (Eastern New England) American English, and a restructured variety
+from St. Helena gave rise to a highly localized variety. These varieIes came into
+unprecedented contact, triggering processes of dialect contact and koinéizaIon (Trudgill
+2004). St Helenian English (StHE), spoken by a group of women who arrived on Tristan in the
+mid-1820s, was parIcularly instrumental, as they raised the majority of the children on the
+island throughout the 19th century (Schreier 2014).
+On the other hand, the feature pool included seZlers from conInental Europe as well:
+Denmark, Italy, and the Netherlands in parIcular. Logbook reports suggest that most of
+them spoke English quite well, though with varied degrees of competence. Certainly the
+most inﬂuenIal of them was Pieter Willem Groen (who anglicized his name to Peter William
+Green), whose potenIal contribuIon to new-dialect formaIon is scruInized here.
+In this paper, I will present new data to shed some light on Green’s sociolinguisIc role and
+
+==================================================
+FILENAME: 25.pdf
+==================================================
+Title: Whi is it so greet difference bitwixe a cirurgian & a phisician? Determining the
+“technicality” of Middle English medical terminology.
+
+
+
+There is an extensive body of medical texts in Middle English, which attest a rich
+professionalised vocabulary (Norri 2016; Taavitsainen & Pahta 2004). Yet, many
+of these terms also occur in other genres and text types, notably glossaries and
+word lists, administrative and legal documents, as well as in literary works.
+English specialised medical language has a long history, and there is extensive
+evidence for the existence of medical terminology from the Old English period
+onwards (Taavitsainen & Pahta 2004; Salmon 1999; cf. Van der Yeught 2018).
+However, compared to that of later periods and of other, more international
+languages of the later Middle Ages and Early Modern period, such as Latin and
+French, Middle English medical vocabulary is more fluid, varied, and layered. It
+reflects the effects of language contact, translation-induced transfer and local
+lexical traditions (Norri 2017; Norri 2004; Taavitsainen 2004; Crespo-García 2008).
+It has been suggested that this particular set of circumstances provided the initial
+foundation for the register stratification that we see in Present-Day English, and
+that the beginnings of lexical differentiation according to register can be found in
+
+==================================================
+FILENAME: 26.pdf
+==================================================
+Model comparison: Wave model vs. Tree model a
+      statistically informed point of view
+
+
+                                July 28, 2026
+
+
+    In historical linguistics, the evolutional history of languages is most often
+represented by a tree. At splitting events, two versions of the same language
+state evolving independently, ultimately creating the observed diversity. This
+model, although dominant, is criticized on many points, in particular the ab-
+sence of lateral transfer between languages. If more recent iterations of the
+model allow for borrowings, they must still remain rare for the model to make
+sense. An alternative to this model, developped as early as the XIXth century
+Osthoff and Brugman [1878], is the so called Wellentheorie, that is now know as
+wave model. In this model, diversity arises from uneven spread of innovations
+between different groups.
+    If the tree model has been widely studied [Pellard et al., 2024], formalised
+and benefits from numerous numerical method (e.g. Beast), the Wave model
+has not been, so far formalised.
+
+==================================================
+FILENAME: 27.pdf
+==================================================
+    Inventory and load: convergence and divergence of lexicographic and frequency
+                evidence in the semantic history of beauty and krasota
+
+How do different types of evidence answer the question of what a word meant — and do their
+answers converge? This paper compares two evidence types for the semantic history of
+evaluative abstract nouns, using English beauty and Russian krasota as a test case: (i)
+lexicographic evidence, the inventory of senses recorded in definitional dictionaries, and (ii)
+frequency evidence, the distribution of functional load across senses in semantic counts and
+corpora.
+
+The lexicographic arm draws on definitional analysis of English dictionaries of the 16th–20th
+centuries and thirty Russian lexicographic sources spanning the 10th to the 21st century. The
+frequency arm comprises three chronological slices: the Thorndike–Lorge Semantic Count
+(1938; 1,000 contexts), the British National Corpus (1980–1993; 300 contexts), and the Corpus
+of Contemporary American English (2000s–2020s; 300 contexts), annotated with a unified
+OED-based system of seven senses. Load distributions are modelled exponentially (M n =
+A·exp(−αn); R² = 92.0–96.6%), with semantic temperature T = 1/α as a summary parameter (T
+rises steadily: 1.21 → 1.70 → 2.09).
+
+The two evidence types converge on the direction of change. Russian dictionaries show the
+
+==================================================
+FILENAME: 28.pdf
+==================================================
+ COMPUTATIONAL ANNOTATION AS EVIDENCE FOR LINGUISTIC RELATEDNESS: A ZERO-SHOT
+           CROSS-LINGUAL TRANSFER TEST BETWEEN OLD ENGLISH AND GOTHIC
+
+
+
+Historical linguistics draws on a rich variety of evidence types –from comparative
+reconstruction and written records to typological theory and social variation data– to
+understand language change and past linguistic states, and to establish claims about
+relatedness and structural affinity between historical Germanic languages. This study
+proposes a computational approach evaluating the viability of zero-shot cross-lingual
+transfer from Old English (OE) to Gothic for automatic syntactic annotation under the
+Universal Dependencies (UD) framework (de Marneffe et al. 2021), contributing to
+ongoing debates about the nature and limits of evidence in historical linguistics. While
+traditional historical linguistics relies on philological comparison and textual analysis,
+computational approaches offer a novel type of evidence: systematic testing of
+linguistic relatedness through the performance of neural models trained on one
+language and applied to another, providing complementary, quantifiable evidence.
+
+The central question is whether the morphosyntactic knowledge encoded in a neural
+model trained on OE can serve to measure linguistic kinship with a related variety,
+
+==================================================
+FILENAME: 29.pdf
+==================================================
+                             Fortition in Luyana, Conditioned by Contact
+
+
+​       Luyi (also known as Luyana) is a Bantu language, located near Zambia’s southwest
+border. Luyi historically underwent a fortition shift */v/→/p/ and */z/→/t̪ / (Lisimba 1982).
+Honeybone (2016, 2022) argues that unmotivated fortition is an impossible change, with all
+documented fortition changes being either a product of assimilation or substrate influence. I
+argue this is true of Luyi as well, due to the substrate influence of the neighboring Lozi. The Lozi
+are a Tswana-Sotho group, who invaded West Zambia in 1834 (Gowlett 1989).
+​       Luyi is part of the Greater Luyana clade of Bantu languages. The historic */v/ and */z/
+were reconstructed on the basis of cross-clade comparison and Proto-Bantu correspondences
+(Lisimba 1982). Table 1 below provides a Luyana correspondence set for the fricatives of
+Proto-Luyana. Proto-Luyana */v/ corresponds to the Proto-Bantu sequences *C̬u while */z/
+corresponds to *C̬i. Through a common Bantu sound change called Bantu Spirantization, these
+stops became fricatives in Proto-Luyana, and adopted their place of articulation from the
+surrounding vowels (Janson 2007).
+
+Table 1​​          Strident Reflexes in sample Luyana Languages​       ​       (Lisimba 1982)
+     Proto-Luyana                   Luyi                  Mbukushu                   Mulonga
+
+
+==================================================
+FILENAME: 2.pdf
+==================================================
+Early evidence of New Zealand vowel change
+
+The rediscovery of an early PhD thesis, Thompson (1921), raises numerous
+empirical questions about the standard story of the development of distinctive
+features of the New Zealand English accent. Thompson’s attention to the speech
+of adolescents across the country and his attention to the speech of urban New
+Zealanders, including Auckland (already the nation’s most diverse speech
+community) showed him to be better attuned to modern principles of the
+sociolinguistic study of variation and change than some of his peers, e.g. Arnold
+Wall (Deverson 1996).
+
+As an internationally-trained phonetician, Thompson’s notations are precise and
+systematic, contrasting with other observations about early sound change
+(Gordon et al. 2004). Thompson’s PhD is also unusual for his celebration of the
+emerging distinctive accent, and his relative lack of apology for any deviation
+from Standard Southern British English. Of considerable significance for studies
+of varieties of English, Thompson documents early centralisation of KIT, today
+generally assumed to be the last stage in a typologically unusual push chain
+among the front vowels. Thompson’s data suggests a far more canonical pull
+chain was at work.
+
+==================================================
+FILENAME: 30.pdf
+==================================================
+             Syntactic Glossing as Evidence for Syntactic Change
+
+Syntactic glosses are paratextual markings indicating constituent order or
+dependency relations. In the cases relevant to this paper, the glossed text is not
+in the native language of the glossator; thus Japanese kunten and Korean kugyŏl
+glossing applies to a literary Chinese text. The glosses facilitate delivery of the
+text in the glossator’s vernacular, a practice which has been termed vernacular
+reading (Whitman et al. 2010). Work on syntactic glossing of Latin texts in
+medieval Europe, beginning with Draak (1967) and continuing through Bossong
+(2006) on the Glossas Emilianenses (10th or 11th c.) and Walkden (2016) on
+Lindisfarne Gospels (10th c.) establishes that the syntactic glosses in these texts
+generate vernacular readings in Old Irish, early Ibero-Romance, and Anglo-Saxon
+respectively.
+
+We discuss three examples of syntactic gloss material as evidence for historical
+change. Early glossed material has long been considered foundational for the
+lexical, phonological, and morphological diachrony of languages such as Old Irish
+and Old High German. The same applies to syntactic glosses. Vernacular glosses
+on a “classical” text are often the earliest material available for a given
+vernacular, simply because glossing is often among the earliest applications of
+
+==================================================
+FILENAME: 31.pdf
+==================================================
+Evidence for vowel length in Old and Middle Hungarian: problems of interpretation
+
+In Late Old Hungarian and Early Middle Hungarian sources (16th century) both major European
+length-marking traditions were present: some sources used letter-doubling, others used
+diacritics (laat or lát for [la:t] ‘he sees’; Kniezsa 1952, Korompay 2012). The interpretation of
+the use of these devices is problematic not only because of the general inconsistency of early
+scribal and printing practices, but also because of systematically occurring imbalances in the
+graphic distribution of the relevant symbols. Two such systematic patterns of length marking,
+hitherto undescribed, are explored in this paper. The goal is to assess how the evidence they
+provide relates to phonological reality.
+         (1) In the letter-doubling tradition, the length of [a:], [o:] and [ø:] is predominantly
+marked in ﬁnal syllables, rarely in non-ﬁnal syllables. This leads to graphic alternations of the
+type laat [la:t] ‘he sees’ vs. latnaak [la:tna:k] ‘they would see’ vs. latnatok [la:tna:tok] ‘you
+would see’. By contrast, [e:] is freely marked in all positions (e.g. eeleteeben [e:lɛte:bɛn] ‘in his
+life’). We o er a tentative explanation for the lack of non-ﬁnal-syllable length marking based
+on the continental Germanic practice of not marking length explicitly in graphic <_CV>
+contexts (cf. Voeste 2012). Actual vowel length is inferred from the diacritic tradition and from
+later dialectal data.
+         (2) Since long vowels were shortened in ﬁnal position in Early Old Hungarian,
+practically all language varieties have shown, since that period, stem-ﬁnal alternation in the
+
+==================================================
+FILENAME: 32.pdf
+==================================================
+Phonological, Morphological, and Lexical Evidence for Two
+Jarawan Migrations
+
+The Jarawan languages [Benue-Congo, Southern Bantoid] are a cluster of ~20 underdocumented
+languages spoken in the Middle Belt of Nigeria. Their classification has proven controversial
+among Africanists. This is especially true of their external classification, but there are questions
+regarding their internal structure as well. The Jar cluster is closest to the Lame and Jaku-Gubi
+(JG) clusters in geographic proximity, but the most distinct from them linguistically. This was
+observed on the basis of lexical data in earlier work (Maddieson & Williamson 1975), and Green
+(2022) argued based on numerals and historical records that Lame and JG represent an early,
+separate Jarawan migration. Data presented in this work furthers this hypothesis by showing
+Lame and JG pattern separately phonologically. Furthermore, Lame exhibits presumed retentions
+in morphology and tonology not shared with other groups.
+
+Phonologically, Jarawan languages have varyingly reduced word stems from a putative CVCV
+Proto-Jarawan shape through loss of V2 and restrictions on C2. The Jar languages are among the
+most progressive in this regard, with canonically monosyllabic stems across the lexicon. JG and
+Lame, however, are among the most conservative. Compare ‘blood’ in Mbat (Jar) kɪ́l with Gura
+(Lame) ǹ ʃìrá and Laɓɨr (JG) kílā. Lame and JG also share a phonological innovation wherein C1
+many labial stops lenited to fricatives before high vowels. In JG, these fricatives then palatalized
+
+==================================================
+FILENAME: 33.pdf
+==================================================
+      Possibilities and Challenges of Using
+         Artiﬁcial Neural Networks for
+         Comparative Reconstruction
+           Abstract for the Fifth AMC Symposium, Edinburgh 2026
+
+                                     Anonymous*
+
+
+   Automatic reconstruction, performing the comparative method with computational mod-
+els, is an area of increased interest and has been approached from various directions (e.g.,
+Fourrier and Sagot, 2020; Hartmann, 2021; Wientzek, 2025; Lu, Xie, and David R Mortensen,
+2024). While non-neural methods have been explored, (e.g., Bouchard-Côté et al., 2013), a
+large number of recent publications investigate the usefulness of Artiﬁcial Neural Networks.
+Until this point, most research has been exploratory, and no systematic account of the desired
+outcomes, requirements, and challenges for neural reconstruction has been formulated. The
+investigation at hand seeks to create a theoretical road map for the possible pathways of fu-
+ture neural reconstruction research and presents an initial prototype of a Graph-Transformer
+implementation addressing many of these challenges.
+   There are many challenges that come with implementing the fundamental principles of
+language reconstruction with computational models: model challenges and data challenges.
+
+==================================================
+FILENAME: 34.pdf
+==================================================
+Internalities and externalities in relative chronology
+Anonymized1
+1 Anonymized Institution
+
+
+
+
+ABSTRACT
+Central to historical phonology is the calibration of the order of occurrence, or relative chronology,
+of sound changes that compose a language’s phonological diachrony. This sequencing bears on
+much in and beyond phonology: the branching structure of language families, which proto-forms
+can be reconstructed, the dating of contact in terms of borrowed elements, and how one may
+conceive of the conditioning of sound changes in the language in question, which in turn informs
+typological discussions.
+Under foundational assumptions of regularity, that each sound change applies exceptionlessly
+and (chronotopically) at a specific point relative to other changes, specific orderings of sound
+changes are falsifiable inasmuch as they make specific predictions in cases where sound changes
+can interfere with each other [8]. Recent innovative computerized approaches leverage these
+interference effects to facilitate the optimization of relative chronologies for predictive accuracy
+[15, 9, 10], both independently reproducing earlier findings and discovering new regularities
+
+==================================================
+FILENAME: 35.pdf
+==================================================
+  Subgrouping methods differ less in the trees they infer than in
+               how they represent uncertainty
+
+Introduction Computational phylogenetic analyses are typically judged by whether they
+reproduce subgroups established by traditional methods (Ringe et al. 2002; Greenhill and Gray
+2012; Pereltsvaig et al. 2015; Chang et al. 2015; Bowern 2017; Greenhill, Heggarty, et al.
+2021; Olander 2022; Pronk 2021:144–145; Piwowarczyk 2022; Ringe 2022). This emphasis on
+agreement has left a more fundamental question relatively unexplored, namely how different
+subgrouping methods draw inferences from uncertain evidence. Any method of subgrouping
+must contend with three recurrent sources of uncertainty: uncertainty about the status of shared
+innovations, the absence of principled criteria for determining how many innovations suffice
+to establish a subgroup, and uncertainty arising from conflicting phylogenetic signal.
+Data and methods To examine how different subgrouping methods respond to these three
+challenges, I compare traditional subgrouping, implied-weighting parsimony, and Bayesian
+phylogenetic inference using simulation experiments. Binary characters are simulated on known
+trees under varying levels of homoplasy, borrowing, and phylogenetic signal. Each experiment
+isolates one source of uncertainty: whether shared innovations should be interpreted as evidence
+for common ancestry rather than independent development, how much evidence is sufficient to
+support a subgrouping hypothesis, and how conflicting inherited and contact-induced signals
+should be evaluated.
+
+==================================================
+FILENAME: 36.pdf
+==================================================
+Archaeology of the Tulu Language through the Tigalari Script Tradition of
+                             South India
+Writing systems are considered the signature of human history. Conventionally, script is treated
+merely as a graphical representation, and inscriptions and manuscripts are considered as the
+repositories of textual content. This paper examines the core idea that Scripts are themselves a
+historical archive that contains multiple layers of linguistic, political, economic, social, and
+cultural aspects of a region or society, using the Tigalari script of the Tulu language in the
+southern part of India as a case study, reassessing how inscriptions and manuscripts play a
+significant role in the historical trajectory of the Tulu language and wider historical landscape
+in which it produced. The Tigalari Script, historically developed within the literary and
+scholarly tradition of the South Western Coast of India, known as Tulunadu, survives today
+largely through Inscriptions and Palm-leaf Manuscripts. Its historical evolution can be
+meaningfully reconstructed through the existing manuscripts and inscriptional evidence in
+Tigalari script. The historical-linguistic models proposed by Andronov and Zvelebil identify
+Tulu as directly derived from Proto-Dravidian rather than as a derivative of other languages.
+Tulu evolved into a distinct Dravidian language and remains a vibrant living language. Still,
+Tulu came to be written in other regional scripts, whereas its linguistic history was preserved
+in the manuscript and inscriptional tradition of the Tigalari Script of Southern India.
+
+The concept of an archaeology of language, the paper approaches scripts not merely as graphic
+
+==================================================
+FILENAME: 37.pdf
+==================================================
+  How - and what - can we learn of register variation in medieval languages?
+
+ Direct evidence of past states of language from recordings of speakers can be obtained for
+the last 200 years at most. Before that, diachronic linguists must rely exclusively for
+evidence of language forms and uses on the surviving textual record, augmented where
+available by socio-historical and population studies (Warnow, Taylor & Ringe 1995,
+Honeybone 2012). When we ask what can be learned of the languages of the past, recent
+work on European languages has increasingly offered evidence that their historical states,
+similarly to those of the present, displayed different kinds of variation, as would be
+expected from Labov’s (2001) Uniformitarian Principle. We present in summary form
+research into what we take as register variation in medieval language whose outcomes
+uphold this expectation.
+       A valuable resource for variationist studies of medieval language is the Anglo-
+Norman yearbooks corpus (Ingham & Larrivée 2010), featuring records of debates
+between lawyers 1270-1390. Research using this corpus compared with contemporaneous
+written-origin texts (Ingham 2016, 2026) shows that linguistic change took place faster in
+the spoken-origin debates, where the stable variation in the modern use of the French
+subjunctive (Poplack 1992, Poplack, Lealess & Dion 2013) was also present, unlike in their
+written-origin counterparts. Unpublished work by Ingham & Larrivée (in preparation)
+shows additionally that debate participants often left 1st and 2nd plural subject pronouns
+
+==================================================
+FILENAME: 38.pdf
+==================================================
+ The interplay between language contact and universal principles of grammar: Evidence from
+                                          Corfioto
+
+This work investigates the interplay between universal restrictions of grammar and the limits of variation
+in contact-induced morphosyntactic change. We compare and analyze the synchronic and diachronic
+morphosyntactic properties of clausal complementation in Venetian, Salentino, Greek, and Corfioto, the
+endangered variety traditionally spoken by Jews in Corfu and we argue that similar to standard
+diachronic change in any natural language, the emergent grammar of ‘contact’ languages maintains a
+universal tripartite distinction among Event-, Situation-, and Proposition-type clausal complements
+(Wurmbrand & Lohninger 2023), which is reflected in the clausal size of three minimal syntactic
+domains (vP, IP, CP) and the morphosyntactic realization of embedded subjects and predicates across
+the three types. While complementation in Corfioto reflects morphosyntactic properties of its ‘source’
+languages, its hybrid synchronic properties are subject to a minimal universal tripartition with
+implicational morphosyntactic properties. Unlike Venetian and Salentino, retaining infinitival
+complements, Event-type complements in Corfioto are encoded via a finite verb form, like Modern
+Greek. The embedded verb may surface in a present-non-past ‘subjunctive’ form, depending on person,
+number, and verb class. However, no language licenses strong pronouns or DP subjects preverbally in
+this type. In Situation-type complements, Corfioto displays present-non-past subjunctive forms without
+sequence-of-tense marking, a pattern shared with Salentino and Modern Greek but contrasting with
+Venetian’s strict past-tense subjunctive verb forms embedded under past-tense matrices. Moreover,
+
+==================================================
+FILENAME: 39.pdf
+==================================================
+ Prosodic phrasing and scribal practice: Evidence from manuscript white space
+
+
+
+    Compared to modern texts, historical manuscripts show non-standard use of punctuation, accentuation, and white space. These
+features are often regarded as random noise and, as a result, usually normalized in modern editions (and corpora based on these editions).
+However, a growing body of research (e.g., Nübling 1992, Fleischer 2009, Bronner et al. 2018, Bögel 2020) suggests that these features are
+systematic and may carry linguistic information. Working with normalized editions may therefore result in information loss and potentially
+lead researchers to draw conclusions based on modern editorial choices rather than historical evidence.
+    This paper focuses on one such feature: the use of white space in manuscripts. Specifically, we investigate the orthographic (non)-
+separation of pronouns in Old English (OE), Old Saxon (OS), and Old High German (OHG). Pronouns and other function words are
+particularly affected by orthographic fusion, as shown in 1 below:
+
+
+
+
+                                        Figure 1: Julius E VII manuscript (early 11th century); OE
+                                                ⟨Icsecge gifþu hætst hƿilcemihte þuhæfst⟩
+                                                Ic secge gif þu hætst hƿilce mihte þu hæfst
+                                              ‘I say, if you command, what power you have.’
+
+==================================================
+FILENAME: 3.pdf
+==================================================
+             Lower Mamberamo and Austronesian: the
+                    Morphological Evidence
+                                                   -
+
+                                           July 10, 2026
+
+    The Lower Mamberamo family consists of a pair of languages, Warembori and Yoke, spoken
+around the mouth of the Mamberamo river in West Papua (Foley, 2018, 500-7). Since Warembori
+was documented by Donohue (1999), who presents a grammar sketch and accompanying wordlist,
+there has remained significant uncertainty as to their family affiliation. In particular, Donohue
+notes the presence of a sizeable Austronesian component, not only in the lexicon but also in parts
+of the morphological system, in particular the pronominal morphology present on nouns and verbs
+(see Table 1).
+    In this talk I assess the extent to which the morphological forms attested in Warembori are
+derivable from Austronesian sources. This includes both the pronominal forms, whose resem-
+blance to Austronesian was already noted by Donohue (1999) and later authors such as Kamholz
+(2014); Table 1 compares the subject-marking prefixes of Warembori with the neighbouring South-
+Halmahera-West-New-Guinea languages Waropen and Moor. I discuss the relationship of these
+forms to the SHWNG subject-marking prefixes and the extent to which these forms are regularly
+derivable from Austronesian forms.
+
+==================================================
+FILENAME: 40.pdf
+==================================================
+   Processes of linguistic standardization in an eighteenth-century minoritized
+                                     language:
+                              the case of Manx Gaelic
+
+
+Manx (Gaelic) is a minoritized language native to the Isle of Man, now extinct as an L1
+community vernacular. Although closely related to Irish and Scottish Gaelic, Manx was
+largely cut off geopolitically and socially from the wider Gaelic world from the later
+Middle Ages onwards, and there is no attestation of the use of the traditional Gaelic
+orthography or literary registers in Man. Manx emerges as a written language for
+mostly religious purposes in the seventeenth and eighteenth centuries, culminating in
+the publication of a complete Bible translation in 1775, even as pressures towards
+language shift to English gathered pace.
+        Although the very existence of a Manx standard language has sometimes been
+disputed, and standard language ideologies appear to have been weak or ambivalent
+in the community during the period in question, there are clear signs of norm
+convergence and supralocalization in manuscript and print texts of the mid-eighteenth
+century. Indeed, in printed texts the orthography reached a state of homogeneity (one
+word form = one spelling) almost as high as that of English. Morphosyntax, on the
+other hand, remained much more variable, and there are some hints of the
+
+==================================================
+FILENAME: 41.pdf
+==================================================
+ANONYMISED ABSTRACT
+
+This paper considers the ‘Tape-Recorded Survey of Hiberno-English Speech’ (TRSHES) (Barry
+1981a) as a source of evidence for both historical linguistics and language variation and
+change research. We first examine its significance as a historical record of vernacular speech,
+particularly for the documentation of Ulster English (Adams 1981, Corrigan 2010, Harris 1985,
+Maguire 2020 & Lowry et al. 2025). Unlike many earlier dialect studies that relied heavily on
+elicited forms and written representations (e.g. Orton 1962 or Mather et al. 1975-1986), the
+survey preserved substantial quantities of naturalistic speech, providing evidence of Irish-
+English bilingualism alongside variation in pronunciation, discourse practices and speaker
+repertoires (Barry 1981b, Tilling 1981, Lunny 1981 & Ní Ghallchóir 1981).
+
+We then discuss the archive's current status following recent large-scale digitisation and
+cataloguing, outlining ongoing efforts to transform the collection into a dynamic research
+resource. Central to these developments is a new programme of work that seeks to reconnect
+with a subset of participants originally recorded as children. The combination of legacy
+recordings, archival documentation and contemporary re-recordings offers a rare
+opportunity to investigate linguistic change across the lifespan and across generations, while
+simultaneously evaluating the evidential value of historical audio archives for modelling
+language change (see Beaman & Sering (in press), Buchstaller et al. 2022, Butcher 2021,
+
+==================================================
+FILENAME: 42.pdf
+==================================================
+A philologically grounded phonological interpretation of ‘divisions’ in Middle Chinese
+‘Divisions’ are subsyllabic units recognized in early rhyming dictionaries, a classical phonolexicographic
+genre of Middle Chinese (ca. 3rd–9th centuries; Zhā ng 2024). Their phonological essence has remained
+notoriously elusive and controversial (Ferlus 2009, Shě n 2024). This study offers a falsiNiable
+phonological interpretation of ‘divisions’ through an analysis of their treatment in early rhyme tables, the
+other standard philological source. The main conclusion is that ‘divisions’ encode contrastive features
+associated with nuclei.
+Early rhyme tables visually place syllables with different ‘divisions’ (labelled ‘I’, ‘II’, ‘III’, ‘IV’ and ‘A’) into
+four rows:
+The second row contains syllables with Division III plus retroNlex sibilants (e.g. [tʂ]) and syllables with
+    Division II regardless of onset type. The straightforward hypothesis is that both carry a feature of
+    retro4lexion (Hamann 2003, Halfmann 2025) associated with onsets (the former case) or nuclei (the
+    latter).
+The fourth row accommodates syllables with Division III plus [coronal] onsets (e.g. [t]; Hall 1997),
+    syllables with Division IV and syllables with Division A. These syllables should carry a feature of
+    coronality (Calabrese 2005) associated with onsets or nuclei.
+The third and Nirst rows contain the remaining syllables with Division III (plus other onsets) and Division
+    I, respectively. These syllables should have plain nuclei.
+These hypotheses are borne out by correspondence patterns in Sino-Vietnamese, Sino-Japanese and Sino-
+Korean loans. The two classiNications, with their IPA interpretations, are summarized below:
+
+==================================================
+FILENAME: 43.pdf
+==================================================
+Formulaic texts as evidence for historical linguistics: Anglicisation in early
+modern Scottish proverbs
+(word count: 382, excl. refs)
+This presentation has two aims. First, it shifts attention away from language variation
+to ask whether formulaic text types, by definition largely invariant in form, can provide
+useful evidence for historical linguistics, and if so, what kind. Early modern Scottish
+proverbs are used as a case study. Despite eluding a straightforward definition,
+proverbs are characterised by structural stability and links to oral traditions: "a
+syntactic string which is learned and reused as a single unit with a frozen internal and
+external structure" (Cram 1994: 73; see also Knappe 2025: 312). I argue that this
+expected invariance allows the text to function as a control and can be used to isolate
+any "noise" for further interpretation. Any alterations reveal pressures arising from
+linguistic, cultural and technological change.
+Building on this, the second aim is to investigate Anglicisation in the earliest published
+collections of Scottish proverbs. The study draws on three early modern printed
+sources: Fergusson (1641), Fergusson (1658) and Stampoy (1663). Several
+contextual factors are important. Firstly, the proverbs ultimately derive from a late late
+sixteenth-century manuscript or oral tradition associated with Reverend David
+Fergusson, who died in 1598 (Beveridge 1924). Secondly, by the mid-seventeenth
+century, printed texts in Scotland are expected to show a large degree of Anglicisation
+
+==================================================
+FILENAME: 44.pdf
+==================================================
+                The diachronic stability of syllable weight in Scottish Gaelic
+
+Stressed syllables in modern Scottish Gaelic (SG) display a binary opposition between light
+and heavy. In this paper I demonstrate that the lexical distribution of syllable weight shows a
+remarkable degree of cross-dialectal stability, in spite of extensive segmental variation. I also
+argue that this stability extends historically to the mediaeval period, with consequences for the
+interpretation of syllable weight in Early Irish (EI). This evidence strongly supports the exist-
+ence of an autonomous durational tier in phonological representations, whose diachronic de-
+velopment may remain independent of changes at the segmental level.
+       I define a heavy stressed syllable in SG as one whose rhyme contains either (i) a long
+monophthong (Vː), (ii) a diphthong (VV̯), (iii) a svarabhakti group (VCV̯), or (iv) in some
+dialects, a short vowel followed by a long consonant (VCː), while all other syllables are light.
+Although a given lexical item may display dialectal variation across these segmental types, the
+weight of its stressed syllable remains constant. Besides duration, the opposition in syllable
+weight is reinforced phonetically by differences of tone in dialects such as Lewis, where heavy
+stressed syllables are characterised by a later tonal peak, and glottalisation in dialects such as
+Islay, where light stressed syllables are characterised by glottalisation at their right edge. While
+this approach to syllable weight in SG runs contrary to several existing analyses of certain phe-
+nomena (Smith 1999; Hall 2003; 2006; Iosad 2015; Scouller 2017), I show that these turn out
+to be incorrect upon closer inspection of the data.
+
+==================================================
+FILENAME: 45.pdf
+==================================================
+                             Historical evidence for unique clusters
+When two lexical sets go back to a common ancestor, regular correspondences between them are
+normally believed to reflect the proto-language’s phonemes. However, this does not necessarily
+entail a one-to-one correspondence: as Burlak and Starostin (2005, p. 31) document, there are
+multiple other correspondences possible, such as coalescence, split, deletion, insertion, and
+metathesis. Furthermore, correspondences can be positional, e. g. a velar is reflected as a velar
+before back vowels but as a sibilant before front ones.
+Accordingly, one of the more difficult situations involve combinations of phonemes (“clusters”)
+that are reconstructed to be rare, whether because of phonotactic restrictions, because at least one
+of the involved phonemes is itself rare, or accidentally. In principle, combinations can produce a
+unique correspondence; a well-known example is Proto-Indo-European *#p…kw- producing qu…
+qu- in Latin (Burlak & Starostin, 2005, p. 54). However, if the combination is sufficiently rare, one
+cannot exclude sporadic differences that do not go back to any protolanguage distinction (ibidem,
+p. 50), as the rarity may preclude use of quantitative distinctions.
+One such case is the Indo-European root for ‘spleen’. While few doubt connection between
+Ancient Greek σπλήν, Middle Irish selg, Latin lien, Lithuanian blužnis, Old Armenian pʻaycałn,
+Avestan spərəzan, and Czech slezina (all with the same meaning!), the root is usually characterized
+as “difficult to reconstruct” (Beekes, 2010, p. 1385). It may reflect a unique cluster *sb-, whose
+uniqueness is unsurprising given that PIE *-b- (that is, the labial usually reflected with Proto-
+Germanic *p and Italic and Proto-Slavic *b, as in *(s)leh 2b- ‘weak’) is a very rare phoneme to
+
+==================================================
+FILENAME: 46.pdf
+==================================================
+Tracing a Broken Dialect Chain in Eastern Arabia: Evidence from Northern Oman
+This paper investigates what present-day dialect evidence can reveal about historical
+linguistic connections among the speech communities of eastern Arabia. It develops
+Holes’s proposal that shared features in Baḥārna village Arabic and northern Omani
+Arabic reflect a discontinuous sedentary dialect chain extending from the Gulf coast
+through Oman to southeastern Yemen (Holes 2006, 2011c, 2012: 240–41, 2016).
+Using data from northern Omani varieties, this study identifies more geographically
+restricted features, Sedentary (S) and Bedouin (B) in type, that add detail to this proposed
+dialect geography. The first the is treatment of interdentals, namely the use of TH-
+fronting, the realization of historical /θ/ as [f], in Sedentary-type varieties of ʿIbrī and
+Samāʾil, and stopping of etymological /θ/, the realization of /θ/ as [t] in Shiħħi dialect in
+Musandam Peninsula. The second is the occurrence of [-ə] as the question particle in S-
+type varieties in the hinterland (Dakilyah Governorate). The third feature is the use of
+null definite article in syntactically definite nouns and NPs in a Bedouin variety spoken
+along the Bāṭina coast. Comparable features have been documented in Bahraini and
+Omani Arabic (Holes 2011a: 242, 245; 2011b: 485; 2012: 241; 2016: 213–15). The
+following examples illustrate these features:
+A) Interdentals (S-type)
+         TH-Fronting:
+                         /θallaːɡa/> /fallaːɡa/ ‘fridge’
+
+==================================================
+FILENAME: 47.pdf
+==================================================
+Amphichronic evidence for lexicalised patterns in Mapudungun
+
+Under the life cycle of phonological processes framework, we expect idiosyncratic lexical patterns
+to appear to be derivable via the application of phonological rules, also known as allomorphic
+variation. This is due to the fact that these residues may have emerged through the lexicalisation of
+opaque phonological processes due to input restructuring (Bermúdez-Otero & Trousdale, 2012;
+Ramsammy, 2015; Sen, 2016).
+
+Assuming a strictly modular conceptualisation of grammar, these types of arbitrary patterns appear
+to defy modularity because a) they can be phonologically conditioned, but morphologically selected
+based on lexical information, and b) they invite both mono-representational phonological analysis
+(Scheer, 2016) and optimisation through the emergence of the unmarked.
+
+Using an amphichronic approach (Bermúdez-Otero, 2015; Kiparsky, 2006), I will present two case
+studies of putative phonological generalisations in Mapudungun (a South American isolate) to
+describe their pathways of lexicalisation via the dephonologisation of an ancestral rule of
+fricativisation.
+
+The first case corresponds to a set of disyllabic verbs in Mapudungun that end in [Cɨm], where C is
+a stop. These verbs are reminiscent of monosyllabic bases ending in a fricative plus a supposedly
+
+==================================================
+FILENAME: 48.pdf
+==================================================
+                 Glosses as Evidence for Language Use and Language Change
+
+This paper explores what medieval glosses can tell us about language and language change in the
+past. Glosses can be defined as ‘any one or more words, letters, and symbols, written in the
+margin or between the lines of a text, i.e. anything on a page which is not text proper, but
+which is intended to comment on the text’ (Wieland 1983: 7). Glosses typically give information
+about areas such as morphology or syntax, give Latin or vernacular lexical equivalents, or provide
+etymological or encyclopaedic information about the words and concepts appearing in a text
+(Stork 1990). In some cases, didactic texts are furnished with commentaries, which expand on
+the topics discussed in glosses.
+
+This paper focuses on the glosses and commentary to one particular text, John of Garland’s
+Dictionarius (Pagan, Seiler & Wallis 2023; Wallis, Seiler & Pagan 2024). This thirteenth-
+century work is designed to teach Latin vocabulary by taking its readers on an imaginary walk
+through Paris and naming people, goods for sale, flora and fauna. Many of the 32 surviving
+manuscripts contain interlinear glosses in Latin, French, English, Dutch or Low German,
+allowing us to explore several linguistic features; the temporal range of the manuscripts (13th-
+15th centuries) illustrates changing vocabulary, especially in fashion-related areas such as shoes,
+while diatopic variation can be found in the varieties of Anglo- and continental French used in
+the glosses. Furthermore, the glosses and commentary shed light on the multilingual
+
+==================================================
+FILENAME: 49.pdf
+==================================================
+       When monophthongs are spelled like diphthongs – i-digraphs in Older Scots
+       This paper examines the use of i-digraphs for long monophthongs, an Older Scots orthographic
+       convention marking vowel length (Aitken 1971: 7, Benskin 2001: 212). The i-digraphs <ei>, <ai>,
+       <oi>, <ui> were initially considered to originate from the monophthongisation of early Middle
+       English /ei/, /ai/, /oi/ and /ui/ (cf. Murray 1873, Dobson 1968). However, based on modern
+       dialect and northern Middle English spelling evidence, Kniezsa (1983: 45, 50) found that the
+       convention was borrowed into Scots from Anglo-Norman (<ei>) and from northern Middle
+       English (<oi>, <ui>, <ai>); therefore ‘independent from any English sound change in the Northern
+       region’.
+       Since Kniezsa’s (1983, 1984) studies, access to especially early texts has improved significantly
+       and it is now possible to study i-digraphs at scale in Older Scots corpora and trace their trajectory
+       in detail. I have extracted orthographic data for all Older Scots long monophthongs; i.e. early Scots
+       [a:], [ɛ:], [e:], [i:], [ø:], [u:], [ɔ:], from the From Inglis to Scots corpus, the Linguistic Atlas of Older
+       Scots, and the Helsinki Corpus of Older Scots. In total, 930 lemmas encompassing 103,410 tokens
+       between 1350 and 1700 are analysed to answer the research question:
+                      How and when are i-digraphs used for long monophthongs, across
+                      different word-positions, and in etymologically different lexical items?
+
+       Previously it has been proposed that each of the i-digraphs has their own trajectory (Meurman-
+       Solin 1997: 21, Kniezsa 1983: 45), but my results show that vowel height plays a role in their use:
+
+==================================================
+FILENAME: 4.pdf
+==================================================
+A New Perspective on the Latin Loans in Welsh
+
+
+
+    British Celtic borrowed hundreds of words from Latin during the Roman occupation of Britain. While
+certain aspects of these loans have been observed and debated, such as their wide semantic breadth (Jackson
+1953: 78–80) and the degree in which they show traits of innovative and conservative forms of Latin (Jackson
+1953, Smith 1983: 938–9; Adams 2007: 588), further insight is gained by analyzing the loans according to
+several semantic and phonological features simultaneously. By evaluating the phonological and semantic
+history of the loanwords in and beyond the Roman period and comparing them against typological
+expectations of lexical borrowing resistance and language contact theory, the resulting models can help
+develop cohesive, data-driven insights into the sociolinguistic history of Latin in Britain.
+
+    This research analyzes the loanwords according to:
+
+    •   quantity, with consideration of how many were likely borrowed and used in the vernacular language
+        of British Celtic
+    •   semantic domains in comparison to typological expectations
+    •   the frequency of non-classical Latin features
+    •   the chronology of the loans, based on termini ante quem and termini post quem
+
+==================================================
+FILENAME: 50.pdf
+==================================================
+                             Analogical origin of ergativity in Päri
+
+Päri (West Nilotic) represents one of the vänishingly räre instänces of putätive ergätivity
+thät häve been identified in Africä. We ärgue thät it emerged äs the äccidentäl by-product
+of än änälogicäl chänge.
+
+Konig (2008) describes Päri äs häving split ergätivity. NP-initiäl mäin cläuses äre säid to
+be ergätive, becäuse they distinguish intränsitive änd tränsitive subjects: only tränsitive
+subjects märk cäse (Andersen 1988, 2000):
+
+(1)ä. SV      dhäägɔ̀  cʌ̀ m-ò
+              womän    eät:AP-INTR
+              ‘The womän is eäting.’
+
+  b. OVS      riŋò  ä-t̪äälˋ  dhääg-ɛ̀
+              meät PST-cook womän-CASE
+              ‘The womän cooked the meät.’
+
+Verb-initiäl subordinäte cläuses äre nominätive, becäuse intränsitive subjects älso märk
+cäse:
+
+==================================================
+FILENAME: 51.pdf
+==================================================
+Purpose-Built Corpora in Historical Speech Act Analysis:
+A Function-to-Form Approach to Threats in English
+Drama
+         In recent years, historical speech act (SA) analysis has turned to looking for larger trends in
+SA development. In the history of English, apologies (Jucker, 2019), expressions of gratitude
+(Haselow, 2024), promises (Haselow & Lässig, 2026), to name but a few, have already been
+investigated through the lens that is the attenuation hypothesis. Research on the attenuation of SAs
+has been guided by various questions, each addressing different dimensions inherent to SAs: Did
+a given SA type lose or gain popularity among the English-speaking society? Was a given SA type
+or its specific locutions refunctionalized over time? Did an SA’s essential conditions change over
+time?
+         Seeking answers to these and related questions, several approaches have emerged to find
+and analyse real-language evidence. Initiated in structural eclecticism, corpus-based approaches
+have received increasing attention in the latest waves of diachronic SA analysis, admittedly
+warranting mostly form-to-function searches (Jucker, 2024). For function-to-form approaches,
+however, the only method for combing through said corpora so far is manual inspection (Landert
+et al., 2023). Presently, this approach has been chosen for a small number of ongoing studies on
+the development of different expressive and hybrid-expressive SAs in English, including the type
+THREATS.
+         Within the diachronic analysis of THREATS in English, a closer look is shed on the purpose-
+
+==================================================
+FILENAME: 52.pdf
+==================================================
+      Parallel corpora and translation equivalents as evidence in historical
+                                    linguistics
+
+
+As Labov (1994: 11) already states, “[h]istorical linguistics can […] be thought of as the
+art of making the best use of bad data”. Since historical linguists often lack evidence
+such as dictionaries from bygone eras or the opportunity to consult native speakers,
+other types of evidence become more important. Two such types are parallel corpora
+and translation equivalents. In my talk, I will focus on these types of evidence as tools
+in historical linguistic studies by presenting the advantages they offer over regular
+corpora. Drawing on data concerning approximation markers in Old Spanish, I will
+primarily discuss the role of parallel corpora in historical semantics and in the study of
+language contact. The biblical parallel corpus Biblia Medieval (Enrique-Arias 2008) will
+be the main data source for my talk. This parallel corpus offers the possibility of
+comparing different Spanish medieval translations of the Bible with the Latin text
+(Vulgate) and the Hebrew text.
+Table 1 provides an example of the use of parallel corpora in historical linguistics. Here,
+the uses of the well-known approximation markers como in the Spanish Ferrara Bible,
+circiter in the Vulgate and the approximative prefix -‫( כּ‬k(e)-) in the Hebrew text – all of
+which mean ‘about’ – justify the interpretation of the lexeme cuanto (lit. ‘as’) in the
+
+==================================================
+FILENAME: 53.pdf
+==================================================
+What happens when a progressive emerges? Gaining diachronic insights with synchronic
+translation evidence
+
+Much previous research has been dedicated to investigating the history of progressive aspect in
+English, though mostly focusing on the progressive construction BE Ving and its rise (e.g. Strang 1982;
+Smitterberg 2005; Kranich 2010; Petré 2016). It has recently been shown that the rise of BE Ving
+impacted other strategies already available for conveying ongoingness and that the expression of
+progressive meaning went in fact through three stages: an initial reliance on pragmatic inference, then
+on various (semi-)grammatical strategies, and finally on the default grammaticalized marker BE Ving,
+which partly superseded earlier strategies (Author 1 & Author 2).
+
+Now, when another language develops a way of expressing progressive meaning, do we then see the
+same three-phase pattern? What happens when a ‘grammaticalizable’ progressive emerges, and
+where does that first take place (tense; verb type)?
+
+To answer these questions, this paper draws on synchronic translation evidence, thereby providing
+insights into various language systems and the interaction between their strategies for expressing
+progressive meaning at one point in time.
+
+Data are collected from two parallel translation corpora, consisting of translations of the Bible
+
+==================================================
+FILENAME: 54.pdf
+==================================================
+Combining scanty historical sources with modern linguistic resources: the example of Romani
+
+This talk demonstrates how we can refine, verify, and expand our knowledge of the historical
+development of a language by combining the scanty historical sources we have at our disposal with
+modern linguistic resources.
+While we know more and more about Romani, as the ever-growing literature clearly shows (to
+mention only the most comprehensive publications: Matras 2002 and Matras & Tenser 2020), it is a
+generally and comparatively underdocumented language in terms of the amount of historical data.
+The first known source containing Romani material dates back to the early 16 th century (Knauer
+2010), but sources remain scarce until the end of the 18th century, when Romani was established as
+an Indo-Aryan language (see Adiego 2020 and the literature therein).
+The specific example to be presented is the Central dialect group of Romani (cf. Elšík & Beníšek
+2020: 402–404), which has historically been spoken within and close to the borders of the former
+Kingdom of Hungary.
+On the on hand, the result of a recent effort to document the Central Romani dialect group
+comprehensively is the Linguistic Atlas of Central Romani (Elšík et al. 2011–2013), which contains
+a large quantity of contemporary data based on a questionnaire of roughly 1500 sentences, which
+had to be translated by the consultants who were native speakers of Romani.
+On the other hand, there are various sources from the 18 th and 19th centuries which contain some
+Romani language material collected in the region or were written with the express purpose of
+
+==================================================
+FILENAME: 55.pdf
+==================================================
+A tale of three diaries – Genitive choice in Afrikaans and English in contact
+
+
+English and Afrikaans both have a prenominal genitive (the general's wife/ die generaal se
+vrou) and a postnominal genitive (the wife of the general/ die vrou van die generaal) that
+can be used interchangeably (i.e. alternate) in many contexts.
+
+
+The animacy of the possessor has been shown to be the most important factor in the choice
+between the two genitives in both languages (e.g. Rosenbach 2014, Kirsten 2019), in that
+animate possessors usually prefer the prenominal genitive (Mary's sister/Maria se suster),
+while inanimate possessors typically take postnominal position (the doors of the train/ die
+deure van die trein). However, Afrikaans more freely allows inanimate possessors in
+prenominal positions than English. This weaker animacy constraint has been transferred
+from Afrikaans to South African English, in particular the L2 English of Afrikaans speakers
+(Rosenbach 2017) and White South African L1 English (Rosenbach & Kirsten 2024).
+
+
+This paper is aimed at further elaborating on the possible influence of language contact in
+genitive choice in Afrikaans and South African Englishes by looking at a time interval
+
+==================================================
+FILENAME: 56.pdf
+==================================================
+A constructional approach to prepositions and prepositional phrases in Old English
+
+Keywords: spatial prepositions, Diachronic Construction Grammar, constructionalization,
+metaphorization, Old English
+
+This diachronic, corpus-based project investigates the semantic and syntactic development of
+Old English prepositional phrases (OE PPs) with the spatial prepositions on and to, drawing on
+data from the York-Toronto-Helsinki Parsed Corpus of Old English (YCOE, Taylor et al. 2003).
+Prepositions have been researched extensively, but research on OE prepositional phrases is rare
+(e.g., Lundskær-Nielsen 1993; Alcorn 2009), requiring a more in-depth analysis. On the one
+hand, the complements can range from monosyllabic words (ex.2) to more complex noun
+phrases (NP), involving appositions (ex.1), and the prepositional head can either be positioned
+towards the left or the right of the complement (see Alcorn 2014). On the other hand, spatial
+prepositions are not only restricted to spatial interpretation but developed temporal (ex.3) and
+figurative semantics (ex.1).
+
+    (1) Her East Seaxe onfengon geleafan & fulwihtes bæð under Sæbyrhte cyninge . . .
+        here East Saxons received faith       & Baptism bath under Sæberhte King
+        ‘Here the East Saxons received the faith and the baptismal bath under King Sæberhte’
+                                                                                          (ChronA 604.2.258)
+
+==================================================
+FILENAME: 57.pdf
+==================================================
+From “Borrowing” to “Integration”: The Morphological Integration
+                  Hypothesis of English GO
+
+
+
+                                                      Abstract
+           The suppletive paradigm of the English verb GO (go–went–gone) has long been a challenge for
+      historical linguistics. The traditional borrowing hypothesis, which traces went to the preterite of Old
+      English wendan (Prokosch 1939; Campbell 1959; Hogg 1992), leaves several questions unresolved:
+      why the past participle gone remained native, why go and do diverged in Modern English despite sharing
+      highly parallel inflectional frames in Old English, and why only the past tense—not the participle—was
+      replaced.
+           This paper proposes a morphological integration hypothesis: Old English gān failed to generate
+      an internally coherent past tense because all theoretically possible CVC forms (*gid, *ged, *gad, *god,
+      *gud) were systematically blocked by phonological, semantic, and systemic morphological constraints—
+      ranging from palatalization to homophony with God and conflict with the adjective gōd. This sys-
+      tematic failure created a morphological gap that, under analogical pressure (Bybee 1985), drove the
+      language system to “rent” the optimal available resource from within the shared semantic field of mo-
+      tion/departure: the preterite went from the near-synonym wendan.
+           Two independent lines of evidence support this hypothesis. First, a physiological-acoustic model
+
+==================================================
+FILENAME: 58.pdf
+==================================================
+Total evidence in language phylogenies
+
+Keywords: Phylogeny, historical linguistics, computational, Tai / Kra-dai
+
+
+
+Historical linguistic evidence from phonology, morphosyntax and             lexicon can often produce
+
+conflicting subgroupings for a related group of languages. Computational language phylogenies are
+
+not exempt from this problem, as they are commonly constructed using a comparative dataset which
+
+only draws on one of these subsystems. When data from distinct subsystems is included, their
+
+modelling parameters are often conflated.
+
+Southwest Tai is a relatively young subgroup of the Kra-Dai language family, which expanded into its
+
+current area in mainland Southeast Asia beginning around 1,000 years before present (Kirigaya 2015).
+
+
+==================================================
+FILENAME: 59.pdf
+==================================================
+What historical signals does phonological evidence contain?
+ Recovering Indo-Aryan phylogeny without cognate labels
+
+
+                                         July 31, 2026
+
+Establishing phylogeny in historical linguistics relies on diverse sources of evidence, including
+sound correspondences, cognate relationships and shared innovations. While cognate-based
+methods have become the standard for computational phylogenetics, it depends on manual
+expert cognate identification, which is often difficult in the presence of lexical replacement and
+contact-induced borrowing.
+We thus ask a complementary question: how much historical signal is preserved in phonological
+evidence alone, without cognate labels? To investigate this, we develop LiLA (Linguistically-
+informed Levenshtein Algorithm), a weighted edit distance that compares IPA-transcribed word
+forms using phonologically motivated substitution costs. Unlike reduced transcription systems
+such as ASJP or orthographic representations such as IAST, LiLA preserves fine-grained phono-
+logical structure while remaining fully automatic and without requiring cognate annotation.
+Applied to 207-item Swadesh lists for Indo-Aryan languages, LiLA recovers much of the accepted
+genealogical structure, achieving higher agreement with Kogan’s (Genealogical classification
+of New Indo-Aryan languages and lexicostatistics, 2017) reference classification than standard
+
+==================================================
+FILENAME: 5.pdf
+==================================================
+                 North American English gotten, revival or retention?
+                       Evidence from sociolinguistic typology
+
+In this paper, I add new evidence for a linguistic change, the trajectory of got to gotten in
+North American varieties of English. This development has never been subject to in-
+depth sociolinguistic scrutiny in spoken dialects, yet robust variation endures in
+contemporary vernaculars, (1-2).
+
+(1) Dan had got a job here as an engineer. (man, 63, b. 1945)
+(2) One of their friends had gotten a job. (man, 61, b. 1958)
+
+  A long-standing view is that gotten is an historical retention from UK founders (e.g.
+Curme, 1927; Marckwardt, 1958; Mencken, 1962). More recent research argues it was a
+20th century revival driven by American ideology (Hundt, 2009; Anderwald, 2020b; a).
+  To probe this contested explanation, I examine a multi-community corpus of vernacular
+speech from Canadian English. All forms of got and gotten (n=862) were extracted and
+coded for community type, date of birth, age, occupation, education, gender, as well as
+verb complex and grammatical person. Distributional analysis was used to uncover
+empirical patterns, conditional inference trees to probe the internal complexity of
+intersecting factors and mixed effects logistic models to assess relative significance and
+
+==================================================
+FILENAME: 60.pdf
+==================================================
+         How much does the choice of phylogeny matter for
+                              phylogenetic regression?
+     Introduction. Phylogenetic comparative methods rely on explicit hypotheses about rela-
+tionships among languages. In phylogenetic regression and related Gaussian process models,
+these hypotheses are represented by a tree with branch lengths that determines the phylo-
+genetic covariance among the languages. Several approaches exist for specifying these trees:
+assigning a branch length of 1 to every split in the Glottolog (Hammarström and Forkel 2022)
+tree (Guzmán Naranjo and Becker 2021), assuming exponentially distributed branch lengths
+(Macklin-Cordes and Round 2022), and estimating a global phylogeny with Bayesian inference
+(Bouckaert et al. 2026). These approaches differ substantially in both their assumptions about
+linguistic history and their practical trade-offs. For example, the global tree of Bouckaert et al.
+(ibid.) assumes that all languages share a single common ancestor, whereas the Glottolog tree
+treats languages from different families as unrelated. The Bayesian tree also requires discard-
+ing a substantial proportion of available data, since it does not include all lects. Approaches
+using the Glottolog tree, by contrast, offer greater coverage of languages but rely on a fixed
+tree topology and simplified branch-length assumptions. Despite these differences, it remains
+unclear whether the choice of phylogeny leads to substantively different comparative infer-
+ences.
+     Data and methods. In this study we compare the three approaches to representing phy-
+logenetic relationships in phylogenetic regression. Ten phonemes (/b/, /kʰ/, /pʰ/, /R/, /tʃ/, /ɡ/,
+
+==================================================
+FILENAME: 61.pdf
+==================================================
+Comparable Methods for (In)comparable Corpora: Building Linguistic Evidence from Early
+Modern Witch Trial Records
+
+Historical (socio-)linguistics increasingly relies on digitised corpora to investigate language variation and
+change. Yet historical datasets are rarely directly comparable: they differ in language, documentary traditions,
+available metadata, and the social and institutional contexts in which they were produced. These differences
+inevitably shape not only the kinds of linguistic questions that can be addressed but also the process through
+which linguistic evidence is constructed. This paper therefore asks whether a common analytical workflow
+can be used to build linguistic evidence from fundamentally different historical corpora.
+
+The paper addresses this question through two case studies based on Early Modern witch trial records from
+Switzerland and Scotland. Although both corpora belong to the same documentary genre, they differ
+substantially in their evidential potential. The Bernese records contain little reliable information on the social
+status of the accused, whereas the Scottish material includes comparatively rich social metadata.
+Nevertheless, both corpora allow the investigation of diachronic changes in female personal naming
+practices, specifically the linguistic marking and recording of women's names in judicial records, making
+them suitable test cases for a comparative methodological study.
+
+Rather than comparing the historical findings themselves, the paper focuses on the analytical process
+through which linguistic evidence is built. Both case studies follow the same workflow: corpus preparation,
+
+==================================================
+FILENAME: 62.pdf
+==================================================
+Fifth AMC Symposium on Historical Linguistics
+
+
+         The Missing Merovingian Pieces: An Empirical Approach to an Interdisciplinary Divide
+
+The transformation of Late Latin to the Romance languages provides a case study for competing sources
+of evidence and disagreement between disciplinary approaches. On the one hand, most historical
+grammars present the evolution of Late Latin to Pre-French as a relative chronology, providing early
+datings (3rd-5th centuries) for a cascade of logical and ordered phonological changes (cf. Straka 1953;
+Marr & Mortensen 2023) which heavily eroded the phonological shape, and by extension the
+morphology, of inherited Latin words. Final unstressed vowels for example are either depicted as the
+direct loss of the vowel (V → ∅) or with a prior reduction to schwa (V → ə → ∅), with dating varying
+between the 4th (Ségéral 2020: 324), the 6th (Rice 1902; Richter 1934; Bourciez & Bourciez 1967; Zink
+2013), and the 9th century (Pope 1952; Author 2022).
+      On the other hand, historians of the Early Medieval period present an essentially seamless
+linguistic continuity into the 9th century and demontrate that Latin written in the Merovingian period
+(5th-8th c.) was read and spoken in such a way as to be understood by the illiterate population
+(McKitterick 1991). Among medieval philologists, (Bonnet 1890; Arbois de Jubainville 1872; Wright
+1982; 2003; Cantalausa 1990; Banniard 2013; 2020; Lemay 2017), it is now communis opinio that
+Merovingian documents indeed reflect a formal register of the spoken language.
+
+==================================================
+FILENAME: 63.pdf
+==================================================
+The graph structure of relative chronology data
+
+
+Since the introduction of historical linguistics as a scientific discipline in the nineteenth century,
+one of its main objectives besides the reconstruction of proto-languages and the detection of
+different types of language changes has been to determine the order according to which the
+changes of a language occurred (e.g., Bremer 1894, Fortson 2013). In the absence of records
+attesting earlier stages, linguists, in doing so, have been relying on inferring relative order from
+available language data. By determining the feeding, bleeding, counterfeeding, and
+counterbleeding relationships detectable between language changes (usually phonological
+changes), their order can be determined (e.g., Chen 1973). Provided that a large enough number
+of relative datings can be inferred, a model of the relative chronology of the changes of a
+language can be derived (e.g., Holzer 2007).
+This paper argues that detailed models of the relative chronology of language changes provide
+the hitherto unnoticed possibility of describing language history as a graph and that important
+insights can be gained from doing so. It is suggested that language changes can be understood as
+the vertices of a graph and chronological relationships between the changes as the edges. Due to
+the nature of the data, the Language History Graph (LHG) has specific properties which can be
+defined by making use of graph-theoretical concepts:
+       It is a finite directed simple graph.
+
+==================================================
+FILENAME: 64.pdf
+==================================================
+     Mapping language variation and change using spatiotemporal GAMMs
+
+Research on language variation across broad geographic areas has long faced a design trade-off. Traditional dialect
+atlases provide geographic breadth but commonly sample few speakers at each site, whereas community studies
+provide social depth but usually cover a much smaller area. More recent dialectometric approaches better integrate
+linguistic, geographic, and social factors across large datasets (Wieling and Nerbonne, 2015); however, modeling how
+geographic patterns develop continuously through time remains a challenge in the study of language change.
+    To model dialect change in greater detail, we combine browser-based, map-assisted crowdsourcing (Leemann et al.,
+2018) with generalized additive mixed models (GAMMs). Participants complete a Qualtrics survey reporting linguistic
+choices for dialect features undergoing change, sociodemographic background, mobility, and dialect or language use
+and exposure; an embedded interactive map records where each participant acquired their dialect. Smooth terms
+for space and apparent time, together with a space-by-time interaction, model gradual spatial and temporal variation.
+One fit yields comparable maps and an apparent-time trajectory at each location. Sociodemographic variables can be
+included as covariates or interacted with geography and speaker age, allowing regional change to be traced across social
+dimensions. Boundary spatial terms can be added, representing coastlines, mountains, and other diffusion barriers, and
+random-effect smooths account for repeated participant and item responses (Wieling et al., 2014; Wood, 2017).
+    We demonstrate the approach with cases of ongoing Norwegian dialect leveling. Figure 1 presents one case
+involving the loss of plural agreement on predicate participles in Sunnmøre, a traditional agreement area in Western
+Norway (Sandøy, 1988; Sandstedt et al., 2026) (e.g., kalvane va fødd-e/født seint på året “the calves were born-PL /∅
+late in the year”). The data comprise 5,064 judgments from 422 speakers born between 1930 and 2013 across 13
+
+==================================================
+FILENAME: 65.pdf
+==================================================
+                      Combining lines of evidence in historical reconstruction:
+                              The case of the Hungarian accusative
+The history of accusative marking in Hungarian presents a puzzle. Its marker, -t, also occurs as an
+accusative marker in other Uralic languages, which has led some scholars to propose a Proto-Uralic
+origin [1]. However, whereas in the related languages its use is confined to pronouns, in Hungarian it is
+the regular accusative marker of nouns, while personal pronouns show considerable variation. This
+paper argues that frequency data, individual usage patterns, diachronic shifts, and parallel developments
+point to an independent development of the Hungarian accusative suffix from the other Proto-Uralic -t
+markers. The analysis focuses on personal pronouns, using data from three digital corpora covering
+approximately 800 years.
+The analysis builds on four empirical observations. (1) The ratio of marked to unmarked accusative
+forms of the first- and second-person singular pronouns (engem-et, téged-et vs. engem, téged) fluctuates
+until the nineteenth century, when the unmarked variants become increasingly frequent. (2) The third-
+person singular pronoun also has two variants: simple and doubled accusative marking (ő-t vs. ő-t-et).
+The former is attested in the earliest texts, remains rare for centuries, and then rapidly regains ground in
+the nineteenth century. (3) Attempts at regularization appear earlier in some registers and individual
+writers, but proceed in different directions, as illustrated by five Bible translations. (4) Eighteenth-
+century data show that some speakers used the reflexive pronoun as a personal pronoun (a failed change),
+but it is always -t-marked (magam-at ‘me’) when used as an accusative.
+Observation (1) argues against the origin of Hungarian -t in the pronominal paradigm: the persistent use
+
+==================================================
+FILENAME: 66.pdf
+==================================================
+Scaling Up Treebanks: Automatic Annotation as Evidence for Historical Syntactic Change
+
+
+Treebanks, corpora of syntactically-annotated sentences, have revolutionized the study of
+language change by providing data for large-scale investigations combining grammatical and
+statistical analysis. However, these treebanks are manually constructed, a slow process that
+limits their size to about two million words — even when far more data is available. Modern
+techniques in Natural Language Processing offer the possibility of overcoming this limitation,
+making it possible to automatically annotate far larger amounts of text than could be done
+manually. However, this automatic annotation must be accurate enough to allow the resulting
+corpus to be used for linguistic research. The inevitable errors of statistical parsing might be
+compounded by further challenges from Optical Character Recognition and other types of errors
+in the source texts that do not exist in the cleaned-up manually constructed treebanks.
+
+In this work, we present three case studies addressing whether such automatically annotated
+treebanks can serve as evidence for research on language change. Our main example comes
+from Early Modern English. The Penn Parsed Corpus of Early Modern English (PPCEME) is a
+1.7-million-word treebank that has been used for research in areas such as the rise of
+do-support. However, this amount pales in comparison to the 1.5 billion words available for the
+same period in the Early English Books Online (EEBO) collection. Earlier work [1] has
+
+==================================================
+FILENAME: 67.pdf
+==================================================
+       A Typology of Prefix Reduction in South and Central Bavarian Dialects
+
+In Standard German, past participles are formed with the unstressed prefix g@-. Throughout the
+Upper German dialect area, however, the tendency to syncopate unstressed vowels has resulted in
+considerable variation in its surface form. This paper investigates participial prefix reduction in
+South and Central Bavarian dialects on the basis of newly elicited data from 33 speakers across
+three countries (Austria, Italy, and Germany).
+The survey identifies three groups or patterns of prefixation (A, B and C, see Table 1). While
+pattern C mostly retains the conservative CV form, pattern A and B exhibit a greater tolerance
+of C- or even Ø- forms. The geographical distribution of the patterns follows historical innovation
+centres and transport routes (Kranzmayer 1960, Wiesinger 2013). The more conservative systems
+are found in peripheral region (Figure 1).
+
+                                                     A   B   C
+                              Stops and affricates   Ø- CV- CV-
+                              Voiceless fricatives   C- C-   C-
+                              Voiced fricatives      C- C- CV-
+                              Sonorants              C- C- CV-
+                              Vowels                 C- C- CV-
+
+
+==================================================
+FILENAME: 68.pdf
+==================================================
+The development of the Hungarian postposition nélkül 'without': evidence from
+historical corpora
+
+The Hungarian postposition nélkül ('without') arose through an unusual grammaticalization
+process. According to the traditional account (Zsilinszky 1992), the development proceeded
+in three stages: first, the harmonizing adessive suffix -nÁl was followed by the postposition
+kül(ön); next, the postposition became incorporated into the suffix while vowel harmony
+remained productive (-nÁlkül); finally, the entire complex became invariant with respect to
+harmony and detached from the stem, yielding the modern postposition (nélkül). This paper
+reassesses this account by asking three questions: whether shortening of the postposition
+was necessary for its incorporation, how vowel harmony disappeared during the change,
+and what motivated the subsequent reanalysis of the complex as a postposition.
+
+The study is based on approximately 3,600 attestations collected from the three major
+corpora of Old and Middle Hungarian (ÓMK, TMK, KED), supplemented with additional Old
+Hungarian manuscripts. Since around half of the texts are not normalized, searches were
+carried out in those using all plausible spellings corresponding to the normalized forms.
+
+The data show that shortening was not a prerequisite for suffix formation. The Guary Codex
+(<1508) contains both long and short detached forms, suggesting that the original
+
+==================================================
+FILENAME: 69.pdf
+==================================================
+                       Positional asymmetries in consonantal sound change
+Introduction. Consonants change more quickly at word ends than at beginnings [1, 8, 14].
+However, studies of this edge asymmetry have not adequately modeled the role of a con-
+sonant’s position in the syllable. Word-initial consonants typically occupy syllable onsets,
+whereas word-final consonants coincide with syllable codas. To model what role the sylla-
+ble edges play in the positional asymmetries traditionally ascribed to word edges, we compare
+rates of segmental change in word-initial, word-final, and word-medial position, where onsets
+and codas can be controlled. We also model the contribution of different change types (e.g.,
+fortition, lenition) to these asymmetries.
+Data & Model. We sampled cognate sets from GLED [13] for 4,222 languages (50 families) and
+represented each word as a string of feature-decomposed segments coded for word and sylla-
+ble position. Syllabification was performed with an algorithm based on onset-maximization,
+the Sonority-Sequencing Principle, and the Syllable Contact Law. For each family, we fitted
+a feature-based continuous-time Markov chain on the global phylogeny of Bouckaert et al.
+[3] and reconstructed consonantal evolutionary histories by stochastic character mapping [9].
+These histories provided sampled counts of change events [10], which were the response vari-
+able in a hierarchical Bayesian regression model estimating the effects of word and syllable
+position and their interaction with change type, with time available for change as an offset.
+Results. Word-final consonants change at 1.66 times the initial rate (0.51 [0.40, 0.62] on the
+log scale), confirming the traditional asymmetry. However, rates do not differ in medial and
+
+==================================================
+FILENAME: 6.pdf
+==================================================
+Phonology despite spellings:
+On the extension of Old French external sandhi (liaison and elision)
+
+
+Modern French ﬁnal consonants (C#) show features of external sandhi: liaison (1) and enchaînement (2).
+    1. LIAISON : ﬂoating C#
+           a. Realized before V-initial words : peti[t] enfant (‘small child’)
+           b. But not before C-initial words : petiØ chien (‘small dog’)
+           c. Or before pause : il est petiØ (‘he is small’)
+    2. ENCHAÎNEMENT : C# resyllabiﬁed as onset of V-initial word : corps à corps [kɔ.ʁa.kɔʁ] (‘hand-to-
+       hand’)
+      Modern French also has group stress, unlike Latin which had word stress. These features are in place
+at least since the 16th century, being attested by grammarians’ treatises. However, Very Old French (842-
+1100) only has liaison between a proclitic and its host and still has word stress. A third phenomenon, elision,
+only applies between a proclitic and its host in Very Old French (3.a), but happens in larger contexts in 16th-
+century French (3.b).
+    3. ELISION : ﬂoating ﬁnal vowel (V#) deleted before V-initial word :
+           a. On a clitic : sa espee ⇾ s’espee (‘his/her sword’) ; li emperere ⇾ l’emperere (‘the emperor’)
+           b. On a lexical word : impoſsibl’ ęn noſtre lange instead of impoſsible ; Meigret 1550 (‘impossible
+              in our language’)
+
+==================================================
+FILENAME: 70.pdf
+==================================================
+Successive waves of initial foot incorporation in the historical phonology of Western Nilotic
+
+Western Nilotic, particularly its Dinka–Nuer subgroup, exhibits an exceptionally elaborate
+system of non-concatenative morphology, including vowel quantity alternations, consonantal
+mutation, vowel quality mutation, and tonal modifications. I argue that many of these
+alternations derive from two successive diachronic waves of initial foot incorporation. The first
+wave, reconstructible for Proto-Western Nilotic, compressed the contents of the initial bimoraic
+foot of the derivational stem into a single syllable; the second, largely restricted to Dinka–Nuer,
+extended this mechanism to the entire inflected word. In both cases, incorporation of the initial
+foot triggered loss of any following foot within the relevant domain (“metrical truncation”;
+Monich & Baerman 2022).
+
+The first wave applied within the derivational stem by incorporating the prosodic and segmental
+material of the initial bimoraic foot into the root syllable and deleting a second metrical foot if
+present. Because the suffixal material in the second foot was deleted, the root-final consonant
+was resyllabified into the root syllable's coda, taking over the second mora of a long root vowel
+and thereby shortening it. This process generated the family-wide “length polarity” of
+multiplicative stems (Zimmerman 2018). The bimoraic multiplicative suffix (Author, under
+review) produced stems that could be parsed as a single foot with short roots but as two feet
+with long roots, triggering metrical truncation in the latter case. Surkum, a conservative Burun
+
+==================================================
+FILENAME: 71.pdf
+==================================================
+A feedback loop of corpora and artificial language learning experiments
+Experiments play an increasing role in historical linguistics, often informed by
+corpus work; yet the relationship between corpus evidence and experimental
+evidence remains underexplored. This paper argues that the two can be used in a
+feedback loop: corpora generate testable hypotheses about historical learning
+situations, while experiments in turn refine our interpretation of historical corpus
+data. The integration of the two is illustrated for the loss of V2, often linked to a
+decrease in unambiguous evidence like XV structures (Lightfoot 1999, Westergaard
+2009). Without such evidence, learners may fail to derive a V2 grammar from their
+input. Recent corpus work demonstrates a statistical link between different types of
+evidence and the loss of V2 (Larrivée et al. 2025). Moreover, experimental evidence
+from English speakers suggests that a high variability of clause-initial grammatical
+categories (e.g. NPs, PPs) fosters learning of V2 more than high variability in clause-
+initial grammatical functions (e.g. subjects; Meisezahl et al. 2025). These combined
+findings make the prediction that diachronically stable V2 systems should exhibit a
+stable distribution of different clause-initial elements. This makes Historical
+German an ideal test case. Corpus evidence from IPCHG (Sapp et al. 2026) reveals
+increasing clause-initial subjects after 1600 (Figure 1), while the distribution of
+different grammatical categories remains comparatively stable (Figure 2). This is
+compatible with the findings of Meisezahl et al. (2025) that variability in grammatical
+
+==================================================
+FILENAME: 72.pdf
+==================================================
+                    Language History in the Placename record of Patagonia:
+
+                       Overlapping pathways through the native landscape
+KEYWORDS: Onomastics, Spatial Semantics, Digital methods, Visualization
+
+Placenames constitute one of the most enduring linguistic records in a territory. These "linguistic fossils" (Trapero
+1995, Cacciafoco & Cavallaro 2023) are of particular importance for scarcely documented languages and the
+histories of their peoples. Such is the case for languages of Patagonia, where toponymy can provide information
+on processes of displacement, contact, and historical language distribution in periods leading up to European
+colonization. In this paper, we focus on the evidence for territorial dynamics and the transmission of culturally-
+specific naming practices via contact across three unrelated indigenous Patagonian languages: Mapudungun
+[ARN], Günün a Yajüch [PUE] and Aonekko ‘a’ien [TEH]. We draw our data from the Wax database
+(https://www.wax.cenpat-conicet.gob.ar/ – Domínguez & González Bagur 2024), which compiles and geo-
+references a large proportion of the toponymic record of 19th (Moreno 1879, Musters 1871) and 20th century
+Patagonia and Tierra del Fuego (Groeber 1926, Harrington 1942, Casamiquela 1987) encompassing 2,018
+placenames across eight languages, gleaned from historical maps, geographic dictionaries, and travelers’ journals
+(see Fig. 1).
+
+
+
+
+==================================================
+FILENAME: 73.pdf
+==================================================
+On the trail of lost dialects: uncovering patterns of change in late Middle English
+administrative writing
+
+
+
+The only direct evidence of language in earlier historical periods comes from written texts.
+Their limitations as evidence are well known: the material they provide is generally partial
+and skewed, limited to particular registers and often impossible to date or localize with any
+precision. Most importantly, it forms direct evidence of written language rather than spoken.
+The development of written language is a valid subject of research in itself; at the same time,
+being the best available evidence, historical texts are commonly mined for evidence about the
+spoken mode. One of the (numerous) challenges is the tendency of written language towards
+convention and uniformity. Even if a historical written language is highly variable, it makes
+little sense to treat the surviving texts as transcripts of speech. In addition, the dissemination
+of changes in the written mode cannot be expected to follow the same geographical or social
+paths as in the spoken mode.
+This paper considers the use of written variation as linguistic evidence in Middle English,
+here defined as the varieties of English written between the Norman Conquest and the
+Reformation. The variation during this period is generally agreed to reflect geography to a
+large extent; however, even if materials become abundant towards the end of the period, they
+
+==================================================
+FILENAME: 74.pdf
+==================================================
+                            Neural evidence for language change in progress:
+                  Individual production variability predicts morphosyntactic processing
+
+
+Evidence for language change commonly comes from distributions across places, generations, and speakers. Such patterns
+identify change in progress but not how fine-grained community variation shapes individual grammars or how this variability
+influences moment-by-moment comprehension. We ask whether neural responses during standard-language reading track speak-
+ers’ individual positions in an ongoing change.
+    Here we explore the loss of a traditional dialect feature, predicate participial agreement in Sunnmøre Norwegian (Western
+Norway; Sandstedt et al., 2026). Regional data show a logistic decline across 1930–2013 birth years and westward-spreading
+loss (Figure 1a–b). ERPs were recorded from 156 L1 speakers reading standard Norwegian Bokmål: 73 from Sunnmøre (target),
+where agreement is optional, and 83 from Northern Norway (control), where it is absent. A production task estimated individual
+agreement rates. Individual neural responses were modelled using participant-specific GAMMs (Figure 1cd), whose response
+magnitude and polarity were tested using an LMM, including a three-way interaction between condition, individual age, and
+production rate as well as standard literacy engagement, exposure, and proficiency factor scores as covariates.
+    Both groups showed P600-dominated responses to participial agreement (ungrammatical in the Bokmål standard); however,
+the response was nearly threefold smaller in Sunnmøre (AUC: 299 vs. 938 µV·ms). Sunnmøre judgments were also more gradient
+and less accurate: incongruent agreement was accepted on 79.7% of trials versus 49.5% in Northern Norway (group interaction:
+β = −1.119, SE = .192, p < .001). This suggests that dialect exposure to optional agreement reduces integration costs and
+grammatical sensitivity during standard reading. Within the Sunnmøre group, P600 amplitude and polarity varied jointly with
+
+==================================================
+FILENAME: 75.pdf
+==================================================
+                           When is a tree (not) a tree?
+
+
+    Challenges to the ‘tree’ model of linguistic genealogy, and as such to the conven-
+tional idea that the past of a language family is most accurately represented as a series
+of bifurcations subsequent to a shared origin, have a long history. Criticisms rooted
+in the idea that horizontal transmission, or transmission by contact, may interfere
+with the inferrability and validity of any such tree date at least as far back as Schmidt
+(1872), and recent work has often foregrounded the inevitability of such transfer at the
+very earliest stages of divergence, at which mutually-intelligible varieties remain adja-
+cent in space (François 2014:167-168). In turn, a range of recent work has sought to
+replace the tree with reticulate representations, or otherwise to incorporate an osten-
+sibly messy history directly into the model; see e.g. Heggarty et al. (2010). One such
+reworked genealogy of Germanic is oﬀered by Agee (2021), under the rubric of His-
+torical Glottometry (HG) (François 2014, Kalyan and François 2018, 2019), in which
+languages fall into overlapping groupings whose strength is roughly proportional to
+the number of innovations shared among their members. Comparable conclusions are
+reached over similar data by Hartmann (2023). Approaches of this kind have faced
+criticism in their turn (Jacques and List 2019), particularly for the absence of the time
+dimension from their output, but also because any given reticulate result may contain
+
+==================================================
+FILENAME: 7.pdf
+==================================================
+What spelling can tell us about sound: Interpreting orthographic evidence from
+Early Modern churchwardens’ accounts
+
+This paper examines orthographic variation in 16th- and 17th-century English
+churchwardens’ accounts as a potential source of evidence for pronunciation and
+linguistic change in Early Modern English. The study is based on two similarly-sized
+corpora (approximately 17,000 words each) of manuscript churchwardens’ accounts
+from the parish of St Martin in Oxford, which display considerable orthographic
+variation, including spellings such as smoke/smoak, church/churche,
+paid/payd/paide/payed, and the recurrent formula receypts/receptes/ receattes/reccettes.
+
+Churchwardens' accounts are annual financial records documenting parish income and
+expenditure. Produced continuously over long periods and recording administrative
+activity, they provide valuable evidence of everyday written language outside more
+literary and formal genres. Although churchwardens' accounts have long been
+recognised as valuable sources for social history, they have been exploited less
+extensively for studying of orthographic variation and its relationship to historical
+pronunciation.
+
+The paper examines how far orthographic variation in administrative manuscripts can
+
+==================================================
+FILENAME: 8.pdf
+==================================================
+Treasure coves for historical linguistics: Evidence from obsolescing dialect features
+
+How do we know what English was like in the past? Obsolescing grammatical dialect features provide
+a valuable source. Focussing on English dialects, we will argue that obsolescing grammatical features
+can: (1) fill a gap in an historical trajectory; (2) confirm an historical situation; (3) help to decide on
+an historical development. We will illustrate with three grammatical features.
+
+The first is double demonstratives, (1).
+
+(1)     a.       and this here London driver said to me … (man, 78)
+        b.       there here things about tribes abroad (man, 72)
+
+While double demonstratives are receding from UK dialects, the form this here (1a) is prevalent and
+deployed to introduce a new referent into the discourse (Anonymous 2025). A survey of historical
+data (e.g. Oxford English Dictionary) dates the emergence of double demonstratives in the mid-
+eighteenth century. This dating provides a missing link in the developmental path established for
+indefinite markers, bridging the use of a certain from the thirteenth century (Breban 2012) and
+(simple) indefinite this in the twentieth (Prince 1981).
+
+Second, preverbal did. Nevalainen and Raumolin-Brunberg (2003: 69) have reported on a non-
+
+==================================================
+FILENAME: 9.pdf
+==================================================
+The entanglement of words and practices: The role of material culture in language change
+
+        Historical linguistics has traditionally relied on written records, comparative evidence,
+and internal reconstruction to trace semantic change. Yet many aspects of lexical history involve
+changes not simply in words, but in the material practices those words once referenced. This
+paper argues that such changes become visible only when multiple forms of evidence are
+considered together.
+
+        Drawing on data from the North American Linguistic Atlas Project (LAP), this paper
+examines variants for ‘deep-dish fruit dessert’ collected by four regional Atlas surveys conducted
+between 1931 and 1983, which produced 3,800 responses representing over 358 response types.
+Considered in isolation, the Atlas maps document striking regional lexical diversity. Read
+alongside fieldworker comments, however, the responses reveal distinctions in material practices
+that help explain why speakers maintained such a large number of overlapping lexical categories.
+These observations can then be compared with historical dictionaries and nineteenth- and
+twentieth-century cookbooks in order to distinguish local practices from those that are more
+widespread.
+
+        The resulting picture differs substantially from one derived from lexical distributions
+alone. Older British culinary categories such as dumpling, pudding, dowdy, and slump persist
+
