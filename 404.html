@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!------------------------
+           /\_/\  
+          ( o.o ) 
+         Mari mari! 
+    Thanks for checking 
+    out my source code. 
+   It's not very organised
+  but feel free to adapt it
+-------------------------->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — Page not found | Aldo Berríos Castillo</title>
+  <meta name="robots" content="noindex">
+
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+
+  <style>
+    .error-content { min-height: 55vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 48px 24px; }
+    .error-code { font-family: "Barlow Condensed", sans-serif; font-size: clamp(72px, 12vw, 120px); line-height: 1; margin: 0 0 12px; }
+    .error-content p { max-width: 540px; }
+    .error-home { text-decoration: underline; text-underline-offset: 4px; }
+  </style>
+</head>
+
+
+<body class="site-clean-bg">
+
+<!-- NEW MINIMAL TOP NAVIGATION BAR (THREE-PART FLEX SPLIT) -->
+<div class="custom-nav-bar w3-content" style="max-width:1400px;">
+  
+  <!-- Desktop / Tablet Menu Configuration -->
+  <div class="desktop-flex-nav">
+    <!-- Part 1: Far Left Identity -->
+    <div class="nav-left-brand">
+      <a href="index.html" class="nav-font profile-name">ALDO BERRÍOS CASTILLO</a>
+    </div>
+    
+    <!-- Part 2: Middle Content Pathing Links -->
+    <div class="nav-center-links">
+      <a href="research.html" class="w3-bar-item w3-button nav-font">Research</a>
+      <a href="teaching.html" class="w3-bar-item w3-button nav-font">Teaching</a>
+      <a href="revitalisation.html" class="w3-bar-item w3-button nav-font">Language Revitalisation</a>
+      <a href="CV/CV_ABerrios.pdf" class="w3-bar-item w3-button nav-font">CV</a>
+    </div>
+    
+    <!-- Part 3: Far Right Utility Anchors -->
+    <div class="nav-right-utility">
+      <a href="spanish.html" class="w3-bar-item w3-button nav-font">ES</a>
+      <span class="w3-bar-item nav-font text-inactive">EN</span>
+    </div>
+  </div>
+
+  <!-- Mobile Only Sandwich Menu Configuration -->
+<div class="w3-hide-large mobile-sandwich-container">
+    <div class="sandwich-header">
+      <span class="nav-font mobile-brand-title">ALDO BERRÍOS CASTILLO</span>
+      <button onclick="toggleMobileMenu()" class="w3-button sandwich-btn" aria-label="Toggle Menu">&#9776;</button>
+    </div>
+    
+    <!-- Hidden Mobile Drawer -->
+    <div id="mobileMenuDrawer" class="w3-bar-block mobile-drawer-links w3-hide">
+      <a class="w3-bar-item w3-button nav-font" href="index.html">Home</a>
+      <a class="w3-bar-item w3-button nav-font" href="research.html">Research</a>
+      <a class="w3-bar-item w3-button nav-font" href="teaching.html">Teaching</a>
+      <a class="w3-bar-item w3-button nav-font" href="revitalisation.html">Language Revitalisation</a>
+      <hr style="margin: 5px 20px; border-color: #eee;">
+      <a class="w3-bar-item w3-button nav-font" href="spanish.html">ES (Español)</a>
+      <a class="w3-bar-item w3-button nav-font" href="CV/CV_ABerrios.pdf">CV (Curriculum)</a>
+    </div>
+  </div>
+
+</div>
+
+<hr class="nav-divider">
+
+<main class="w3-content w3-margin-top" style="max-width:1400px;">
+  <div class="w3-row-padding">
+    <div class="w3-col l3 m12 s12">&nbsp;</div>
+    <div class="w3-col l9 m12 s12 minimal-content-section">
+      <div class="error-content">
+        <h1 class="content-title-blue error-code">404</h1>
+        <h2 class="content-title-blue">Page not found</h2>
+        <p>The page you are looking for may have been moved, renamed or no longer exists.</p>
+        <p><a class="error-home" href="index.html">&larr; Back to homepage</a></p>
+        <p lang="es">Página no encontrada. <a class="error-home" href="spanish.html">Volver al inicio</a>.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Clean Minimal Footer -->
+<footer class="w3-container w3-center w3-margin-top clean-footer">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+<script>
+function toggleMobileMenu() {
+  var x = document.getElementById("mobileMenuDrawer");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+
+</body>
+</html>
