@@ -249,13 +249,14 @@ practitioners use language documentation? [El rol de las personas frente a los d
 
 
 
-#cv-section("Ponencias y presentaciones")
+#cv-section("Ponencias y presentaciones (selección)")
 
 #set terms(hanging-indent: 1.5em, spacing: 1.2em)
 #show terms.item: it => block(width: 100%)[
   #it.term #it.description
 ]
 
+/ *Berríos, A.* (2026, Nov 12).: _Theoretical implications of non-optimising phonologically conditioned suppletion: The case of the stative and ambulative suffixes in Mapudungun_. Ponencia presentada en el taller _Morphosyntactic conditioning of phonology in Stratal and parallel frameworks_ (PhonStraP), Barcelona, Cataluña.
 
 / *Berríos, A.*, Honeybone, P. & Molineaux, B. (2026, Sept 09):_Phonotactic change: the emergence of a coda constraint in Mapudungun_. Ponencia presentada en _Special interest panel: What is/are phonotactics?_, Linguistics Association of Great Britain (LAGB) Annual Conference 2026.
 
@@ -279,21 +280,21 @@ practitioners use language documentation? [El rol de las personas frente a los d
 
 / *Berríos, A.* (2025, July 2).: _Lanzamiento de la Publicacíon: Pu Mapuche ñi N’emül’_. Presentación en la Universidad de La Frontera, Temuco, Chile.
 
-/ *Berríos, A.* (2025, June 5).: _K-Allomorphy in Mapudungun: the case of stative -(kï)le_. Ponencia presentada en LEL Postgraduate Conference 2025, University of Edinburgh.
+// / *Berríos, A.* (2025, June 5).: _K-Allomorphy in Mapudungun: the case of stative -(kï)le_. Ponencia presentada en LEL Postgraduate Conference 2025, University of Edinburgh.
 
-/ *Berríos, A.* (2025, February 7).: _Today’s irregular morphology is yesterday’s regular phonology: [...] the complex verbal morphology of Mapudungun_. Ponencia presentada en 22nd Old-World Conference in Phonology, University of Amsterdam.
+// / *Berríos, A.* (2025, February 7).: _Today’s irregular morphology is yesterday’s regular phonology: [...] the complex verbal morphology of Mapudungun_. Ponencia presentada en 22nd Old-World Conference in Phonology, University of Amsterdam.
 
- / *Berríos, A.* (2024, December 5).: _La morfología del presente es la fonología del pasado_. Ponencia presentada en the "Jornadas de estudios lingüísticos internacionales SOCHIL-SAEL 2024".
+//  / *Berríos, A.* (2024, December 5).: _La morfología del presente es la fonología del pasado_. Ponencia presentada en the "Jornadas de estudios lingüísticos internacionales SOCHIL-SAEL 2024".
 
- / *Berríos, A.* (2024, October 10).: _Tañi chumken kiñe antü mew: Una experiencia pedagógica en contexto universitario_. VII Coloquio sobre Enseñanza y Aprendizaje de la lengua mapuche, Universidad de la Frontera.
+//  / *Berríos, A.* (2024, October 10).: _Tañi chumken kiñe antü mew: Una experiencia pedagógica en contexto universitario_. VII Coloquio sobre Enseñanza y Aprendizaje de la lengua mapuche, Universidad de la Frontera.
 
- / *Berríos, A.* (2024, August 28).: _From regular phonology to irregular morphology: An amphichronic study of the alternation of causative -(ï)m in Mapudungun_. Ponencia presentada en 2024 Annual Meeting of the LAGB, Newcastle University.
+//  / *Berríos, A.* (2024, August 28).: _From regular phonology to irregular morphology: An amphichronic study of the alternation of causative -(ï)m in Mapudungun_. Ponencia presentada en 2024 Annual Meeting of the LAGB, Newcastle University.
 
- / *Berríos, A.* (2024, June 4).: _From regular phonology to irregular morphology_. Ponencia presentada en 30th LEL Postgraduate Conference, University of Edinburgh.
+ // / *Berríos, A.* (2024, June 4).: _From regular phonology to irregular morphology_. Ponencia presentada en 30th LEL Postgraduate Conference, University of Edinburgh.
 
- / *Berríos, A.* (2024, April 29).: _Mapudungun: Sociolinguistics, Research and Revitalisation_. Micro-conference: Researching and Revitalising Minoritised Isolates, University of Edinburgh.
+ // / *Berríos, A.* (2024, April 29).: _Mapudungun: Sociolinguistics, Research and Revitalisation_. Micro-conference: Researching and Revitalising Minoritised Isolates, University of Edinburgh.
 
- / *Berríos, A.* (2024, April 25-26).: _From regular phonology to irregular morphology_. Ponencia presentada en 11th Manchester Forum in Linguistics (MFiL 2024), University of Manchester.
+ // / *Berríos, A.* (2024, April 25-26).: _From regular phonology to irregular morphology_. Ponencia presentada en 11th Manchester Forum in Linguistics (MFiL 2024), University of Manchester.
 
 // / *Berríos, A.* (2024, February 6).: _La historia de -(ï)m causative in Mapudungun_. AMC Catchup Sessions.
 
@@ -304,7 +305,7 @@ practitioners use language documentation? [El rol de las personas frente a los d
 // / *Berríos, A.* (2021).: _Diccionario de mapuzugun en linea www.azümchefe.cl_. II Jornada de Revitalización lingüística.
 // / Carilaf, V., & *Berríos, A.* (2019).: _Kimeltuwe, Materiales de mapudungun_. Toolkits for Sociolinguistic Revitalization, Santiago, Chile.
 
-#cv-section("Presentaciones de póster académico")
+#cv-section("Presentaciones de póster académico (selección)")
 
 #set terms(hanging-indent: 1.5em, spacing: 1.2em)
 #show terms.item: it => block(width: 100%)[
@@ -318,11 +319,11 @@ practitioners use language documentation? [El rol de las personas frente a los d
 / *Berríos, A.* (2025, May 29).: _K-POP\* Allomorphy: On the status of -k in Mapudungun Morphophonology_. PPLS Research Day 2025, University of Edinburgh. 
 #h(1fr) #text(size: 7pt)[\* k-Phonologically-Oriented Phenomena]
 
-/ *Berríos, A.* (2024, July 4).: _Today’s morphology is yesterday’s phonology: An amphichronic study of the alternation of causative -(ï)m in Mapudungun_. 20th ACTL Summer School, University of York, UK.
+// / *Berríos, A.* (2024, July 4).: _Today’s morphology is yesterday’s phonology: An amphichronic study of the alternation of causative -(ï)m in Mapudungun_. 20th ACTL Summer School, University of York, UK.
 
-/ *Berríos, A.* (2024, June 13).: _Today’s morphology is yesterday’s phonology_. PPLS Research Day 2024, University of Edinburgh.
+// / *Berríos, A.* (2024, June 13).: _Today’s morphology is yesterday’s phonology_. PPLS Research Day 2024, University of Edinburgh.
 
-/ *Berríos, A.* (2023, November 2).: _Phoneme Frequency in Mapudungun_. 78th Language Lunch, University of Edinburgh, UK.
+// / *Berríos, A.* (2023, November 2).: _Phoneme Frequency in Mapudungun_. 78th Language Lunch, University of Edinburgh, UK.
 
 
 #cv-section("Actividades de extensión y apoyo a la comunidad académica")
@@ -371,6 +372,7 @@ practitioners use language documentation? [El rol de las personas frente a los d
 //   details: none
 // )
 
+#pagebreak()
 
 #cv-section("Activismo digital e impacto comunitario")
 
@@ -400,13 +402,10 @@ practitioners use language documentation? [El rol de las personas frente a los d
 // - *Phonemiser*: An interactive program mapping traditional inputs into systemic International Phonetic Alphabet (IPA) output matrices. #link("https://aldoberrios.shinyapps.io/phonemizer/")[aldoberrios.shinyapps.io/phonemizer/]
 // - *Mapudungun Nemülkawe*: Online Mapudungun dictionary. A grass-root innitiative to create a dictionary database for students, with examples and playable audio to model pronunciation (available at #link("https://mapudungun.cl")[mapudungun.cl]).
 
+
+// #pagebreak()
+
 #cv-section("Afiliaciones profesionales")
 - Sociedad Chilena de Lingüística (*Sochil*)
 - Linguistics Association of Great Britain (*LAGB*)
 - Philological Society (*Philsoc*)
-
-Epu awkiñ che dungun DISTÜRIFUSIYON ALTERNANTE KAM VARIYASIYON LIFÜREMU mülele, 
-
-Si hay dos sonidos en DA o VL, entonces cualquier contexto que tenga un sonido en estudio el otro sonido también tiene el mismo contexto. y tienen los mismos contextos (vecino). Las dos palabras son similares (se pueden confundir una con otra), que están en par mínimo, pero no entregan significados distintos, entonces los sonidos bajo estudio integran un solo fonema.
-
-fey chem karukatu ñi niyen kiñe awkiñ chilhkatupeyel kangelu awkiñ ka chilhkatupeyeyel fey ka femuechi karukatu pu awkiñ che dungun niyey, keñawüngekey reke ti epu n´emül´ par minimu mülelu, welu wülnole kake pin engu, fey may ta ti epu awkiñ chilhkatupeyeel koneltuleyngu kiñe fonemamu müten.

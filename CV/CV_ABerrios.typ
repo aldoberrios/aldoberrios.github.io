@@ -272,6 +272,7 @@
   #it.term #it.description
 ]
 
+/ *Berríos, A.* (2026, Nov 12).: _Theoretical implications of non-optimising phonologically conditioned suppletion: The case of the stative and ambulative suffixes in Mapudungun_. Talk at the Morphosyntactic conditioning of phonology in Stratal and parallel frameworks (PhonStraP).
 
 / *Berríos, A.*, Honeybone, P. & Molineaux, B. (2026, Sept 09):_Phonotactic change: the emergence of a coda constraint in Mapudungun_. Talk at the _Special interest panel: What is/are phonotactics?_, Linguistics Association of Great Britain (LAGB) Annual Conference 2026.
 
